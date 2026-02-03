@@ -1,3 +1,7 @@
+<p align="center">
+  <a href="README.md">中文</a> | <a href="README_EN.md">English</a>
+</p>
+
 # 井口裝置繪圖工具
 
 一款用於繪製井口裝置示意圖的 Windows 桌面應用程序。
@@ -58,7 +62,7 @@
 
 ## 安裝使用
 
-1. 下載 Release 中的壓縮包
+1. 從 [Releases](https://github.com/mycing/wellhead-device-drawing-tool/releases) 下載最新版本
 2. 解壓到任意目錄
 3. 運行 `4.18.exe`
 
