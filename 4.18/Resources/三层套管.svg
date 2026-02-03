@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="55.3698mm" height="32.5981mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 153.23 90.21"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:xodm="http://www.corel.com/coreldraw/odm/2003">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .str0 {stroke:#332C2B;stroke-width:1.95;stroke-miterlimit:22.9256}
+    .fil0 {fill:none}
+   ]]>
+  </style>
+ </defs>
+ <g id="Layer_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <line class="fil0 str0" x1="1.25" y1="7.95" x2="1.25" y2= "20.4" />
+  <polyline class="fil0 str0" points="152.26,28 152.26,0.98 0.98,0.98 0.98,8.69 "/>
+  <ellipse class="fil0 str0" cx="43.05" cy="21.35" rx="41.72" ry="13.35"/>
+  <path class="fil0 str0" d="M80.55 27.46c6.7,4.7 20.42,7.93 36.26,7.93 15.22,0 28.49,-2.98 35.44,-7.39"/>
+  <ellipse class="fil0 str0" cx="44.68" cy="51.28" rx="33.37" ry="10.68"/>
+  <ellipse class="fil0 str0" cx="43.09" cy="75.29" rx="27.95" ry="8.95"/>
+  <line class="fil0 str0" x1="11.24" y1="51.28" x2="11.53" y2= "30.13" />
+  <path class="fil0 str0" d="M70.97 58.59c6.7,4.71 20.42,7.93 36.26,7.93 15.22,0 28.49,-2.98 35.44,-7.39"/>
+  <line class="fil0 str0" x1="142.67" y1="59.26" x2="142.97" y2= "32.45" />
+  <line class="fil0 str0" x1="15.39" y1="75.67" x2="15.69" y2= "56.31" />
+  <path class="fil0 str0" d="M63.01 81.31c6.7,4.71 20.42,7.93 36.26,7.93 15.22,0 28.49,-2.98 35.44,-7.39"/>
+  <line class="fil0 str0" x1="134.75" y1="81.93" x2="135.04" y2= "62.65" />
+ </g>
+</svg>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="47.2215mm" height="9.2001mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 111.92 21.8"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:xodm="http://www.corel.com/coreldraw/odm/2003">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .str0 {stroke:#332C2B;stroke-width:1.67;stroke-miterlimit:22.9256}
+    .fil0 {fill:none}
+   ]]>
+  </style>
+ </defs>
+ <g id="Layer_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <line class="fil0 str0" x1="1.04" y1="4.91" x2="1.04" y2= "12.2" />
+  <polyline class="fil0 str0" points="111.08,16.65 111.08,0.84 0.84,0.84 0.84,5.35 "/>
+  <ellipse class="fil0 str0" cx="31.5" cy="12.76" rx="30.4" ry="7.81"/>
+  <path class="fil0 str0" d="M58.83 16.33c4.88,2.75 14.88,4.64 26.42,4.64 11.09,0 20.76,-1.74 25.83,-4.32"/>
+ </g>
+</svg>

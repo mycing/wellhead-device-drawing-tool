@@ -1,0 +1,89 @@
+# Visual Studio / Build outputs
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio files
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.rsuser
+
+# Build results
+[Dd]ebugPublic/
+[Rr]eleases/
+*.VisualState.xml
+TestResult.xml
+[Dd]ebugPS/
+[Rr]eleasePS/
+dlldata.c
+
+# NuGet packages
+packages/
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+
+# ClickOnce
+*.application
+publish/
+app.publish/
+
+# User-specific files
+*.pdb
+*.idb
+*.ilk
+*.log
+
+# Rider
+.idea/
+
+# Resharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# Upgrade log
+UpgradeLog.htm
+UpgradeLog.XML
+
+# Backup files
+*.bak
+*.backup
+
+# Old project folders (not part of main source)
+井口装置小工具.zip
+井口装置绘图工具5.17/
+界面元素/
+界面元素.zip
+界面元素更改/
+装置参照/
+装置参照.zip
+安装说明.txt
+
+# Setup project outputs
+Setup1/Debug/
+Setup1/Release/
+
+# MSIX packaging
+WapProjTemplate1/

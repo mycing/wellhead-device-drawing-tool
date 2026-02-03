@@ -1,0 +1,310 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="万能防喷器" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\万能防喷器.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="三层套管" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\三层套管.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="三层套管1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\三层套管.svg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="三層套管" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\三層套管.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="上色圖片示例" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\上色圖片示例.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="临时井口头" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\临时井口头.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="临时井口头1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\临时井口头.svg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="井口平台" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\井口平台.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="井口平台1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\井口平台.svg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="井口平臺" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\井口平臺.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="分流器" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\分流器.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="分流器1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\分流器.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="分流器11" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\分流器1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="分流器2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\分流器.svg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="升高1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\升高1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="升高立管" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\升高立管.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="升高立管1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\升高立管.svg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="单层套管" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\单层套管.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="单层套管1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\单层套管.svg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="双层套管" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\双层套管.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="双层套管1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\双层套管.svg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="双闸板防喷器" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\双闸板防喷器.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="双闸板防喷器1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\双闸板防喷器.svg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="变径法兰" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\变径法兰.svg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="喇叭口" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\喇叭口.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="喇叭口1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\喇叭口.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="喇叭口11" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\喇叭口1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="喇叭口2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\喇叭口.svg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="單層套管" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\單層套管.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="單筒雙井" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\單筒雙井.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="單筒雙井1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\單筒雙井.svg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="套管头" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\套管头.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="套管头1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\套管头.svg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="套管頭" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\套管頭.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="密封盘根升高短节" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\密封盘根升高短节.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="密封盘根升高短节1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\密封盘根升高短节.svg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="密封盤根升高短節" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\密封盤根升高短節.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="旋轉控制頭" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\旋轉控制頭.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="旋转控制头" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\旋转控制头.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="未上色圖片示例" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\未上色圖片示例.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="油管四通" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\油管四通.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="法兰" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\法兰.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="法蘭" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\法蘭.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="环形防喷器" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\环形防喷器.svg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="節流壓井管匯" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\節流壓井管匯.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="節流壓井管匯1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\節流壓井管匯.svg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="精细控压旋转控制头" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\精细控压旋转控制头.svg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="臨時京口頭" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\臨時京口頭.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="萬能" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\萬能.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="轉盤面" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\轉盤面.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="转盘面" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\转盘面.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="转盘面1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\转盘面.svg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="鑽井四通" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\鑽井四通.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="钻井四通" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\钻井四通.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="钻井四通1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\钻井四通.svg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="閘板防噴器" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\閘板防噴器.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="闸板防喷器" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\闸板防喷器.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="闸板防喷器1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\闸板防喷器.svg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="防喷器配置背景" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\防喷器配置背景.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="隔水導管" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\隔水導管.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="隔水導管1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\隔水導管.svg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="雙層套管" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\雙層套管.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="雙閘版防噴器" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\雙閘版防噴器.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+</root>

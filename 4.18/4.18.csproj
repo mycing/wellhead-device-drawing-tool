@@ -1,0 +1,496 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8160CE45-10DF-45B2-859E-ECDCD079221D}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>_4._18</RootNamespace>
+    <AssemblyName>4.18</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+    <PublishUrl>D:\ 2.25_4.18\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>6</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>E458A50CA39A3396A70BF74858BED5DEB8DAA98A</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>4.18_1_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>false</DelaySign>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="ExCSS, Version=4.2.3.0, Culture=neutral, PublicKeyToken=bdbe16be9b936b9a, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExCSS.4.2.3\lib\net48\ExCSS.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=9.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.9.0.2\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Svg, Version=3.4.0.0, Culture=neutral, PublicKeyToken=12a0bac221edeae2, processorArchitecture=MSIL">
+      <HintPath>..\packages\Svg.3.4.7\lib\net472\Svg.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections.Specialized, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Specialized.4.3.0\lib\net46\System.Collections.Specialized.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite, Version=1.0.119.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\lib\net46\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.EF6, Version=1.0.119.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.119.0\lib\net46\System.Data.SQLite.EF6.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq, Version=1.0.119.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.119.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Pipelines, Version=9.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Pipelines.9.0.2\lib\net462\System.IO.Pipelines.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Encodings.Web, Version=9.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encodings.Web.9.0.2\lib\net462\System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Json, Version=9.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Json.9.0.2\lib\net462\System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Device.cs" />
+    <Compile Include="DrawstringPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HelpDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ImagePicturePanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="MenuStyleHelper.cs" />
+    <Compile Include="PanelSampleLibrarySaver.cs" />
+    <Compile Include="TemplateTreeNodeData.cs" />
+    <Compile Include="PanelManager.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RecursiveTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ScreenCaptureManager.cs" />
+    <Compile Include="AutoAlignManager.cs" />
+    <Compile Include="AutoCaptureManager.cs" />
+    <Compile Include="CustomScrollBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SvgDrawPicturePanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TagTreeUserControl.cs" />
+    <Compile Include="TagTreeUserControl.Designer.cs">
+      <DependentUpon>TagTreeUserControl.cs</DependentUpon>
+    </Compile>
+    <Content Include="readme.txt" />
+    <EmbeddedResource Include="TagTreeUserControl.resx">
+      <DependentUpon>TagTreeUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Resources\钻井四通.svg" />
+    <None Include="Resources\转盘面.svg" />
+    <None Include="Resources\闸板防喷器.svg" />
+    <None Include="Resources\套管头.svg" />
+    <None Include="Resources\双闸板防喷器.svg" />
+    <None Include="Resources\双层套管.svg" />
+    <None Include="Resources\升高立管.svg" />
+    <None Include="Resources\三层套管.svg" />
+    <None Include="Resources\密封盘根升高短节.svg" />
+    <None Include="Resources\临时井口头.svg" />
+    <None Include="Resources\喇叭口.svg" />
+    <None Include="Resources\井口平台.svg" />
+    <None Include="Resources\精细控压旋转控制头.svg" />
+    <None Include="Resources\節流壓井管匯.svg" />
+    <None Include="Resources\环形防喷器.svg" />
+    <None Include="Resources\隔水導管.svg" />
+    <None Include="Resources\分流器.svg" />
+    <None Include="Resources\單筒雙井.svg" />
+    <None Include="Resources\单层套管.svg" />
+    <None Include="Resources\变径法兰.svg" />
+    <None Include="Resources\節流壓井管匯.png" />
+    <None Include="Resources\隔水導管.png" />
+    <None Include="Resources\單筒雙井.png" />
+    <None Include="Resources\鑽井四通.png" />
+    <None Include="Resources\轉盤面.png" />
+    <None Include="Resources\閘板防噴器.png" />
+    <None Include="Resources\旋轉控制頭.png" />
+    <None Include="Resources\萬能.png" />
+    <None Include="Resources\套管頭.png" />
+    <None Include="Resources\雙閘版防噴器.png" />
+    <None Include="Resources\雙層套管.png" />
+    <None Include="Resources\升高1.png" />
+    <None Include="Resources\三層套管.png" />
+    <None Include="Resources\密封盤根升高短節.png" />
+    <None Include="Resources\臨時京口頭.png" />
+    <None Include="Resources\喇叭口1.png" />
+    <None Include="Resources\井口平臺.png" />
+    <None Include="Resources\分流器1.png" />
+    <None Include="Resources\法蘭.png" />
+    <None Include="Resources\單層套管.png" />
+    <None Include="Resources\升高.png" />
+    <None Include="Resources\喇叭口.png" />
+    <None Include="Resources\分流器.png" />
+    <None Include="Resources\Annular BOP.svg" />
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="4.18_1_TemporaryKey.pfx" />
+    <None Include="4.18_TemporaryKey.pfx" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.8">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.8 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\变径法兰.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\变压法兰.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\防喷器配置背景.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\界面背景1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\整体背景1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\加号1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\单闸板防喷器.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\蜜蜂盘根升高短节.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\单层套管.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\井口平台.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\喇叭口.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\蜜蜂盘根升高短节.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\三层套管.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\升高立管.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\双层套管.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\双闸板防喷器.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\旋转控制头.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\闸板防喷器.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\转盘面.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\钻井四通.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\空白.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\空白 - 副本 %283%29.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\空白 - 副本 %284%29.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\单层套管.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\喇叭口.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\三层套管.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\双层套管.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\油管四通.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\转盘面.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\法兰.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\分流器.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\升高立管.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\套管头.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\井口平台.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\密封盘根升高短节.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\双闸板防喷器.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\闸板防喷器.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\钻井四通.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\万能防喷器.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\旋转控制头.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\喇叭口线.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\临时井口头线.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\临时京口头线.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\单层套管线.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\分流器线.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\井口平台线.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\喇叭口线.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\密封盘根升高短节线.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\三层套管线.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\升高立管线.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\双层套管线.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\双闸板防喷器线.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\套管头线.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\万能防喷器线.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\旋转控制头线.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\油管四通线.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\闸板防喷器线.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\转盘面线.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\钻井四通线.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\临时井口头.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\临时井口头线.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\法兰线.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\上色圖片示例.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\未上色圖片示例.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="picture\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+    <Error Condition="!Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+  <Import Project="..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets" Condition="Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" />
+</Project>
