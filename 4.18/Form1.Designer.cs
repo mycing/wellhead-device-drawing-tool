@@ -35,6 +35,7 @@ namespace _4._18
             this.panel1 = new System.Windows.Forms.Panel();
             this.tagTreeUserControl1 = new _4._18.TagTreeUserControl();
             this.label4 = new System.Windows.Forms.Label();
+            this.labelSettings = new System.Windows.Forms.Label();
             this.labelHelp = new System.Windows.Forms.Label();
             this.listBox3Container = new System.Windows.Forms.Panel();
             this.treeViewTemplates = new System.Windows.Forms.TreeView();
@@ -66,6 +67,7 @@ namespace _4._18
             this.panel1.Controls.Add(this.checkBox1);
             this.panel1.Controls.Add(this.panel2Container);
             this.panel1.Controls.Add(this.vScrollBarPanel2);
+            this.panel1.Controls.Add(this.labelSettings);
             this.panel1.Controls.Add(this.labelHelp);
             this.panel1.Controls.Add(this.textBoxTagSearch);
             this.panel1.Controls.Add(this.label3);
@@ -104,9 +106,24 @@ namespace _4._18
             this.label4.Text = "防噴器配置";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // 
+            //
+            // labelSettings
+            //
+            this.labelSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(237)))), ((int)(((byte)(240)))));
+            this.labelSettings.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.labelSettings.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.labelSettings.Location = new System.Drawing.Point(1596, 10);
+            this.labelSettings.Margin = new System.Windows.Forms.Padding(0);
+            this.labelSettings.Name = "labelSettings";
+            this.labelSettings.Padding = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelSettings.Size = new System.Drawing.Size(20, 40);
+            this.labelSettings.TabIndex = 61;
+            this.labelSettings.Text = "設置";
+            this.labelSettings.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.labelSettings.Click += new System.EventHandler(this.labelSettings_Click);
+            //
             // labelHelp
-            // 
+            //
             this.labelHelp.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(237)))), ((int)(((byte)(240)))));
             this.labelHelp.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.labelHelp.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -346,6 +363,7 @@ namespace _4._18
         private Label label2;
         private TagTreeUserControl tagTreeUserControl1;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label labelSettings;
         private System.Windows.Forms.Label labelHelp;
         private _4._18.CustomScrollBar vScrollBarPanel2;
         private System.Windows.Forms.Panel panel2Container;

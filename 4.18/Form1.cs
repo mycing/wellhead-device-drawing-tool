@@ -162,6 +162,9 @@ namespace _4._18
         /// </summary>
         public Form1()
         {
+            // 先載入語言設置，再初始化控件
+            LocalizationManager.LoadLanguageSetting();
+
             InitializeComponent();
 
             // 統一文字與 ToolTip 的字體大小
@@ -213,17 +216,17 @@ namespace _4._18
 
             //3.31 treeViewTemplates 右鍵菜單
             contextMenuTemplates = new ContextMenuStrip();
-            menuItemDelete = new ToolStripMenuItem("刪除");
+            menuItemDelete = new ToolStripMenuItem(LocalizationManager.GetString("Delete"));
             menuItemDelete.Click += MenuItemDelete_Click;
-            menuItemRename = new ToolStripMenuItem("重命名");
+            menuItemRename = new ToolStripMenuItem(LocalizationManager.GetString("Rename"));
             menuItemRename.Click += MenuItemRename_Click;
-            menuItemAddFolder = new ToolStripMenuItem("新增資料夾");
+            menuItemAddFolder = new ToolStripMenuItem(LocalizationManager.GetString("AddFolder"));
             menuItemAddFolder.Click += MenuItemAddFolder_Click;
-            menuItemAddSubFolder = new ToolStripMenuItem("新增子資料夾");
+            menuItemAddSubFolder = new ToolStripMenuItem(LocalizationManager.GetString("AddSubFolder"));
             menuItemAddSubFolder.Click += MenuItemAddSubFolder_Click;
-            menuItemAddToLibrary = new ToolStripMenuItem("添加裝置到庫");
+            menuItemAddToLibrary = new ToolStripMenuItem(LocalizationManager.GetString("AddDeviceToLibrary"));
             menuItemAddToLibrary.Click += MenuItemAddToLibrary_Click;
-            menuItemAddToFolder = new ToolStripMenuItem("添加裝置到此資料夾");
+            menuItemAddToFolder = new ToolStripMenuItem(LocalizationManager.GetString("AddDeviceToFolder"));
             menuItemAddToFolder.Click += MenuItemAddToFolder_Click;
             contextMenuTemplates.Items.Add(menuItemAddFolder);
             contextMenuTemplates.Items.Add(menuItemAddSubFolder);
@@ -235,29 +238,29 @@ namespace _4._18
 
             //listBox1 右鍵菜單：添加自繪裝置和刪除用戶自定義裝置
             contextMenuStripListBox1 = new ContextMenuStrip();
-            addDeviceMenuItemListBox1 = new ToolStripMenuItem("添加自繪裝置");
+            addDeviceMenuItemListBox1 = new ToolStripMenuItem(LocalizationManager.GetString("AddCustomDevice"));
             addDeviceMenuItemListBox1.Click += AddDeviceMenuItem_Click_ListBox1;
-            deleteMenuItemListBox1 = new ToolStripMenuItem("刪除當前裝置");
+            deleteMenuItemListBox1 = new ToolStripMenuItem(LocalizationManager.GetString("DeleteCurrentDevice"));
             deleteMenuItemListBox1.Click += DeleteMenuItem_Click_ListBox1;
             contextMenuStripListBox1.Items.Add(addDeviceMenuItemListBox1);
             contextMenuStripListBox1.Items.Add(deleteMenuItemListBox1);
 
             //panel2 右鍵菜單：自動截圖、截圖、清空畫布、打開裝置樣例、自動對齊、刪除
             contextMenuStripPanel2 = new ContextMenuStrip();
-            deleteMenuItemPanel2 = new ToolStripMenuItem("刪除");
+            deleteMenuItemPanel2 = new ToolStripMenuItem(LocalizationManager.GetString("Delete"));
             deleteMenuItemPanel2.Click += DeleteMenuItem_Click_Panel2;
             separatorPanel2 = new ToolStripSeparator();
-            autoCaptureMenuItemPanel2 = new ToolStripMenuItem("自動截圖");
+            autoCaptureMenuItemPanel2 = new ToolStripMenuItem(LocalizationManager.GetString("AutoCapture"));
             autoCaptureMenuItemPanel2.Click += AutoCaptureMenuItem_Click_Panel2;
-            captureMenuItemPanel2 = new ToolStripMenuItem("截圖");
+            captureMenuItemPanel2 = new ToolStripMenuItem(LocalizationManager.GetString("Capture"));
             captureMenuItemPanel2.Click += CaptureMenuItem_Click_Panel2;
-            clearCanvasMenuItemPanel2 = new ToolStripMenuItem("清空畫布");
+            clearCanvasMenuItemPanel2 = new ToolStripMenuItem(LocalizationManager.GetString("ClearCanvas"));
             clearCanvasMenuItemPanel2.Click += ClearCanvasMenuItem_Click_Panel2;
-            openSampleMenuItemPanel2 = new ToolStripMenuItem("打開裝置樣例");
+            openSampleMenuItemPanel2 = new ToolStripMenuItem(LocalizationManager.GetString("OpenSample"));
             openSampleMenuItemPanel2.Click += OpenSampleMenuItem_Click_Panel2;
-            autoAlignMenuItemPanel2 = new ToolStripMenuItem("自動對齊");
+            autoAlignMenuItemPanel2 = new ToolStripMenuItem(LocalizationManager.GetString("AutoAlign"));
             autoAlignMenuItemPanel2.Click += AutoAlignMenuItem_Click_Panel2;
-            saveSampleMenuItemPanel2 = new ToolStripMenuItem("添加樣例到庫");
+            saveSampleMenuItemPanel2 = new ToolStripMenuItem(LocalizationManager.GetString("AddSampleToLibrary"));
             saveSampleMenuItemPanel2.Click += SaveSampleMenuItem_Click_Panel2;
             contextMenuStripPanel2.Items.Add(autoAlignMenuItemPanel2);
             contextMenuStripPanel2.Items.Add(deleteMenuItemPanel2);
@@ -294,6 +297,16 @@ namespace _4._18
             {
                 labelHelp.Width = helpButtonWidth;
             }
+
+            labelSettings.BringToFront();
+            int settingsButtonWidth = TextRenderer.MeasureText(labelSettings.Text, labelSettings.Font).Width + 12;
+            if (labelSettings.Width < settingsButtonWidth)
+            {
+                labelSettings.Width = settingsButtonWidth;
+            }
+
+            // 應用本地化
+            ApplyLocalization();
         }
 
         /// <summary>
@@ -326,6 +339,154 @@ namespace _4._18
                 dialog.StartPosition = FormStartPosition.CenterParent;
                 dialog.ShowDialog(this);
             }
+        }
+
+        private void labelSettings_Click(object sender, EventArgs e)
+        {
+            ShowSettingsDialog();
+        }
+
+        /// <summary>
+        /// 顯示設置對話框
+        /// </summary>
+        private void ShowSettingsDialog()
+        {
+            using (Form settingsForm = new Form())
+            {
+                settingsForm.Text = LocalizationManager.GetString("SettingsTitle");
+                settingsForm.StartPosition = FormStartPosition.CenterParent;
+                settingsForm.Width = 400;
+                settingsForm.Height = 200;
+                settingsForm.FormBorderStyle = FormBorderStyle.FixedDialog;
+                settingsForm.MaximizeBox = false;
+                settingsForm.MinimizeBox = false;
+
+                Label langLabel = new Label()
+                {
+                    Text = LocalizationManager.GetString("LanguageLabel"),
+                    Left = 20,
+                    Top = 25,
+                    Width = 160,
+                    Font = new Font("Microsoft YaHei UI", 10F),
+                    TextAlign = ContentAlignment.MiddleLeft
+                };
+
+                ComboBox langCombo = new ComboBox()
+                {
+                    Left = 180,
+                    Top = 23,
+                    Width = 180,
+                    Font = new Font("Microsoft YaHei UI", 10F),
+                    DropDownStyle = ComboBoxStyle.DropDownList
+                };
+                langCombo.Items.Add("繁體中文");
+                langCombo.Items.Add("简体中文");
+                langCombo.Items.Add("English");
+
+                // 設置當前選中項
+                switch (LocalizationManager.CurrentLanguage)
+                {
+                    case Language.TraditionalChinese: langCombo.SelectedIndex = 0; break;
+                    case Language.SimplifiedChinese: langCombo.SelectedIndex = 1; break;
+                    case Language.English: langCombo.SelectedIndex = 2; break;
+                }
+
+                Button okButton = new Button()
+                {
+                    Text = LocalizationManager.GetString("OK"),
+                    Left = 100,
+                    Top = 90,
+                    Width = 100,
+                    Height = 40,
+                    Font = new Font("Microsoft YaHei UI", 10F)
+                };
+                okButton.Click += (s, ev) =>
+                {
+                    settingsForm.DialogResult = DialogResult.OK;
+                    settingsForm.Close();
+                };
+
+                Button cancelButton = new Button()
+                {
+                    Text = LocalizationManager.GetString("Cancel"),
+                    Left = 210,
+                    Top = 90,
+                    Width = 100,
+                    Height = 40,
+                    Font = new Font("Microsoft YaHei UI", 10F)
+                };
+                cancelButton.Click += (s, ev) =>
+                {
+                    settingsForm.DialogResult = DialogResult.Cancel;
+                    settingsForm.Close();
+                };
+
+                settingsForm.AcceptButton = okButton;
+                settingsForm.CancelButton = cancelButton;
+                settingsForm.Controls.Add(langLabel);
+                settingsForm.Controls.Add(langCombo);
+                settingsForm.Controls.Add(okButton);
+                settingsForm.Controls.Add(cancelButton);
+
+                if (settingsForm.ShowDialog(this) == DialogResult.OK)
+                {
+                    Language selectedLang;
+                    switch (langCombo.SelectedIndex)
+                    {
+                        case 1: selectedLang = Language.SimplifiedChinese; break;
+                        case 2: selectedLang = Language.English; break;
+                        default: selectedLang = Language.TraditionalChinese; break;
+                    }
+
+                    if (selectedLang != LocalizationManager.CurrentLanguage)
+                    {
+                        LocalizationManager.SetLanguage(selectedLang);
+                        ApplyLocalization();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 應用本地化字符串到所有 UI 控件
+        /// </summary>
+        private void ApplyLocalization()
+        {
+            // 主窗體標題
+            this.Text = LocalizationManager.GetString("FormTitle") + "                           ";
+
+            // 頂部標籤
+            label1.Text = LocalizationManager.GetString("DeviceSelection");
+            label3.Text = LocalizationManager.GetString("TagManagement");
+            label4.Text = LocalizationManager.GetString("BOPConfig");
+            label2.Text = LocalizationManager.GetString("SavedTemplates");
+            checkBox1.Text = LocalizationManager.GetString("UseUncoloredDevice");
+            labelHelp.Text = LocalizationManager.GetString("Help");
+            labelSettings.Text = LocalizationManager.GetString("Settings");
+
+            // Panel2 右鍵菜單
+            deleteMenuItemPanel2.Text = LocalizationManager.GetString("Delete");
+            autoCaptureMenuItemPanel2.Text = LocalizationManager.GetString("AutoCapture");
+            captureMenuItemPanel2.Text = LocalizationManager.GetString("Capture");
+            clearCanvasMenuItemPanel2.Text = LocalizationManager.GetString("ClearCanvas");
+            openSampleMenuItemPanel2.Text = LocalizationManager.GetString("OpenSample");
+            autoAlignMenuItemPanel2.Text = LocalizationManager.GetString("AutoAlign");
+            saveSampleMenuItemPanel2.Text = LocalizationManager.GetString("AddSampleToLibrary");
+
+            // ListBox1 右鍵菜單
+            addDeviceMenuItemListBox1.Text = LocalizationManager.GetString("AddCustomDevice");
+            deleteMenuItemListBox1.Text = LocalizationManager.GetString("DeleteCurrentDevice");
+
+            // 模板樹右鍵菜單
+            menuItemDelete.Text = LocalizationManager.GetString("Delete");
+            menuItemRename.Text = LocalizationManager.GetString("Rename");
+            menuItemAddFolder.Text = LocalizationManager.GetString("AddFolder");
+            menuItemAddSubFolder.Text = LocalizationManager.GetString("AddSubFolder");
+            menuItemAddToLibrary.Text = LocalizationManager.GetString("AddDeviceToLibrary");
+            menuItemAddToFolder.Text = LocalizationManager.GetString("AddDeviceToFolder");
+
+            // 重新調整按鈕佈局
+            AdjustHelpButtonLayout();
         }
         private void Panel2_MouseWheel(object sender, MouseEventArgs e)
         {
@@ -641,7 +802,7 @@ namespace _4._18
                     }
                     else
                     {
-                        MessageBox.Show("圖片文件不存在。", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(LocalizationManager.GetString("ImageNotExist"), LocalizationManager.GetString("Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
 
                 }
@@ -708,6 +869,7 @@ namespace _4._18
                 return;
             }
 
+            // 幫助按鈕
             labelHelp.Font = label4.Font;
             labelHelp.Height = label4.Height;
             labelHelp.Top = label4.Top;
@@ -715,13 +877,30 @@ namespace _4._18
             labelHelp.ForeColor = label4.ForeColor;
             labelHelp.TextAlign = label4.TextAlign;
 
-            int textWidth = TextRenderer.MeasureText(labelHelp.Text, labelHelp.Font, new Size(int.MaxValue, labelHelp.Height), TextFormatFlags.SingleLine).Width;
-            int targetWidth = textWidth + 32;
-            labelHelp.Width = Math.Max(labelHelp.Width, targetWidth);
+            int helpTextWidth = TextRenderer.MeasureText(labelHelp.Text, labelHelp.Font, new Size(int.MaxValue, labelHelp.Height), TextFormatFlags.SingleLine).Width;
+            int helpTargetWidth = helpTextWidth + 32;
+            labelHelp.Width = Math.Max(60, helpTargetWidth);
             labelHelp.Left = (panel2Container != null)
                 ? panel2Container.Right - labelHelp.Width
                 : label4.Right + 4;
             labelHelp.BringToFront();
+
+            // 設置按鈕 - 在幫助按鈕左邊
+            if (labelSettings != null)
+            {
+                labelSettings.Font = label4.Font;
+                labelSettings.Height = label4.Height;
+                labelSettings.Top = label4.Top;
+                labelSettings.BackColor = label4.BackColor;
+                labelSettings.ForeColor = label4.ForeColor;
+                labelSettings.TextAlign = label4.TextAlign;
+
+                int settingsTextWidth = TextRenderer.MeasureText(labelSettings.Text, labelSettings.Font, new Size(int.MaxValue, labelSettings.Height), TextFormatFlags.SingleLine).Width;
+                int settingsTargetWidth = settingsTextWidth + 32;
+                labelSettings.Width = Math.Max(60, settingsTargetWidth);
+                labelSettings.Left = labelHelp.Left - labelSettings.Width - 4;
+                labelSettings.BringToFront();
+            }
         }
 
         /// <summary>
@@ -779,7 +958,7 @@ namespace _4._18
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"發生錯誤：{ex.Message}", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(LocalizationManager.GetString("ErrorOccurred", ex.Message), LocalizationManager.GetString("Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -789,6 +968,14 @@ namespace _4._18
         public void StartCapture()
         {
             CaptureMenuItem_Click_Panel2(null, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// 公開方法 - 自動截圖（供自定義控件調用）
+        /// </summary>
+        public void StartAutoCapture()
+        {
+            autoCaptureManager?.Execute();
         }
 
         /// <summary>
@@ -1024,7 +1211,7 @@ namespace _4._18
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"刪除文件失敗：{ex.Message}", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(LocalizationManager.GetString("DeleteFileFailed", ex.Message), LocalizationManager.GetString("Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
 
@@ -1041,8 +1228,8 @@ namespace _4._18
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                openFileDialog.Filter = "图像文件|*.jpg;*.jpeg;*.png;*.bmp;*.gif;*.svg";
-                openFileDialog.Title = "选择自繪裝置";
+                openFileDialog.Filter = LocalizationManager.GetString("ImageFileFilter");
+                openFileDialog.Title = LocalizationManager.GetString("SelectCustomDevice");
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
@@ -1675,10 +1862,11 @@ namespace _4._18
         /// </summary>
         private void MenuItemAddFolder_Click(object sender, EventArgs e)
         {
-            TemplateTreeNodeData newFolder = new TemplateTreeNodeData("新資料夾");
+            string folderName = LocalizationManager.GetString("NewFolder");
+            TemplateTreeNodeData newFolder = new TemplateTreeNodeData(folderName);
             templateLibraryData.Add(newFolder);
 
-            TreeNode newNode = new TreeNode("新資料夾");
+            TreeNode newNode = new TreeNode(folderName);
             newNode.Tag = newFolder;
             treeViewTemplates.Nodes.Add(newNode);
             treeViewTemplates.SelectedNode = newNode;
@@ -1698,10 +1886,11 @@ namespace _4._18
                 TemplateTreeNodeData parentData = selectedNode.Tag as TemplateTreeNodeData;
                 if (parentData != null && parentData.IsFolder)
                 {
-                    TemplateTreeNodeData newFolder = new TemplateTreeNodeData("新子資料夾");
+                    string subFolderName = LocalizationManager.GetString("NewSubFolder");
+                    TemplateTreeNodeData newFolder = new TemplateTreeNodeData(subFolderName);
                     parentData.Children.Add(newFolder);
 
-                    TreeNode newNode = new TreeNode("新子資料夾");
+                    TreeNode newNode = new TreeNode(subFolderName);
                     newNode.Tag = newFolder;
                     selectedNode.Nodes.Add(newNode);
                     selectedNode.Expand();
@@ -1780,10 +1969,10 @@ namespace _4._18
             {
                 TemplateTreeNodeData nodeData = selectedNode.Tag as TemplateTreeNodeData;
                 string message = nodeData.IsFolder ?
-                    $"確定要刪除資料夾「{selectedNode.Text}」及其所有內容嗎？" :
-                    $"確定要刪除模板「{selectedNode.Text}」嗎？";
+                    LocalizationManager.GetString("ConfirmDeleteFolder", selectedNode.Text) :
+                    LocalizationManager.GetString("ConfirmDeleteTemplate", selectedNode.Text);
 
-                if (MessageBox.Show(message, "確認刪除", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                if (MessageBox.Show(message, LocalizationManager.GetString("ConfirmDelete"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     // 從數據結構中移除
                     if (selectedNode.Parent == null)

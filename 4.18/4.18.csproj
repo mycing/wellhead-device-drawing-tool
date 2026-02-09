@@ -152,6 +152,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Device.cs" />
+    <Compile Include="LocalizationManager.cs" />
     <Compile Include="DrawstringPanel.cs">
       <SubType>Component</SubType>
     </Compile>

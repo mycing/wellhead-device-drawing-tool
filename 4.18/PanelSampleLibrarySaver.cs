@@ -35,14 +35,14 @@ namespace _4._18
                 inputForm.Location = new Point(500, 300);
                 inputForm.Width = 500;
                 inputForm.Height = 450;
-                inputForm.Text = "保存模板到庫";
+                inputForm.Text = LocalizationManager.GetString("SaveTemplateTitle");
 
                 // 標籤：選擇目標資料夾
                 Label labelFolder = new Label()
                 {
                     Left = 10,
                     Top = 10,
-                    Text = "選擇目標資料夾（不選擇則保存為根節點）：",
+                    Text = LocalizationManager.GetString("SelectTargetFolder"),
                     Width = 460,
                     Font = new Font("Microsoft YaHei UI", 10F)
                 };
@@ -76,7 +76,7 @@ namespace _4._18
                 {
                     Left = 10,
                     Top = 300,
-                    Text = "模板名稱：",
+                    Text = LocalizationManager.GetString("TemplateName"),
                     Width = 80,
                     Font = new Font("Microsoft YaHei UI", 10F)
                 };
@@ -91,77 +91,93 @@ namespace _4._18
 
                 Button confirmation = new Button()
                 {
-                    Text = "保存",
+                    Text = LocalizationManager.GetString("Save"),
                     Left = 10,
-                    Width = 460,
+                    Width = 225,
                     Top = 340,
                     Height = 40,
                     Font = new Font("Microsoft YaHei UI", 10F)
                 };
-                confirmation.Click += (s, ev) => { inputForm.DialogResult = DialogResult.OK; inputForm.Close(); };
+                confirmation.Click += (s, ev) =>
+                {
+                    if (string.IsNullOrEmpty(textBox.Text))
+                    {
+                        MessageBox.Show(inputForm, LocalizationManager.GetString("TemplateNameEmpty"), LocalizationManager.GetString("Error"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        textBox.Focus();
+                        return;
+                    }
+                    inputForm.DialogResult = DialogResult.OK;
+                    inputForm.Close();
+                };
+
+                Button cancelButton = new Button()
+                {
+                    Text = LocalizationManager.GetString("Cancel"),
+                    Left = 245,
+                    Width = 225,
+                    Top = 340,
+                    Height = 40,
+                    Font = new Font("Microsoft YaHei UI", 10F)
+                };
+                cancelButton.Click += (s, ev) => { inputForm.DialogResult = DialogResult.Cancel; inputForm.Close(); };
 
                 inputForm.AcceptButton = confirmation;
+                inputForm.CancelButton = cancelButton;
                 inputForm.Controls.Add(labelFolder);
                 inputForm.Controls.Add(folderTree);
                 inputForm.Controls.Add(labelName);
                 inputForm.Controls.Add(textBox);
                 inputForm.Controls.Add(confirmation);
+                inputForm.Controls.Add(cancelButton);
 
                 if (inputForm.ShowDialog(owner) == DialogResult.OK)
                 {
                     string templateName = textBox.Text;
-                    if (!string.IsNullOrEmpty(templateName))
+                    List<PanelInfo> panelInfos = _panelManager.SaveAllPanels();
+                    TemplateTreeNodeData newTemplate = new TemplateTreeNodeData(templateName, panelInfos);
+
+                    if (folderTree.SelectedNode != null)
                     {
-                        List<PanelInfo> panelInfos = _panelManager.SaveAllPanels();
-                        TemplateTreeNodeData newTemplate = new TemplateTreeNodeData(templateName, panelInfos);
+                        // 保存到選中的節點作為子節點
+                        TemplateTreeNodeData parentData = folderTree.SelectedNode.Tag as TemplateTreeNodeData;
 
-                        if (folderTree.SelectedNode != null)
+                        if (parentData != null)
                         {
-                            // 保存到選中的節點作為子節點
-                            TemplateTreeNodeData parentData = folderTree.SelectedNode.Tag as TemplateTreeNodeData;
+                            parentData.Children.Add(newTemplate);
 
-                            if (parentData != null)
+                            // 在主 TreeView 中找到對應的節點並添加
+                            TreeNode parentNode = FindNodeByPath(_treeView.Nodes, folderTree.SelectedNode.FullPath, folderTree.PathSeparator);
+                            if (parentNode == null || parentNode.Tag != parentData)
                             {
-                                parentData.Children.Add(newTemplate);
-
-                                // 在主 TreeView 中找到對應的節點並添加
-                                TreeNode parentNode = FindNodeByPath(_treeView.Nodes, folderTree.SelectedNode.FullPath, folderTree.PathSeparator);
-                                if (parentNode == null || parentNode.Tag != parentData)
-                                {
-                                    parentNode = FindNodeByData(_treeView.Nodes, parentData);
-                                }
-                                if (parentNode != null)
-                                {
-                                    TreeNode newNode = new TreeNode(templateName);
-                                    newNode.Tag = newTemplate;
-                                    parentNode.Nodes.Add(newNode);
-                                    parentNode.Expand();
-                                }
+                                parentNode = FindNodeByData(_treeView.Nodes, parentData);
                             }
-                            else
+                            if (parentNode != null)
                             {
-                                // 無法定位父節點則保存為根節點
-                                _templateLibraryData.Add(newTemplate);
                                 TreeNode newNode = new TreeNode(templateName);
                                 newNode.Tag = newTemplate;
-                                _treeView.Nodes.Add(newNode);
+                                parentNode.Nodes.Add(newNode);
+                                parentNode.Expand();
                             }
                         }
                         else
                         {
-                            // 未選擇則保存為根節點
+                            // 無法定位父節點則保存為根節點
                             _templateLibraryData.Add(newTemplate);
                             TreeNode newNode = new TreeNode(templateName);
                             newNode.Tag = newTemplate;
                             _treeView.Nodes.Add(newNode);
                         }
-
-                        _saveAction?.Invoke();
                     }
                     else
                     {
-                        MessageBox.Show("模板名稱不能為空。", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        // 未選擇則保存為根節點
+                        _templateLibraryData.Add(newTemplate);
+                        TreeNode newNode = new TreeNode(templateName);
+                        newNode.Tag = newTemplate;
+                        _treeView.Nodes.Add(newNode);
                     }
+
+                    _saveAction?.Invoke();
                 }
             }
         }
@@ -177,13 +193,13 @@ namespace _4._18
                 inputForm.Location = new Point(500, 300);
                 inputForm.Width = 400;
                 inputForm.Height = 180;
-                inputForm.Text = $"保存到「{parentNode.Text}」";
+                inputForm.Text = LocalizationManager.GetString("SaveToFolder", parentNode.Text);
 
                 Label label = new Label()
                 {
                     Left = 10,
                     Top = 20,
-                    Text = "模板名稱：",
+                    Text = LocalizationManager.GetString("TemplateName"),
                     Width = 80,
                     Font = new Font("Microsoft YaHei UI", 10F)
                 };
@@ -198,43 +214,59 @@ namespace _4._18
 
                 Button confirmation = new Button()
                 {
-                    Text = "保存",
+                    Text = LocalizationManager.GetString("Save"),
                     Left = 10,
-                    Width = 360,
+                    Width = 175,
                     Top = 70,
                     Height = 40,
                     Font = new Font("Microsoft YaHei UI", 10F)
                 };
-                confirmation.Click += (s, ev) => { inputForm.DialogResult = DialogResult.OK; inputForm.Close(); };
+                confirmation.Click += (s, ev) =>
+                {
+                    if (string.IsNullOrEmpty(textBox.Text))
+                    {
+                        MessageBox.Show(inputForm, LocalizationManager.GetString("TemplateNameEmpty"), LocalizationManager.GetString("Error"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        textBox.Focus();
+                        return;
+                    }
+                    inputForm.DialogResult = DialogResult.OK;
+                    inputForm.Close();
+                };
+
+                Button cancelButton = new Button()
+                {
+                    Text = LocalizationManager.GetString("Cancel"),
+                    Left = 195,
+                    Width = 175,
+                    Top = 70,
+                    Height = 40,
+                    Font = new Font("Microsoft YaHei UI", 10F)
+                };
+                cancelButton.Click += (s, ev) => { inputForm.DialogResult = DialogResult.Cancel; inputForm.Close(); };
 
                 inputForm.AcceptButton = confirmation;
+                inputForm.CancelButton = cancelButton;
                 inputForm.Controls.Add(label);
                 inputForm.Controls.Add(textBox);
                 inputForm.Controls.Add(confirmation);
+                inputForm.Controls.Add(cancelButton);
 
                 if (inputForm.ShowDialog(owner) == DialogResult.OK)
                 {
                     string templateName = textBox.Text;
-                    if (!string.IsNullOrEmpty(templateName))
-                    {
-                        List<PanelInfo> panelInfos = _panelManager.SaveAllPanels();
-                        TemplateTreeNodeData newTemplate = new TemplateTreeNodeData(templateName, panelInfos);
+                    List<PanelInfo> panelInfos = _panelManager.SaveAllPanels();
+                    TemplateTreeNodeData newTemplate = new TemplateTreeNodeData(templateName, panelInfos);
 
-                        // 添加到數據結構
-                        parentData.Children.Add(newTemplate);
+                    // 添加到數據結構
+                    parentData.Children.Add(newTemplate);
 
-                        // 添加到 TreeView
-                        TreeNode newNode = new TreeNode(templateName);
-                        newNode.Tag = newTemplate;
-                        parentNode.Nodes.Add(newNode);
-                        parentNode.Expand();
+                    // 添加到 TreeView
+                    TreeNode newNode = new TreeNode(templateName);
+                    newNode.Tag = newTemplate;
+                    parentNode.Nodes.Add(newNode);
+                    parentNode.Expand();
 
-                        _saveAction?.Invoke();
-                    }
-                    else
-                    {
-                        MessageBox.Show("模板名稱不能為空。", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
+                    _saveAction?.Invoke();
                 }
             }
         }

@@ -54,6 +54,7 @@ app.publish/
 *.idb
 *.ilk
 *.log
+language.conf
 
 # Rider
 .idea/
