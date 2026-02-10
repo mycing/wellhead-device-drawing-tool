@@ -108,10 +108,7 @@ namespace _4._18
         private ContextMenuStrip contextMenuTemplates;
         private ToolStripMenuItem menuItemDelete;
         private ToolStripMenuItem menuItemRename;
-        private ToolStripMenuItem menuItemAddFolder;
-        private ToolStripMenuItem menuItemAddSubFolder;
         private ToolStripMenuItem menuItemAddToLibrary;
-        private ToolStripMenuItem menuItemAddToFolder;
 
         //listBox1 右鍵菜單
         private ContextMenuStrip contextMenuStripListBox1;
@@ -150,6 +147,7 @@ namespace _4._18
 
         //5.7 設置svg公共變量用於存儲與getimage相同的需要繪製的圖片
         public byte[] SvgData;
+        private bool _useUncoloredDevices = true;
 
         //創建panelmanager管理類
         private PanelManager _panelManager;
@@ -178,12 +176,12 @@ namespace _4._18
             toolTip.Popup += ToolTip_Popup;
 
             custom_device = new List<string>();
-            checkBox1.Checked = true;
-            //在窗體加載時在listbox1中加載Device類中已加載寫好的默認裝置
+            _useUncoloredDevices = true;
+            //在窗體加載時在listbox1中加載本地化裝置名稱
             Device alldevice = new Device();
-            foreach (string device in alldevice.Defult_device)
+            foreach (string name in LocalizationManager.GetAllDeviceNames())
             {
-                listBox1.Items.Add(device);
+                listBox1.Items.Add(name);
             }
 
             // 检查文件夹是否存在，如果不存在则创建它
@@ -216,24 +214,16 @@ namespace _4._18
 
             //3.31 treeViewTemplates 右鍵菜單
             contextMenuTemplates = new ContextMenuStrip();
-            menuItemDelete = new ToolStripMenuItem(LocalizationManager.GetString("Delete"));
-            menuItemDelete.Click += MenuItemDelete_Click;
+            menuItemAddToLibrary = new ToolStripMenuItem(LocalizationManager.GetString("AddSampleToLibrary"));
+            menuItemAddToLibrary.Click += MenuItemAddToLibrary_Click;
             menuItemRename = new ToolStripMenuItem(LocalizationManager.GetString("Rename"));
             menuItemRename.Click += MenuItemRename_Click;
-            menuItemAddFolder = new ToolStripMenuItem(LocalizationManager.GetString("AddFolder"));
-            menuItemAddFolder.Click += MenuItemAddFolder_Click;
-            menuItemAddSubFolder = new ToolStripMenuItem(LocalizationManager.GetString("AddSubFolder"));
-            menuItemAddSubFolder.Click += MenuItemAddSubFolder_Click;
-            menuItemAddToLibrary = new ToolStripMenuItem(LocalizationManager.GetString("AddDeviceToLibrary"));
-            menuItemAddToLibrary.Click += MenuItemAddToLibrary_Click;
-            menuItemAddToFolder = new ToolStripMenuItem(LocalizationManager.GetString("AddDeviceToFolder"));
-            menuItemAddToFolder.Click += MenuItemAddToFolder_Click;
-            contextMenuTemplates.Items.Add(menuItemAddFolder);
-            contextMenuTemplates.Items.Add(menuItemAddSubFolder);
+            menuItemDelete = new ToolStripMenuItem(LocalizationManager.GetString("Delete"));
+            menuItemDelete.Click += MenuItemDelete_Click;
             contextMenuTemplates.Items.Add(menuItemAddToLibrary);
-            contextMenuTemplates.Items.Add(menuItemAddToFolder);
             contextMenuTemplates.Items.Add(menuItemRename);
             contextMenuTemplates.Items.Add(menuItemDelete);
+            MenuStyleHelper.Apply(contextMenuTemplates);
 
 
             //listBox1 右鍵菜單：添加自繪裝置和刪除用戶自定義裝置
@@ -244,6 +234,7 @@ namespace _4._18
             deleteMenuItemListBox1.Click += DeleteMenuItem_Click_ListBox1;
             contextMenuStripListBox1.Items.Add(addDeviceMenuItemListBox1);
             contextMenuStripListBox1.Items.Add(deleteMenuItemListBox1);
+            MenuStyleHelper.Apply(contextMenuStripListBox1);
 
             //panel2 右鍵菜單：自動截圖、截圖、清空畫布、打開裝置樣例、自動對齊、刪除
             contextMenuStripPanel2 = new ContextMenuStrip();
@@ -290,13 +281,12 @@ namespace _4._18
 
             // 訂閱 tagTreeUserControl1 的節點選中事件
             tagTreeUserControl1.NodeSelected += TagTreeUserControl1_NodeSelected;
-
-            labelHelp.BringToFront();
-            int helpButtonWidth = TextRenderer.MeasureText(labelHelp.Text, labelHelp.Font).Width + 12;
-            if (labelHelp.Width < helpButtonWidth)
-            {
-                labelHelp.Width = helpButtonWidth;
-            }
+            // 訂閱 tagTreeUserControl1 的 MouseMove 事件，用於維持預覽圖片
+            tagTreeUserControl1.TreeViewMouseMove += TagTreeUserControl1_MouseMove;
+            // 訂閱 tagTreeUserControl1 的 MouseDown 事件，用於右鍵取消預覽和選定
+            tagTreeUserControl1.TreeViewMouseDown += TagTreeUserControl1_MouseDown;
+            // 補充 treeViewTemplates 的 MouseDown 事件訂閱
+            treeViewTemplates.MouseDown += treeViewTemplates_MouseDown;
 
             labelSettings.BringToFront();
             int settingsButtonWidth = TextRenderer.MeasureText(labelSettings.Text, labelSettings.Font).Width + 12;
@@ -332,15 +322,6 @@ namespace _4._18
             tagTreeUserControl1.ApplyFilter(textBoxTagSearch.Text);
         }
 
-        private void labelHelp_Click(object sender, EventArgs e)
-        {
-            using (HelpDialog dialog = new HelpDialog())
-            {
-                dialog.StartPosition = FormStartPosition.CenterParent;
-                dialog.ShowDialog(this);
-            }
-        }
-
         private void labelSettings_Click(object sender, EventArgs e)
         {
             ShowSettingsDialog();
@@ -356,7 +337,7 @@ namespace _4._18
                 settingsForm.Text = LocalizationManager.GetString("SettingsTitle");
                 settingsForm.StartPosition = FormStartPosition.CenterParent;
                 settingsForm.Width = 400;
-                settingsForm.Height = 200;
+                settingsForm.Height = 250;
                 settingsForm.FormBorderStyle = FormBorderStyle.FixedDialog;
                 settingsForm.MaximizeBox = false;
                 settingsForm.MinimizeBox = false;
@@ -368,7 +349,7 @@ namespace _4._18
                     Top = 25,
                     Width = 160,
                     Font = new Font("Microsoft YaHei UI", 10F),
-                    TextAlign = ContentAlignment.MiddleLeft
+                    TextAlign = System.Drawing.ContentAlignment.MiddleLeft
                 };
 
                 ComboBox langCombo = new ComboBox()
@@ -379,27 +360,67 @@ namespace _4._18
                     Font = new Font("Microsoft YaHei UI", 10F),
                     DropDownStyle = ComboBoxStyle.DropDownList
                 };
-                langCombo.Items.Add("繁體中文");
-                langCombo.Items.Add("简体中文");
                 langCombo.Items.Add("English");
+                langCombo.Items.Add("简体中文");
+                langCombo.Items.Add("繁體中文");
+                langCombo.Items.Add("Español");
+                langCombo.Items.Add("Français");
+                langCombo.Items.Add("Português");
+                langCombo.Items.Add("Русский");
+                langCombo.Items.Add("فارسی");
+                langCombo.Items.Add("Norsk");
+                langCombo.Items.Add("العربية");
 
                 // 設置當前選中項
                 switch (LocalizationManager.CurrentLanguage)
                 {
-                    case Language.TraditionalChinese: langCombo.SelectedIndex = 0; break;
+                    case Language.English: langCombo.SelectedIndex = 0; break;
                     case Language.SimplifiedChinese: langCombo.SelectedIndex = 1; break;
-                    case Language.English: langCombo.SelectedIndex = 2; break;
+                    case Language.TraditionalChinese: langCombo.SelectedIndex = 2; break;
+                    case Language.Spanish: langCombo.SelectedIndex = 3; break;
+                    case Language.French: langCombo.SelectedIndex = 4; break;
+                    case Language.Portuguese: langCombo.SelectedIndex = 5; break;
+                    case Language.Russian: langCombo.SelectedIndex = 6; break;
+                    case Language.Persian: langCombo.SelectedIndex = 7; break;
+                    case Language.Norwegian: langCombo.SelectedIndex = 8; break;
+                    case Language.Arabic: langCombo.SelectedIndex = 9; break;
                 }
+
+                Label uncolorLabel = new Label()
+                {
+                    Text = LocalizationManager.GetString("UseUncoloredDeviceLabel"),
+                    Left = 20,
+                    Top = 65,
+                    Width = 160,
+                    Font = new Font("Microsoft YaHei UI", 10F),
+                    TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+                };
+
+                ComboBox uncolorCombo = new ComboBox()
+                {
+                    Left = 180,
+                    Top = 63,
+                    Width = 180,
+                    Font = new Font("Microsoft YaHei UI", 10F),
+                    DropDownStyle = ComboBoxStyle.DropDownList
+                };
+                uncolorCombo.Items.Add(LocalizationManager.GetString("UseColoredDevice"));
+                uncolorCombo.Items.Add(LocalizationManager.GetString("UseUncoloredDevice"));
+                uncolorCombo.SelectedIndex = _useUncoloredDevices ? 1 : 0;
 
                 Button okButton = new Button()
                 {
                     Text = LocalizationManager.GetString("OK"),
-                    Left = 100,
-                    Top = 90,
-                    Width = 100,
-                    Height = 40,
-                    Font = new Font("Microsoft YaHei UI", 10F)
+                    Left = 20,
+                    Top = 110,
+                    Width = 167,
+                    Height = 38,
+                    Font = new Font("Microsoft YaHei UI", 10F),
+                    FlatStyle = FlatStyle.Flat,
+                    BackColor = Color.FromArgb(60, 63, 70),
+                    ForeColor = Color.White
                 };
+                okButton.FlatAppearance.BorderSize = 0;
                 okButton.Click += (s, ev) =>
                 {
                     settingsForm.DialogResult = DialogResult.OK;
@@ -409,33 +430,65 @@ namespace _4._18
                 Button cancelButton = new Button()
                 {
                     Text = LocalizationManager.GetString("Cancel"),
-                    Left = 210,
-                    Top = 90,
-                    Width = 100,
-                    Height = 40,
-                    Font = new Font("Microsoft YaHei UI", 10F)
+                    Left = 193,
+                    Top = 110,
+                    Width = 167,
+                    Height = 38,
+                    Font = new Font("Microsoft YaHei UI", 10F),
+                    FlatStyle = FlatStyle.Flat
                 };
+                cancelButton.FlatAppearance.BorderColor = Color.FromArgb(180, 184, 190);
                 cancelButton.Click += (s, ev) =>
                 {
                     settingsForm.DialogResult = DialogResult.Cancel;
                     settingsForm.Close();
                 };
 
+                LinkLabel helpLink = new LinkLabel()
+                {
+                    Text = LocalizationManager.GetString("Help"),
+                    Font = new Font("Microsoft YaHei UI", 9F),
+                    AutoSize = true,
+                    Top = 162,
+                    LinkColor = Color.FromArgb(100, 100, 100),
+                    ActiveLinkColor = Color.FromArgb(60, 63, 70)
+                };
+                helpLink.Left = (settingsForm.ClientSize.Width - helpLink.PreferredWidth) / 2;
+                helpLink.Click += (s, ev) =>
+                {
+                    using (HelpDialog dialog = new HelpDialog())
+                    {
+                        dialog.StartPosition = FormStartPosition.CenterParent;
+                        dialog.ShowDialog(settingsForm);
+                    }
+                };
+
                 settingsForm.AcceptButton = okButton;
                 settingsForm.CancelButton = cancelButton;
                 settingsForm.Controls.Add(langLabel);
                 settingsForm.Controls.Add(langCombo);
+                settingsForm.Controls.Add(uncolorLabel);
+                settingsForm.Controls.Add(uncolorCombo);
                 settingsForm.Controls.Add(okButton);
                 settingsForm.Controls.Add(cancelButton);
+                settingsForm.Controls.Add(helpLink);
 
                 if (settingsForm.ShowDialog(this) == DialogResult.OK)
                 {
                     Language selectedLang;
                     switch (langCombo.SelectedIndex)
                     {
+                        case 0: selectedLang = Language.English; break;
                         case 1: selectedLang = Language.SimplifiedChinese; break;
-                        case 2: selectedLang = Language.English; break;
-                        default: selectedLang = Language.TraditionalChinese; break;
+                        case 2: selectedLang = Language.TraditionalChinese; break;
+                        case 3: selectedLang = Language.Spanish; break;
+                        case 4: selectedLang = Language.French; break;
+                        case 5: selectedLang = Language.Portuguese; break;
+                        case 6: selectedLang = Language.Russian; break;
+                        case 7: selectedLang = Language.Persian; break;
+                        case 8: selectedLang = Language.Norwegian; break;
+                        case 9: selectedLang = Language.Arabic; break;
+                        default: selectedLang = Language.English; break;
                     }
 
                     if (selectedLang != LocalizationManager.CurrentLanguage)
@@ -443,6 +496,9 @@ namespace _4._18
                         LocalizationManager.SetLanguage(selectedLang);
                         ApplyLocalization();
                     }
+
+                    bool useUncolored = uncolorCombo.SelectedIndex == 1;
+                    _useUncoloredDevices = useUncolored;
                 }
             }
         }
@@ -460,8 +516,6 @@ namespace _4._18
             label3.Text = LocalizationManager.GetString("TagManagement");
             label4.Text = LocalizationManager.GetString("BOPConfig");
             label2.Text = LocalizationManager.GetString("SavedTemplates");
-            checkBox1.Text = LocalizationManager.GetString("UseUncoloredDevice");
-            labelHelp.Text = LocalizationManager.GetString("Help");
             labelSettings.Text = LocalizationManager.GetString("Settings");
 
             // Panel2 右鍵菜單
@@ -480,13 +534,54 @@ namespace _4._18
             // 模板樹右鍵菜單
             menuItemDelete.Text = LocalizationManager.GetString("Delete");
             menuItemRename.Text = LocalizationManager.GetString("Rename");
-            menuItemAddFolder.Text = LocalizationManager.GetString("AddFolder");
-            menuItemAddSubFolder.Text = LocalizationManager.GetString("AddSubFolder");
-            menuItemAddToLibrary.Text = LocalizationManager.GetString("AddDeviceToLibrary");
-            menuItemAddToFolder.Text = LocalizationManager.GetString("AddDeviceToFolder");
+            menuItemAddToLibrary.Text = LocalizationManager.GetString("AddSampleToLibrary");
+
+            // 標籤樹右鍵菜單
+            tagTreeUserControl1.ApplyLocalization();
+
+            RefreshDeviceList();
 
             // 重新調整按鈕佈局
             AdjustHelpButtonLayout();
+        }
+
+        private void RefreshDeviceList()
+        {
+            int selectedIndex = listBox1.SelectedIndex;
+            string selectedCustom = selectedIndex >= LocalizationManager.BuiltInDeviceCount && selectedIndex < listBox1.Items.Count
+                ? listBox1.SelectedItem?.ToString()
+                : null;
+
+            listBox1.BeginUpdate();
+            listBox1.Items.Clear();
+            foreach (string name in LocalizationManager.GetAllDeviceNames())
+            {
+                listBox1.Items.Add(name);
+            }
+            if (Custom_device != null)
+            {
+                foreach (var key in Custom_device.Keys)
+                {
+                    listBox1.Items.Add(key);
+                }
+            }
+            listBox1.EndUpdate();
+
+            if (selectedIndex >= 0)
+            {
+                if (selectedIndex < LocalizationManager.BuiltInDeviceCount)
+                {
+                    listBox1.SelectedIndex = selectedIndex;
+                }
+                else if (!string.IsNullOrEmpty(selectedCustom))
+                {
+                    int idx = listBox1.Items.IndexOf(selectedCustom);
+                    if (idx >= 0)
+                    {
+                        listBox1.SelectedIndex = idx;
+                    }
+                }
+            }
         }
         private void Panel2_MouseWheel(object sender, MouseEventArgs e)
         {
@@ -729,64 +824,65 @@ namespace _4._18
             tagTreeUserControl1.ClearSelection();
             if (listBox1.SelectedIndex != -1)
             {
-                if (listBox1.SelectedIndex <= 22)
+                int idx = listBox1.SelectedIndex;
+                if (idx < LocalizationManager.BuiltInDeviceCount)
                 {
-                    if (checkBox1.Checked == false)
+                    if (_useUncoloredDevices == false)
                     {
-                        switch (listBox1.SelectedItem.ToString())
+                        switch (idx)
                         {
-                            case "变径法兰": getImage = Properties.Resource.法兰; break;
-                            case "变压法兰": getImage = Properties.Resource.法兰; break;
-                            case "升高立管": getImage = Properties.Resource.升高立管; break;
-                            case "套管头": getImage = Properties.Resource.套管头; break;
-                            case "环形防喷器": getImage = Properties.Resource.万能防喷器; break;
-                            case "喇叭口": getImage = Properties.Resource.喇叭口; break;
-                            case "闸板防喷器": getImage = Properties.Resource.闸板防喷器; break;
-                            case "钻井四通": getImage = Properties.Resource.钻井四通; break;
-                            case "三层套管": getImage = Properties.Resource.三层套管; break;
-                            case "双层套管": getImage = Properties.Resource.双层套管; break;
-                            case "单层套管": getImage = Properties.Resource.单层套管; break;
-                            case "密封盘根升高短节": getImage = Properties.Resource.密封盘根升高短节; break;
-                            case "井口平台": getImage = Properties.Resource.井口平台; break;
-                            case "双闸板防喷器": getImage = Properties.Resource.双闸板防喷器; break;
-                            case "分流器": getImage = Properties.Resource.分流器; break;
-                            case "转盘面": getImage = Properties.Resource.转盘面; break;
-                            case "精细控压旋转控制头": getImage = Properties.Resource.旋转控制头; break;
-                            case "临时井口头": getImage = Properties.Resource.临时井口头; break;
-                            case "油管四通": getImage = Properties.Resource.油管四通; break;
-                            case "套管四通": getImage = Properties.Resource.油管四通; break;
-                            case "單筒雙井": getImage = Properties.Resource.單筒雙井; break;
-                            case "隔水導管": getImage = Properties.Resource.隔水導管; break;
-                            case "節流壓井管匯": getImage = Properties.Resource.節流壓井管匯; break;
+                            case 0:  getImage = Properties.Resource.转盘面; break;
+                            case 1:  getImage = Properties.Resource.喇叭口; break;
+                            case 2:  getImage = Properties.Resource.密封盘根升高短节; break;
+                            case 3:  getImage = Properties.Resource.旋转控制头; break;
+                            case 4:  getImage = Properties.Resource.临时井口头; break;
+                            case 5:  getImage = Properties.Resource.万能防喷器; break;
+                            case 6:  getImage = Properties.Resource.闸板防喷器; break;
+                            case 7:  getImage = Properties.Resource.双闸板防喷器; break;
+                            case 8:  getImage = Properties.Resource.钻井四通; break;
+                            case 9:  getImage = Properties.Resource.油管四通; break;
+                            case 10: getImage = Properties.Resource.油管四通; break;
+                            case 11: getImage = Properties.Resource.法兰; break;
+                            case 12: getImage = Properties.Resource.法兰; break;
+                            case 13: getImage = Properties.Resource.升高立管; break;
+                            case 14: getImage = Properties.Resource.套管头; break;
+                            case 15: getImage = Properties.Resource.井口平台; break;
+                            case 16: getImage = Properties.Resource.分流器; break;
+                            case 17: getImage = Properties.Resource.单层套管; break;
+                            case 18: getImage = Properties.Resource.双层套管; break;
+                            case 19: getImage = Properties.Resource.三层套管; break;
+                            case 20: getImage = Properties.Resource.單筒雙井; break;
+                            case 21: getImage = Properties.Resource.隔水導管; break;
+                            case 22: getImage = Properties.Resource.節流壓井管匯; break;
                         }
                     }
                     else
                     {
-                        switch (listBox1.SelectedItem.ToString())
+                        switch (idx)
                         {
-                            case "变径法兰": getImage = Properties.Resource.法蘭; SvgData = Properties.Resource.变径法兰; break;
-                            case "变压法兰": getImage = Properties.Resource.法蘭; SvgData = Properties.Resource.变径法兰; break;
-                            case "升高立管": getImage = Properties.Resource.升高1; SvgData = Properties.Resource.升高立管1; break;
-                            case "套管头": getImage = Properties.Resource.套管頭; SvgData = Properties.Resource.套管头1; break;
-                            case "环形防喷器": getImage = Properties.Resource.萬能; SvgData = Properties.Resource.环形防喷器; break;
-                            case "喇叭口": getImage = Properties.Resource.喇叭口1; SvgData = Properties.Resource.喇叭口2; break;
-                            case "闸板防喷器": getImage = Properties.Resource.閘板防噴器; SvgData = Properties.Resource.闸板防喷器1; break;
-                            case "钻井四通": getImage = Properties.Resource.鑽井四通; SvgData = Properties.Resource.钻井四通1; break;
-                            case "三层套管": getImage = Properties.Resource.三層套管; SvgData = Properties.Resource.三层套管1; break;
-                            case "双层套管": getImage = Properties.Resource.雙層套管; SvgData = Properties.Resource.双层套管1; break;
-                            case "单层套管": getImage = Properties.Resource.單層套管; SvgData = Properties.Resource.单层套管1; break;
-                            case "密封盘根升高短节": getImage = Properties.Resource.密封盤根升高短節; SvgData = Properties.Resource.密封盘根升高短节1; break;
-                            case "井口平台": getImage = Properties.Resource.井口平臺; SvgData = Properties.Resource.井口平台1; break;
-                            case "双闸板防喷器": getImage = Properties.Resource.雙閘版防噴器; SvgData = Properties.Resource.双闸板防喷器1; break;
-                            case "分流器": getImage = Properties.Resource.分流器11; SvgData = Properties.Resource.分流器2; break;
-                            case "转盘面": getImage = Properties.Resource.轉盤面; SvgData = Properties.Resource.转盘面1; break;
-                            case "精细控压旋转控制头": getImage = Properties.Resource.旋轉控制頭; SvgData = Properties.Resource.精细控压旋转控制头; break;
-                            case "临时井口头": getImage = Properties.Resource.臨時京口頭; SvgData = Properties.Resource.临时井口头1; break;
-                            case "油管四通": getImage = Properties.Resource.鑽井四通; SvgData = Properties.Resource.钻井四通1; break;
-                            case "套管四通": getImage = Properties.Resource.鑽井四通; SvgData = Properties.Resource.钻井四通1; break;
-                            case "單筒雙井": getImage = Properties.Resource.單筒雙井; SvgData = Properties.Resource.單筒雙井1; break;
-                            case "隔水導管": getImage = Properties.Resource.隔水導管; SvgData = Properties.Resource.隔水導管1; break;
-                            case "節流壓井管匯": getImage = Properties.Resource.節流壓井管匯; SvgData = Properties.Resource.变径法兰; break;
+                            case 0:  getImage = Properties.Resource.轉盤面; SvgData = Properties.Resource.转盘面1; break;
+                            case 1:  getImage = Properties.Resource.喇叭口1; SvgData = Properties.Resource.喇叭口2; break;
+                            case 2:  getImage = Properties.Resource.密封盤根升高短節; SvgData = Properties.Resource.密封盘根升高短节1; break;
+                            case 3:  getImage = Properties.Resource.旋轉控制頭; SvgData = Properties.Resource.精细控压旋转控制头; break;
+                            case 4:  getImage = Properties.Resource.臨時京口頭; SvgData = Properties.Resource.临时井口头1; break;
+                            case 5:  getImage = Properties.Resource.萬能; SvgData = Properties.Resource.环形防喷器; break;
+                            case 6:  getImage = Properties.Resource.閘板防噴器; SvgData = Properties.Resource.闸板防喷器1; break;
+                            case 7:  getImage = Properties.Resource.雙閘版防噴器; SvgData = Properties.Resource.双闸板防喷器1; break;
+                            case 8:  getImage = Properties.Resource.鑽井四通; SvgData = Properties.Resource.钻井四通1; break;
+                            case 9:  getImage = Properties.Resource.鑽井四通; SvgData = Properties.Resource.钻井四通1; break;
+                            case 10: getImage = Properties.Resource.鑽井四通; SvgData = Properties.Resource.钻井四通1; break;
+                            case 11: getImage = Properties.Resource.法蘭; SvgData = Properties.Resource.变径法兰; break;
+                            case 12: getImage = Properties.Resource.法蘭; SvgData = Properties.Resource.变径法兰; break;
+                            case 13: getImage = Properties.Resource.升高1; SvgData = Properties.Resource.升高立管1; break;
+                            case 14: getImage = Properties.Resource.套管頭; SvgData = Properties.Resource.套管头1; break;
+                            case 15: getImage = Properties.Resource.井口平臺; SvgData = Properties.Resource.井口平台1; break;
+                            case 16: getImage = Properties.Resource.分流器11; SvgData = Properties.Resource.分流器2; break;
+                            case 17: getImage = Properties.Resource.單層套管; SvgData = Properties.Resource.单层套管1; break;
+                            case 18: getImage = Properties.Resource.雙層套管; SvgData = Properties.Resource.双层套管1; break;
+                            case 19: getImage = Properties.Resource.三層套管; SvgData = Properties.Resource.三层套管1; break;
+                            case 20: getImage = Properties.Resource.單筒雙井; SvgData = Properties.Resource.單筒雙井1; break;
+                            case 21: getImage = Properties.Resource.隔水導管; SvgData = Properties.Resource.隔水導管1; break;
+                            case 22: getImage = Properties.Resource.節流壓井管匯; SvgData = Properties.Resource.变径法兰; break;
                         }
                     }
                 }
@@ -864,43 +960,25 @@ namespace _4._18
 
         private void AdjustHelpButtonLayout()
         {
-            if (labelHelp == null || label4 == null)
+            if (labelSettings == null || label4 == null)
             {
                 return;
             }
 
-            // 幫助按鈕
-            labelHelp.Font = label4.Font;
-            labelHelp.Height = label4.Height;
-            labelHelp.Top = label4.Top;
-            labelHelp.BackColor = label4.BackColor;
-            labelHelp.ForeColor = label4.ForeColor;
-            labelHelp.TextAlign = label4.TextAlign;
+            labelSettings.Font = label4.Font;
+            labelSettings.Height = label4.Height;
+            labelSettings.Top = label4.Top;
+            labelSettings.BackColor = label4.BackColor;
+            labelSettings.ForeColor = label4.ForeColor;
+            labelSettings.TextAlign = label4.TextAlign;
 
-            int helpTextWidth = TextRenderer.MeasureText(labelHelp.Text, labelHelp.Font, new Size(int.MaxValue, labelHelp.Height), TextFormatFlags.SingleLine).Width;
-            int helpTargetWidth = helpTextWidth + 32;
-            labelHelp.Width = Math.Max(60, helpTargetWidth);
-            labelHelp.Left = (panel2Container != null)
-                ? panel2Container.Right - labelHelp.Width
+            int settingsTextWidth = TextRenderer.MeasureText(labelSettings.Text, labelSettings.Font, new Size(int.MaxValue, labelSettings.Height), TextFormatFlags.SingleLine).Width;
+            int settingsTargetWidth = settingsTextWidth + 32;
+            labelSettings.Width = Math.Max(60, settingsTargetWidth);
+            labelSettings.Left = (panel2Container != null)
+                ? panel2Container.Right - labelSettings.Width
                 : label4.Right + 4;
-            labelHelp.BringToFront();
-
-            // 設置按鈕 - 在幫助按鈕左邊
-            if (labelSettings != null)
-            {
-                labelSettings.Font = label4.Font;
-                labelSettings.Height = label4.Height;
-                labelSettings.Top = label4.Top;
-                labelSettings.BackColor = label4.BackColor;
-                labelSettings.ForeColor = label4.ForeColor;
-                labelSettings.TextAlign = label4.TextAlign;
-
-                int settingsTextWidth = TextRenderer.MeasureText(labelSettings.Text, labelSettings.Font, new Size(int.MaxValue, labelSettings.Height), TextFormatFlags.SingleLine).Width;
-                int settingsTargetWidth = settingsTextWidth + 32;
-                labelSettings.Width = Math.Max(60, settingsTargetWidth);
-                labelSettings.Left = labelHelp.Left - labelSettings.Width - 4;
-                labelSettings.BringToFront();
-            }
+            labelSettings.BringToFront();
         }
 
         /// <summary>
@@ -1344,6 +1422,44 @@ namespace _4._18
             }
         }
 
+        private void TagTreeUserControl1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isrightclick_while_cursor_leave_listbox1 == false && listBox1.SelectedIndex != -1)
+            {
+                // 如果已经有一个 PictureBox，先移除并释放它
+                if (previewDevice != null)
+                {
+                    this.Controls.Remove(previewDevice);
+                    previewDevice.Dispose();
+                    previewDevice = null;
+                }
+                // 新建一个 PictureBox 用来存储预览的装置
+                previewDevice = new PictureBox
+                {
+                    SizeMode = PictureBoxSizeMode.AutoSize,
+                    Image = getImage,
+                    Visible = true
+                };
+                this.Controls.Add(previewDevice);
+
+                Point cursorPosition = this.PointToClient(Cursor.Position);
+                previewDevice.Location = new Point(cursorPosition.X + 5, cursorPosition.Y + 5);
+                previewDevice.BringToFront();
+            }
+        }
+
+        private void TagTreeUserControl1_MouseDown(object sender, MouseEventArgs e)
+        {
+            isrightclick_while_cursor_leave_listbox1 = true;
+            if (e.Button == MouseButtons.Right && previewDevice != null)
+            {
+                this.Controls.Remove(previewDevice);
+                previewDevice.Dispose();
+                previewDevice = null;
+            }
+            listBox1.ClearSelected();
+            fixedIndex = -1;
+        }
 
         private void panel1_MouseDown(object sender, MouseEventArgs e)
         {
@@ -1818,112 +1934,30 @@ namespace _4._18
 
                 if (node == null)
                 {
-                    // 右鍵點擊空白區域
+                    // 右鍵點擊空白區域：添加樣例到庫
                     treeViewTemplates.SelectedNode = null;
-                    menuItemDelete.Visible = false;
-                    menuItemRename.Visible = false;
-                    menuItemAddFolder.Visible = false;
-                    menuItemAddSubFolder.Visible = false;
                     menuItemAddToLibrary.Visible = true;
-                    menuItemAddToFolder.Visible = false;
+                    menuItemRename.Visible = false;
+                    menuItemDelete.Visible = false;
                 }
                 else
                 {
+                    // 右鍵點擊節點：重命名、刪除
                     treeViewTemplates.SelectedNode = node;
-                    TemplateTreeNodeData nodeData = node.Tag as TemplateTreeNodeData;
-
-                    if (nodeData != null && nodeData.IsFolder)
-                    {
-                        // 右鍵點擊資料夾節點
-                        menuItemDelete.Visible = true;
-                        menuItemRename.Visible = true;
-                        menuItemAddFolder.Visible = false;
-                        menuItemAddSubFolder.Visible = true;
-                        menuItemAddToLibrary.Visible = false;
-                        menuItemAddToFolder.Visible = true;
-                    }
-                    else
-                    {
-                        // 右鍵點擊模板節點
-                        menuItemDelete.Visible = true;
-                        menuItemRename.Visible = true;
-                        menuItemAddFolder.Visible = false;
-                        menuItemAddSubFolder.Visible = false;
-                        menuItemAddToLibrary.Visible = false;
-                        menuItemAddToFolder.Visible = false;
-                    }
+                    menuItemAddToLibrary.Visible = false;
+                    menuItemRename.Visible = true;
+                    menuItemDelete.Visible = true;
                 }
                 contextMenuTemplates.Show(treeViewTemplates, e.Location);
             }
         }
 
         /// <summary>
-        /// 添加根資料夾
-        /// </summary>
-        private void MenuItemAddFolder_Click(object sender, EventArgs e)
-        {
-            string folderName = LocalizationManager.GetString("NewFolder");
-            TemplateTreeNodeData newFolder = new TemplateTreeNodeData(folderName);
-            templateLibraryData.Add(newFolder);
-
-            TreeNode newNode = new TreeNode(folderName);
-            newNode.Tag = newFolder;
-            treeViewTemplates.Nodes.Add(newNode);
-            treeViewTemplates.SelectedNode = newNode;
-            newNode.BeginEdit();
-
-            SaveTemplateLibrary();
-        }
-
-        /// <summary>
-        /// 添加子資料夾
-        /// </summary>
-        private void MenuItemAddSubFolder_Click(object sender, EventArgs e)
-        {
-            TreeNode selectedNode = treeViewTemplates.SelectedNode;
-            if (selectedNode != null)
-            {
-                TemplateTreeNodeData parentData = selectedNode.Tag as TemplateTreeNodeData;
-                if (parentData != null && parentData.IsFolder)
-                {
-                    string subFolderName = LocalizationManager.GetString("NewSubFolder");
-                    TemplateTreeNodeData newFolder = new TemplateTreeNodeData(subFolderName);
-                    parentData.Children.Add(newFolder);
-
-                    TreeNode newNode = new TreeNode(subFolderName);
-                    newNode.Tag = newFolder;
-                    selectedNode.Nodes.Add(newNode);
-                    selectedNode.Expand();
-                    treeViewTemplates.SelectedNode = newNode;
-                    newNode.BeginEdit();
-
-                    SaveTemplateLibrary();
-                }
-            }
-        }
-
-        /// <summary>
-        /// 添加裝置到庫（作為根節點）
+        /// 添加樣例到庫（作為根節點）
         /// </summary>
         private void MenuItemAddToLibrary_Click(object sender, EventArgs e)
         {
             _panelSampleLibrarySaver?.PromptAndSave(this);
-        }
-
-        /// <summary>
-        /// 添加裝置到選中的資料夾
-        /// </summary>
-        private void MenuItemAddToFolder_Click(object sender, EventArgs e)
-        {
-            TreeNode selectedNode = treeViewTemplates.SelectedNode;
-            if (selectedNode != null)
-            {
-                TemplateTreeNodeData parentData = selectedNode.Tag as TemplateTreeNodeData;
-                if (parentData != null && parentData.IsFolder)
-                {
-                    _panelSampleLibrarySaver?.PromptAndSaveToFolder(this, selectedNode, parentData);
-                }
-            }
         }
 
         /// <summary>

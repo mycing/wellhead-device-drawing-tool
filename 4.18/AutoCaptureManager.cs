@@ -25,7 +25,7 @@ namespace _4._18
         {
             if (targetPanel.Controls.Count == 0)
             {
-                MessageBox.Show("畫布上沒有任何內容可以截取。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(LocalizationManager.GetString("CanvasEmpty"), LocalizationManager.GetString("Hint"), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -34,7 +34,7 @@ namespace _4._18
 
             if (contentBounds.Width <= 0 || contentBounds.Height <= 0)
             {
-                MessageBox.Show("無法計算內容邊界。", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(LocalizationManager.GetString("CannotCalculateBounds"), LocalizationManager.GetString("Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -66,11 +66,11 @@ namespace _4._18
                 fullBitmap.Dispose();
 
                 Clipboard.SetImage(croppedBitmap);
-                MessageBox.Show("截圖已複製到剪貼簿。", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(LocalizationManager.GetString("CaptureSuccess"), LocalizationManager.GetString("Success"), MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"截圖失敗：{ex.Message}", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(LocalizationManager.GetString("CaptureFailed", ex.Message), LocalizationManager.GetString("Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

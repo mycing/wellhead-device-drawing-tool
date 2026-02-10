@@ -35,18 +35,16 @@ namespace _4._18
             this.panel1 = new System.Windows.Forms.Panel();
             this.tagTreeUserControl1 = new _4._18.TagTreeUserControl();
             this.label4 = new System.Windows.Forms.Label();
-            this.labelSettings = new System.Windows.Forms.Label();
-            this.labelHelp = new System.Windows.Forms.Label();
             this.listBox3Container = new System.Windows.Forms.Panel();
             this.treeViewTemplates = new System.Windows.Forms.TreeView();
             this.textBoxTemplateSearch = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.panel2Container = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.vScrollBarPanel2 = new _4._18.CustomScrollBar();
-            this.label3 = new System.Windows.Forms.Label();
+            this.labelSettings = new System.Windows.Forms.Label();
             this.textBoxTagSearch = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.listBox1Container = new System.Windows.Forms.Panel();
             this.listBox1 = new System.Windows.Forms.ListBox();
@@ -64,11 +62,9 @@ namespace _4._18
             this.panel1.Controls.Add(this.listBox3Container);
             this.panel1.Controls.Add(this.textBoxTemplateSearch);
             this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.checkBox1);
             this.panel1.Controls.Add(this.panel2Container);
             this.panel1.Controls.Add(this.vScrollBarPanel2);
             this.panel1.Controls.Add(this.labelSettings);
-            this.panel1.Controls.Add(this.labelHelp);
             this.panel1.Controls.Add(this.textBoxTagSearch);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.label1);
@@ -106,37 +102,6 @@ namespace _4._18
             this.label4.Text = "防噴器配置";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            //
-            // labelSettings
-            //
-            this.labelSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(237)))), ((int)(((byte)(240)))));
-            this.labelSettings.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.labelSettings.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.labelSettings.Location = new System.Drawing.Point(1596, 10);
-            this.labelSettings.Margin = new System.Windows.Forms.Padding(0);
-            this.labelSettings.Name = "labelSettings";
-            this.labelSettings.Padding = new System.Windows.Forms.Padding(8, 0, 8, 0);
-            this.labelSettings.Size = new System.Drawing.Size(20, 40);
-            this.labelSettings.TabIndex = 61;
-            this.labelSettings.Text = "設置";
-            this.labelSettings.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.labelSettings.Click += new System.EventHandler(this.labelSettings_Click);
-            //
-            // labelHelp
-            //
-            this.labelHelp.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(237)))), ((int)(((byte)(240)))));
-            this.labelHelp.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.labelHelp.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.labelHelp.Location = new System.Drawing.Point(1696, 10);
-            this.labelHelp.Margin = new System.Windows.Forms.Padding(0);
-            this.labelHelp.Name = "labelHelp";
-            this.labelHelp.Padding = new System.Windows.Forms.Padding(8, 0, 8, 0);
-            this.labelHelp.Size = new System.Drawing.Size(20, 40);
-            this.labelHelp.TabIndex = 60;
-            this.labelHelp.Text = "幫助";
-            this.labelHelp.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.labelHelp.Click += new System.EventHandler(this.labelHelp_Click);
-            // 
             // listBox3Container
             // 
             this.listBox3Container.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(232)))), ((int)(((byte)(235)))));
@@ -166,9 +131,9 @@ namespace _4._18
             this.treeViewTemplates.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeViewTemplates_NodeMouseDoubleClick);
             this.treeViewTemplates.MouseMove += new System.Windows.Forms.MouseEventHandler(this.treeViewTemplates_MouseMove);
             this.treeViewTemplates.MouseUp += new System.Windows.Forms.MouseEventHandler(this.treeViewTemplates_MouseUp);
-            //
+            // 
             // textBoxTemplateSearch
-            //
+            // 
             this.textBoxTemplateSearch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(232)))), ((int)(((byte)(235)))));
             this.textBoxTemplateSearch.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBoxTemplateSearch.Font = new System.Drawing.Font("Microsoft YaHei UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -179,9 +144,9 @@ namespace _4._18
             this.textBoxTemplateSearch.Size = new System.Drawing.Size(601, 53);
             this.textBoxTemplateSearch.TabIndex = 59;
             this.textBoxTemplateSearch.TextChanged += new System.EventHandler(this.textBoxTemplateSearch_TextChanged);
-            //
+            // 
             // label2
-            //
+            // 
             this.label2.AutoSize = true;
             this.label2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(237)))), ((int)(((byte)(240)))));
             this.label2.Font = new System.Drawing.Font("Microsoft YaHei UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -193,20 +158,6 @@ namespace _4._18
             this.label2.Size = new System.Drawing.Size(207, 50);
             this.label2.TabIndex = 49;
             this.label2.Text = "已保存模板";
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(222)))), ((int)(((byte)(225)))));
-            this.checkBox1.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.checkBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
-            this.checkBox1.Location = new System.Drawing.Point(278, 10);
-            this.checkBox1.Margin = new System.Windows.Forms.Padding(2);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(265, 44);
-            this.checkBox1.TabIndex = 35;
-            this.checkBox1.Text = "使用未上色裝置";
-            this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // panel2Container
             // 
@@ -252,6 +203,33 @@ namespace _4._18
             this.vScrollBarPanel2.Value = 0;
             this.vScrollBarPanel2.Scroll += new System.Windows.Forms.ScrollEventHandler(this.vScrollBarPanel2_Scroll);
             // 
+            // labelSettings
+            // 
+            this.labelSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(237)))), ((int)(((byte)(240)))));
+            this.labelSettings.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.labelSettings.Location = new System.Drawing.Point(1596, 10);
+            this.labelSettings.Margin = new System.Windows.Forms.Padding(0);
+            this.labelSettings.Name = "labelSettings";
+            this.labelSettings.Padding = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelSettings.Size = new System.Drawing.Size(20, 40);
+            this.labelSettings.TabIndex = 61;
+            this.labelSettings.Text = "設置";
+            this.labelSettings.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.labelSettings.Click += new System.EventHandler(this.labelSettings_Click);
+            // 
+            // textBoxTagSearch
+            // 
+            this.textBoxTagSearch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(232)))), ((int)(((byte)(235)))));
+            this.textBoxTagSearch.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBoxTagSearch.Font = new System.Drawing.Font("Microsoft YaHei UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBoxTagSearch.Location = new System.Drawing.Point(1115, 83);
+            this.textBoxTagSearch.Margin = new System.Windows.Forms.Padding(2);
+            this.textBoxTagSearch.Multiline = true;
+            this.textBoxTagSearch.Name = "textBoxTagSearch";
+            this.textBoxTagSearch.Size = new System.Drawing.Size(636, 53);
+            this.textBoxTagSearch.TabIndex = 58;
+            this.textBoxTagSearch.TextChanged += new System.EventHandler(this.textBoxTagSearch_TextChanged);
+            // 
             // label3
             // 
             this.label3.AutoSize = true;
@@ -265,19 +243,6 @@ namespace _4._18
             this.label3.Size = new System.Drawing.Size(170, 50);
             this.label3.TabIndex = 9;
             this.label3.Text = "標籤管理";
-            // 
-            // textBoxTagSearch
-            // 
-            this.textBoxTagSearch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(232)))), ((int)(((byte)(235)))));
-            this.textBoxTagSearch.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBoxTagSearch.Font = new System.Drawing.Font("Microsoft YaHei UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.textBoxTagSearch.Location = new System.Drawing.Point(835, 10);
-            this.textBoxTagSearch.Margin = new System.Windows.Forms.Padding(2);
-            this.textBoxTagSearch.Multiline = true;
-            this.textBoxTagSearch.Name = "textBoxTagSearch";
-            this.textBoxTagSearch.Size = new System.Drawing.Size(636, 53);
-            this.textBoxTagSearch.TabIndex = 58;
-            this.textBoxTagSearch.TextChanged += new System.EventHandler(this.textBoxTagSearch_TextChanged);
             // 
             // label1
             // 
@@ -317,7 +282,7 @@ namespace _4._18
             this.listBox1.Location = new System.Drawing.Point(0, 0);
             this.listBox1.Margin = new System.Windows.Forms.Padding(0);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(638, 1856);
+            this.listBox1.Size = new System.Drawing.Size(638, 1848);
             this.listBox1.TabIndex = 3;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             this.listBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDown);
@@ -357,14 +322,12 @@ namespace _4._18
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBoxTagSearch;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.CheckBox checkBox1;
         private TreeView treeViewTemplates;
         private System.Windows.Forms.TextBox textBoxTemplateSearch;
         private Label label2;
         private TagTreeUserControl tagTreeUserControl1;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label labelSettings;
-        private System.Windows.Forms.Label labelHelp;
         private _4._18.CustomScrollBar vScrollBarPanel2;
         private System.Windows.Forms.Panel panel2Container;
         private System.Windows.Forms.Panel listBox1Container;

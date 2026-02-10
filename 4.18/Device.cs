@@ -36,7 +36,7 @@ namespace _4._18
             // 检查文件夹是否存在
             if (!Directory.Exists(folderPath))
             {
-                MessageBox.Show("用戶文件夾無法訪問");
+                MessageBox.Show(LocalizationManager.GetString("UserFolderError"));
                 return;
             }
 
@@ -70,7 +70,7 @@ namespace _4._18
                     {
                         // 记录错误日志并显示错误消息
                         Console.WriteLine($"无法处理图片: {file}\n错误: {ex.Message}");
-                        MessageBox.Show($"无法处理图片: {file}\n错误: {ex.Message}");
+                        MessageBox.Show(LocalizationManager.GetString("ImageProcessError", file, ex.Message));
                     }
                 }
             }

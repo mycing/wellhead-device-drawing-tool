@@ -38,11 +38,17 @@ namespace _4._18
         private Font toolTipFont;
         private TreeNode lastHoveredNode;
 
+        // 是否已完成初始化（防止自動選中）
+        private bool _initialized = false;
+
         // 數據持久化路徑
         private string dataFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tagtree_items.bin");
 
         // 節點選中事件
         public event EventHandler NodeSelected;
+        // 轉發內部 TreeView 的 MouseMove / MouseDown 事件
+        public event MouseEventHandler TreeViewMouseMove;
+        public event MouseEventHandler TreeViewMouseDown;
         private List<TreeNodeData> _fullData = new List<TreeNodeData>();
         private string _currentFilter = string.Empty;
 
@@ -54,13 +60,7 @@ namespace _4._18
             treeViewTag.LabelEdit = true;
 
             // 初始化菜单
-            menuBlank = new ContextMenuStrip();
-            menuBlank.Items.Add("添加根节点", null, (s, e) => AddRootNode());
-
-            menuNode = new ContextMenuStrip();
-            menuNode.Items.Add("添加子节点", null, (s, e) => AddChildNode());
-            menuNode.Items.Add("重命名", null, (s, e) => RenameNode());
-            menuNode.Items.Add("删除当前节点", null, (s, e) => DeleteNode());
+            BuildContextMenus();
 
             treeViewTag.MouseUp += TreeViewTag_MouseUp;
             treeViewTag.AfterSelect += TreeViewTag_AfterSelect;
@@ -74,6 +74,7 @@ namespace _4._18
             toolTipFont = new Font("Microsoft YaHei UI", 13F, FontStyle.Bold);
             treeViewTag.MouseMove += TreeViewTag_MouseMove;
             treeViewTag.MouseLeave += TreeViewTag_MouseLeave;
+            treeViewTag.MouseDown += (s, e) => TreeViewMouseDown?.Invoke(this, e);
         }
 
         private void ToolTip_Popup(object sender, PopupEventArgs e)
@@ -95,8 +96,25 @@ namespace _4._18
 
         private void TreeViewTag_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            // 當節點被選中時觸發事件
+            if (!_initialized)
+            {
+                treeViewTag.SelectedNode = null;
+                return;
+            }
             NodeSelected?.Invoke(this, EventArgs.Empty);
+        }
+
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            base.OnVisibleChanged(e);
+            if (Visible && !_initialized)
+            {
+                BeginInvoke(new Action(() =>
+                {
+                    treeViewTag.SelectedNode = null;
+                    _initialized = true;
+                }));
+            }
         }
 
         private void TreeViewTag_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
@@ -199,6 +217,8 @@ namespace _4._18
                     }
                 }
             }
+            // 轉發 MouseMove 事件給外部訂閱者
+            TreeViewMouseMove?.Invoke(this, e);
         }
 
         private void TreeViewTag_MouseLeave(object sender, EventArgs e)
@@ -288,9 +308,27 @@ namespace _4._18
             treeViewTag.EndUpdate();
         }
 
+        private void BuildContextMenus()
+        {
+            menuBlank = new ContextMenuStrip();
+            menuBlank.Items.Add(LocalizationManager.GetString("AddRootNode"), null, (s, e) => AddRootNode());
+            MenuStyleHelper.Apply(menuBlank);
+
+            menuNode = new ContextMenuStrip();
+            menuNode.Items.Add(LocalizationManager.GetString("AddChildNode"), null, (s, e) => AddChildNode());
+            menuNode.Items.Add(LocalizationManager.GetString("Rename"), null, (s, e) => RenameNode());
+            menuNode.Items.Add(LocalizationManager.GetString("DeleteCurrentNode"), null, (s, e) => DeleteNode());
+            MenuStyleHelper.Apply(menuNode);
+        }
+
+        public void ApplyLocalization()
+        {
+            BuildContextMenus();
+        }
+
         private void AddRootNode()
         {
-            TreeNode node = new TreeNode("新根节点");
+            TreeNode node = new TreeNode(LocalizationManager.GetString("NewRootNode"));
             treeViewTag.Nodes.Add(node);
             treeViewTag.SelectedNode = node;
             node.BeginEdit();
@@ -306,7 +344,7 @@ namespace _4._18
             TreeNode node = treeViewTag.SelectedNode;
             if (node != null)
             {
-                TreeNode child = new TreeNode("新子节点");
+                TreeNode child = new TreeNode(LocalizationManager.GetString("NewChildNode"));
                 node.Nodes.Add(child);
                 node.Expand();
                 treeViewTag.SelectedNode = child;
@@ -371,6 +409,8 @@ namespace _4._18
         {
             try
             {
+                treeViewTag.AfterSelect -= TreeViewTag_AfterSelect;
+
                 if (File.Exists(dataFilePath) && new FileInfo(dataFilePath).Length > 0)
                 {
                     using (FileStream stream = new FileStream(dataFilePath, FileMode.Open))
@@ -389,10 +429,15 @@ namespace _4._18
                         _fullData = rootNodes;
                     }
                 }
+                treeViewTag.SelectedNode = null;
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine("讀取樹結構失敗: " + ex.Message);
+            }
+            finally
+            {
+                treeViewTag.AfterSelect += TreeViewTag_AfterSelect;
             }
         }
 

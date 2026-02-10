@@ -5,6 +5,7 @@ using System.Drawing.Drawing2D;
 using System.IO;
 using System.Windows.Forms;
 using Svg;
+using _4._18;
 
 [Serializable]
 public class SvgDrawPicturePanel : Panel
@@ -143,14 +144,7 @@ public class SvgDrawPicturePanel : Panel
             // 创建右键菜单
             ContextMenuStrip contextMenu = new ContextMenuStrip();
 
-            ToolStripMenuItem autoAlignItem = new ToolStripMenuItem("自動對齊", null, (s, ev) =>
-            {
-                var form = this.FindForm() as _4._18.Form1;
-                form?.AutoAlignControls();
-            });
-            contextMenu.Items.Add(autoAlignItem);
-
-            ToolStripMenuItem deleteItem = new ToolStripMenuItem("刪除", null, (s, ev) =>
+            ToolStripMenuItem deleteItem = new ToolStripMenuItem(LocalizationManager.GetString("Delete"), null, (s, ev) =>
             {
                 if (_parentPanel != null)
                 {
@@ -162,30 +156,44 @@ public class SvgDrawPicturePanel : Panel
                 }
             });
             contextMenu.Items.Add(deleteItem);
+
+            ToolStripMenuItem autoAlignItem = new ToolStripMenuItem(LocalizationManager.GetString("AutoAlign"), null, (s, ev) =>
+            {
+                var form = this.FindForm() as _4._18.Form1;
+                form?.AutoAlignControls();
+            });
+            contextMenu.Items.Add(autoAlignItem);
+
+            ToolStripMenuItem autoCaptureItem = new ToolStripMenuItem(LocalizationManager.GetString("AutoCapture"), null, (s, ev) =>
+            {
+                var form = this.FindForm() as _4._18.Form1;
+                form?.StartAutoCapture();
+            });
+            contextMenu.Items.Add(autoCaptureItem);
             contextMenu.Items.Add(new ToolStripSeparator());
 
-            ToolStripMenuItem captureItem = new ToolStripMenuItem("截圖", null, (s, ev) =>
+            ToolStripMenuItem captureItem = new ToolStripMenuItem(LocalizationManager.GetString("Capture"), null, (s, ev) =>
             {
                 var form = this.FindForm() as _4._18.Form1;
                 form?.StartCapture();
             });
             contextMenu.Items.Add(captureItem);
 
-            ToolStripMenuItem clearItem = new ToolStripMenuItem("清空畫布", null, (s, ev) =>
+            ToolStripMenuItem clearItem = new ToolStripMenuItem(LocalizationManager.GetString("ClearCanvas"), null, (s, ev) =>
             {
                 _parentPanel?.Controls.Clear();
                 _parentPanel?.Refresh();
             });
             contextMenu.Items.Add(clearItem);
 
-            ToolStripMenuItem openSampleItem = new ToolStripMenuItem("打開裝置樣例", null, (s, ev) =>
+            ToolStripMenuItem openSampleItem = new ToolStripMenuItem(LocalizationManager.GetString("OpenSample"), null, (s, ev) =>
             {
                 var form = this.FindForm() as _4._18.Form1;
                 form?.OpenDeviceSample();
             });
             contextMenu.Items.Add(openSampleItem);
 
-            ToolStripMenuItem saveSampleItem = new ToolStripMenuItem("添加樣例到庫", null, (s, ev) =>
+            ToolStripMenuItem saveSampleItem = new ToolStripMenuItem(LocalizationManager.GetString("AddSampleToLibrary"), null, (s, ev) =>
             {
                 var form = this.FindForm() as _4._18.Form1;
                 form?.SaveSampleToLibrary();
