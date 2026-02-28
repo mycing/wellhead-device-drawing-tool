@@ -1,11 +1,11 @@
 <p align="center">
-  <a href="README.md">中文</a> | <a href="README_EN.md">English</a>
+  <a href="README.md">English</a> | <a href="README_CN.md">中文</a>
 </p>
 
-<h1 align="center">井口裝置繪圖工具</h1>
+<h1 align="center">Wellhead Device Drawing Tool</h1>
 
 <p align="center">
-  一款用於繪製井口裝置示意圖的 Windows 桌面應用程序
+  A Windows desktop application for creating wellhead device schematic diagrams
 </p>
 
 <p align="center">
@@ -17,373 +17,373 @@
 
 ---
 
-## 目錄
+## Table of Contents
 
-- [功能特點](#功能特點)
-- [快速開始](#快速開始)
-- [操作指南](#操作指南)
-- [項目結構](#項目結構)
-- [架構設計](#架構設計)
-- [編譯構建](#編譯構建)
-- [數據存儲](#數據存儲)
-- [技術棧](#技術棧)
-- [更新日誌](#更新日誌)
-- [貢獻指南](#貢獻指南)
-- [開源協議](#開源協議)
-
----
-
-## 功能特點
-
-### 核心功能
-- **豐富的內置裝置庫** - 包含 20+ 種常用井口裝置（萬能防噴器、閘板防噴器、套管頭、轉盤面等）
-- **SVG 矢量圖形支持** - 裝置圖片縮放不失真
-- **自定義裝置導入** - 支持 JPG、PNG、BMP、GIF、SVG 格式
-- **樹狀標籤管理** - 多層級分類管理文字標籤
-- **模板庫系統** - 保存/載入常用裝置組合，支持資料夾分類
-- **JSON 批量建圖** - 支持單個 JSON、連續多個 JSON、JSON 數組匯入
-- **多語言界面** - 支持英語、簡中、繁中、西語、法語、葡語、俄語、波斯語、挪威語、日語、韓語、阿語
-
-### 畫布功能
-- **拖放操作** - 直覺的拖動移動、滾輪縮放
-- **智能對齊** - 兩種對齊模式快速整理畫布
-- **多種截圖方式** - 手動框選、自動識別、長圖拼接
-
-### 用戶體驗
-- **實時預覽** - 懸停顯示裝置預覽圖
-- **即時搜索** - 標籤和模板的快速過濾
-- **自動保存** - 數據自動持久化，無需手動保存
-- **可複製錯誤報告** - JSON 匯入失敗可直接複製詳細錯誤信息
+- [Features](#features)
+- [Quick Start](#quick-start)
+- [User Guide](#user-guide)
+- [Project Structure](#project-structure)
+- [Architecture](#architecture)
+- [Build](#build)
+- [Data Storage](#data-storage)
+- [Tech Stack](#tech-stack)
+- [Changelog](#changelog)
+- [Contributing](#contributing)
+- [License](#license)
 
 ---
 
-## 快速開始
+## Features
 
-### 下載安裝
-1. 從 [Releases](https://github.com/mycing/wellhead-device-drawing-tool/releases) 下載最新版本
-2. 解壓到任意目錄
-3. 運行 `WellheadDiagram.exe`
+### Core Features
+- **Rich Built-in Device Library** - 20+ common wellhead devices (Annular BOP, Ram BOP, Casing Head, Rotary Table, etc.)
+- **SVG Vector Graphics Support** - Lossless scaling for device images
+- **Custom Device Import** - Supports JPG, PNG, BMP, GIF, SVG formats
+- **Tree-structured Label Management** - Multi-level categorization for text labels
+- **Template Library System** - Save/load device combinations with folder organization
+- **Batch JSON Diagram Import** - Supports single JSON, multiple concatenated JSON blocks, and JSON arrays
+- **Multilingual UI** - English, Simplified Chinese, Traditional Chinese, Spanish, French, Portuguese, Russian, Persian, Norwegian, Japanese, Korean, Arabic
 
-### 系統要求
+### Canvas Features
+- **Drag & Drop** - Intuitive drag-to-move and scroll-to-zoom
+- **Smart Alignment** - Two alignment modes for quick organization
+- **Multiple Screenshot Methods** - Manual selection, auto-capture, long image stitching
+
+### User Experience
+- **Real-time Preview** - Hover to show device preview
+- **Instant Search** - Quick filtering for labels and templates
+- **Auto Save** - Automatic data persistence
+- **Copyable Error Reports** - JSON import errors can be copied with full diagnostic details
+
+---
+
+## Quick Start
+
+### Installation
+1. Download the latest version from [Releases](https://github.com/mycing/wellhead-device-drawing-tool/releases)
+2. Extract to any directory
+3. Run `WellheadDiagram.exe`
+
+### System Requirements
 - Windows 7 / 8 / 10 / 11
-- .NET Framework 4.8 或更高版本
+- .NET Framework 4.8 or higher
 
-### 基本操作流程
+### Basic Workflow
 ```
-選擇裝置 → 點擊畫布放置 → 添加文字標籤 → 調整位置大小 → 自動對齊 → 截圖/保存模板
+Select Device → Click Canvas to Place → Add Text Labels → Adjust Position/Size → Auto Align → Screenshot/Save Template
 ```
 
 ---
 
-## 操作指南
+## User Guide
 
-### 界面佈局
+### Interface Layout
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│  [使用未上色裝置]                                    [幫助]   │
+│  [Use Uncolored Devices]                             [Help]   │
 ├────────────┬────────────────────┬────────────────────────────┤
-│            │    標籤管理         │                            │
-│  井口裝置   │   ┌──────────┐     │                            │
-│  選擇列表   │   │ 搜索框    │     │         繪圖畫布           │
-│            │   ├──────────┤     │                            │
-│  • 萬能防噴器│   │ 標籤樹    │     │                            │
-│  • 閘板防噴器│   │          │     │                            │
-│  • 套管頭   │   └──────────┘     │                            │
-│  • ...     ├────────────────────┤                            │
-│            │    模板庫          │                            │
+│            │    Label Manager    │                            │
+│  Wellhead  │   ┌──────────┐     │                            │
+│  Device    │   │ Search    │     │       Drawing Canvas       │
+│  List      │   ├──────────┤     │                            │
+│            │   │ Label Tree│     │                            │
+│  • Annular │   │          │     │                            │
+│  • Ram BOP │   └──────────┘     │                            │
+│  • Casing  ├────────────────────┤                            │
+│  • ...     │    Template Library │                            │
 │            │   ┌──────────┐     │                            │
-│            │   │ 搜索框    │     │                            │
+│            │   │ Search    │     │                            │
 │            │   ├──────────┤     │                            │
-│            │   │ 模板樹    │     │                            │
+│            │   │ Templates │     │                            │
 │            │   │          │     │                            │
 │            │   └──────────┘     │                            │
 └────────────┴────────────────────┴────────────────────────────┘
 ```
 
-### 滑鼠操作
+### Mouse Operations
 
-| 區域 | 左鍵 | 右鍵 | 滾輪 |
-|------|------|------|------|
-| 裝置列表 | 選擇裝置 | 添加/刪除自定義裝置 | - |
-| 標籤樹 | 選擇標籤 | 添加/重命名/刪除節點 | - |
-| 模板樹 | 載入模板 | 管理資料夾和模板 | - |
-| 畫布空白 | 放置裝置/標籤 | 功能菜單 | 滾動畫布 |
-| 畫布控件 | 拖動移動 | 刪除/對齊/截圖 | 縮放大小 |
+| Area | Left Click | Right Click | Scroll Wheel |
+|------|------------|-------------|--------------|
+| Device List | Select device | Add/Delete custom device | - |
+| Label Tree | Select label | Add/Rename/Delete node | - |
+| Template Tree | Load template | Manage folders & templates | - |
+| Canvas (blank) | Place device/label | Context menu | Scroll canvas |
+| Canvas (control) | Drag to move | Delete/Align/Screenshot | Resize |
 
-### 右鍵菜單功能
-- **刪除** - 移除選中控件
-- **自動對齊** - 智能排列（兩種模式交替）
-- **自動截圖** - 一鍵截取全部內容
-- **截圖** - 手動框選截圖區域
-- **清空畫布** - 清除所有內容
-- **添加樣例到庫** - 保存為模板
-- **保存到目前模板** - 覆蓋保存當前已載入模板
-- **匯入 JSON** - 通過 AI 生成的 JSON 快速建圖
+### Context Menu Functions
+- **Delete** - Remove selected control
+- **Auto Align** - Smart arrangement (two alternating modes)
+- **Auto Screenshot** - One-click capture all content
+- **Screenshot** - Manual selection capture
+- **Clear Canvas** - Remove all content
+- **Add to Library** - Save as template
+- **Save to Current Template** - Overwrite the currently loaded template
+- **Import JSON** - Build diagrams quickly from AI-generated JSON
 
 ---
 
-## 項目結構
+## Project Structure
 
 ```
 4.18/
-├── 4.18.sln                    # 解決方案文件
-├── README.md                   # 項目說明（中文）
-├── README_EN.md                # 項目說明（英文）
-└── 4.18/                       # 主項目目錄
-    ├── 4.18.csproj             # 項目文件（輸出名：WellheadDiagram.exe）
-    ├── App.config              # 應用配置
-    ├── packages.config         # NuGet 包配置
+├── 4.18.sln                    # Solution file
+├── README.md                   # Project description (English)
+├── README_CN.md                # Project description (Chinese)
+└── 4.18/                       # Main project directory
+    ├── 4.18.csproj             # Project file (output: WellheadDiagram.exe)
+    ├── App.config              # Application config
+    ├── packages.config         # NuGet packages config
     │
-    ├── # 核心文件
-    ├── Program.cs              # 程序入口
-    ├── Form1.cs                # 主窗體邏輯
-    ├── Form1.Designer.cs       # 主窗體設計器
-    ├── Form1.resx              # 主窗體資源
+    ├── # Core Files
+    ├── Program.cs              # Entry point
+    ├── Form1.cs                # Main form logic
+    ├── Form1.Designer.cs       # Main form designer
+    ├── Form1.resx              # Main form resources
     │
-    ├── # 自定義控件
-    ├── SvgDrawPicturePanel.cs  # SVG 裝置面板
-    ├── ImagePicturePanel.cs    # 圖片裝置面板
-    ├── DrawstringPanel.cs      # 文字標籤面板
-    ├── TagTreeUserControl.cs   # 標籤樹控件
-    ├── CustomScrollBar.cs      # 自定義滾動條
-    ├── RecursiveTreeView.cs    # 遞歸樹視圖
+    ├── # Custom Controls
+    ├── SvgDrawPicturePanel.cs  # SVG device panel
+    ├── ImagePicturePanel.cs    # Image device panel
+    ├── DrawstringPanel.cs      # Text label panel
+    ├── TagTreeUserControl.cs   # Label tree control
+    ├── CustomScrollBar.cs      # Custom scroll bar
+    ├── RecursiveTreeView.cs    # Recursive tree view
     │
-    ├── # 功能管理器
-    ├── AutoAlignManager.cs     # 自動對齊管理
-    ├── AutoCaptureManager.cs   # 自動截圖管理
-    ├── ScreenCaptureManager.cs # 手動截圖管理
-    ├── PanelManager.cs         # 面板管理
-    ├── PanelSampleLibrarySaver.cs  # 模板保存
-    ├── CanvasContextMenuFactory.cs # 畫布右鍵菜單工廠
+    ├── # Feature Managers
+    ├── AutoAlignManager.cs     # Auto alignment
+    ├── AutoCaptureManager.cs   # Auto screenshot
+    ├── ScreenCaptureManager.cs # Manual screenshot
+    ├── PanelManager.cs         # Panel management
+    ├── PanelSampleLibrarySaver.cs  # Template saving
+    ├── CanvasContextMenuFactory.cs # Canvas context menu factory
     │
-    ├── # 數據模型
-    ├── Device.cs               # 裝置類
-    ├── TemplateTreeNodeData.cs # 模板樹節點數據
-    ├── WellheadJsonSchema.cs   # JSON 數據模型
+    ├── # Data Models
+    ├── Device.cs               # Device class
+    ├── TemplateTreeNodeData.cs # Template tree node data
+    ├── WellheadJsonSchema.cs   # JSON schema model
     │
-    ├── # 輔助類
-    ├── HelpDialog.cs           # 幫助對話框
-    ├── MenuStyleHelper.cs      # 菜單樣式輔助
-    ├── LocalizationManager.cs  # 多語言管理
-    ├── LanguageOptionMapper.cs # 語言選項映射
-    ├── BuiltInDeviceCatalog.cs # 內置裝置映射
-    ├── WellheadJsonImporter.cs # JSON 匯入解析器
-    ├── JsonImportDialog.cs     # JSON 匯入對話框
+    ├── # Helper Classes
+    ├── HelpDialog.cs           # Help dialog
+    ├── MenuStyleHelper.cs      # Menu style helper
+    ├── LocalizationManager.cs  # Localization manager
+    ├── LanguageOptionMapper.cs # Language option mapping
+    ├── BuiltInDeviceCatalog.cs # Built-in device mapping
+    ├── WellheadJsonImporter.cs # JSON import parser
+    ├── JsonImportDialog.cs     # JSON import dialog
     │
-    ├── Properties/             # 項目屬性
+    ├── Properties/             # Project properties
     │   ├── AssemblyInfo.cs
     │   ├── Resources.resx
     │   └── Settings.settings
     │
-    └── Resources/              # 內置資源文件
-        ├── *.svg               # SVG 矢量裝置圖
-        ├── *.png               # PNG 裝置圖
-        └── *.bmp               # BMP 裝置圖
+    └── Resources/              # Built-in resources
+        ├── *.svg               # SVG vector devices
+        ├── *.png               # PNG device images
+        └── *.bmp               # BMP device images
 ```
 
 ---
 
-## 架構設計
+## Architecture
 
-### 核心類關係
+### Core Class Relationships
 
 ```
-Form1 (主窗體)
-├── Panel2 (畫布容器)
-│   ├── SvgDrawPicturePanel    # SVG 裝置
-│   ├── ImagePicturePanel      # 圖片裝置
-│   └── DrawstringPanel        # 文字標籤
+Form1 (Main Form)
+├── Panel2 (Canvas Container)
+│   ├── SvgDrawPicturePanel    # SVG devices
+│   ├── ImagePicturePanel      # Image devices
+│   └── DrawstringPanel        # Text labels
 │
-├── TagTreeUserControl         # 標籤管理
-│   └── TreeNodeData           # 標籤數據模型
+├── TagTreeUserControl         # Label management
+│   └── TreeNodeData           # Label data model
 │
-├── TreeView (treeViewTemplates)  # 模板庫
-│   └── TemplateTreeNodeData   # 模板數據模型
+├── TreeView (treeViewTemplates)  # Template library
+│   └── TemplateTreeNodeData   # Template data model
 │
-├── AutoAlignManager           # 自動對齊
-├── AutoCaptureManager         # 自動截圖
-├── ScreenCaptureManager       # 手動截圖
-└── PanelSampleLibrarySaver    # 模板保存
+├── AutoAlignManager           # Auto alignment
+├── AutoCaptureManager         # Auto screenshot
+├── ScreenCaptureManager       # Manual screenshot
+└── PanelSampleLibrarySaver    # Template saving
 ```
 
-### 數據模型
+### Data Models
 
 #### TemplateTreeNodeData
 ```csharp
 [Serializable]
 public class TemplateTreeNodeData
 {
-    public string Text { get; set; }                    // 節點名稱
-    public List<PanelInfo> TemplateData { get; set; }   // 模板數據（資料夾為 null）
-    public List<TemplateTreeNodeData> Children { get; set; }  // 子節點
-    public bool IsFolder => TemplateData == null;       // 是否為資料夾
-    public bool IsTemplate => TemplateData != null;     // 是否為模板
+    public string Text { get; set; }                    // Node name
+    public List<PanelInfo> TemplateData { get; set; }   // Template data (null for folders)
+    public List<TemplateTreeNodeData> Children { get; set; }  // Child nodes
+    public bool IsFolder => TemplateData == null;       // Is folder
+    public bool IsTemplate => TemplateData != null;     // Is template
 }
 ```
 
-#### TreeNodeData (標籤)
+#### TreeNodeData (Labels)
 ```csharp
 [Serializable]
 public class TreeNodeData
 {
-    public string Text { get; set; }                    // 標籤文字
-    public List<TreeNodeData> Children { get; set; }    // 子節點
+    public string Text { get; set; }                    // Label text
+    public List<TreeNodeData> Children { get; set; }    // Child nodes
 }
 ```
 
-### 面板控件繼承
+### Panel Control Hierarchy
 
 ```
 Panel (System.Windows.Forms)
-├── SvgDrawPicturePanel   # 支持 SVG 渲染、等比縮放
-├── ImagePicturePanel     # 支持圖片渲染、高質量插值
-└── DrawstringPanel       # 支持動態字體縮放
+├── SvgDrawPicturePanel   # SVG rendering, aspect ratio scaling
+├── ImagePicturePanel     # Image rendering, high-quality interpolation
+└── DrawstringPanel       # Dynamic font scaling
 ```
 
 ---
 
-## 編譯構建
+## Build
 
-### 環境要求
-- Visual Studio 2019 或更高版本
+### Requirements
+- Visual Studio 2019 or later
 - .NET Framework 4.8 SDK
 
-### 編譯步驟
+### Build Steps
 
-1. **克隆倉庫**
+1. **Clone Repository**
    ```bash
    git clone https://github.com/mycing/wellhead-device-drawing-tool.git
    cd wellhead-device-drawing-tool
    ```
 
-2. **還原 NuGet 包**
+2. **Restore NuGet Packages**
    ```bash
    nuget restore 4.18.sln
    ```
-   或在 Visual Studio 中右鍵解決方案 → 還原 NuGet 包
+   Or right-click solution in Visual Studio → Restore NuGet Packages
 
-3. **編譯項目**
+3. **Build Project**
    ```bash
    msbuild 4.18.sln /p:Configuration=Release
    ```
-   或在 Visual Studio 中按 F5 / Ctrl+Shift+B
+   Or press F5 / Ctrl+Shift+B in Visual Studio
 
-4. **輸出位置**
+4. **Output Location**
    ```
-   4.18/bin/Release/  或  4.18/bin/Debug/
+   4.18/bin/Release/  or  4.18/bin/Debug/
    ```
 
-### NuGet 依賴
-| 包名 | 版本 | 用途 |
-|------|------|------|
-| Svg | 3.4.7 | SVG 矢量圖渲染 |
-| Newtonsoft.Json | 13.0.3 | JSON 序列化 |
-| ExCSS | 4.2.3 | SVG/CSS 樣式解析 |
-| System.Buffers | 4.5.1 | 內存緩衝支持 |
-| System.Memory | 4.5.5 | 高性能內存訪問 |
-| System.Numerics.Vectors | 4.5.0 | 向量計算支持 |
-| System.Resources.Extensions | 9.0.0 | 資源擴展支持 |
-| System.Runtime.CompilerServices.Unsafe | 6.0.0 | 低層運行時支持 |
+### NuGet Dependencies
+| Package | Version | Purpose |
+|---------|---------|---------|
+| Svg | 3.4.7 | SVG vector rendering |
+| Newtonsoft.Json | 13.0.3 | JSON serialization |
+| ExCSS | 4.2.3 | SVG/CSS style parsing |
+| System.Buffers | 4.5.1 | Buffer utilities |
+| System.Memory | 4.5.5 | Memory/span support |
+| System.Numerics.Vectors | 4.5.0 | Vector math support |
+| System.Resources.Extensions | 9.0.0 | Resource extension support |
+| System.Runtime.CompilerServices.Unsafe | 6.0.0 | Runtime low-level support |
 
 ---
 
-## 數據存儲
+## Data Storage
 
-### 文件說明
-| 文件名 | 格式 | 說明 |
-|--------|------|------|
-| `template_library.bin` | Binary | 模板庫（資料夾結構+模板內容） |
-| `tagtree_items.bin` | Binary | 標籤樹結構 |
-| `pictures/` | 目錄 | 用戶自定義裝置圖片 |
-| `language.conf` | Text | 語言與界面顯示設置 |
-| `listbox3_items.bin` | Binary | 舊版模板數據（兼容遷移） |
-| `listbox3_items.json` | JSON | 舊版模板數據（調試/兼容） |
+### File Description
+| Filename | Format | Description |
+|----------|--------|-------------|
+| `template_library.bin` | Binary | Template library (folder structure + templates) |
+| `tagtree_items.bin` | Binary | Label tree structure |
+| `pictures/` | Directory | User custom device images |
+| `language.conf` | Text | Language/UI setting persistence |
+| `listbox3_items.bin` | Binary | Legacy template data (migration compatibility) |
+| `listbox3_items.json` | JSON | Legacy template data (debug/compatibility) |
 
-### 序列化方式
-使用 `BinaryFormatter` 進行二進制序列化，確保數據完整性。
+### Serialization
+Uses `BinaryFormatter` for binary serialization to ensure data integrity.
 
-### 備份建議
-- 定期備份程序目錄下的 `.bin` 文件
-- 遷移時複製整個程序資料夾
+### Backup Recommendations
+- Regularly backup `.bin` files in the program directory
+- Copy entire program folder when migrating
 
 ---
 
-## 技術棧
+## Tech Stack
 
-| 類別 | 技術 |
-|------|------|
-| 語言 | C# |
-| 框架 | .NET Framework 4.8 |
+| Category | Technology |
+|----------|------------|
+| Language | C# |
+| Framework | .NET Framework 4.8 |
 | UI | Windows Forms |
-| 圖形渲染 | GDI+、SVG.NET |
-| 數據持久化 | BinaryFormatter |
-| 截圖 | Win32 API (BitBlt) |
+| Graphics | GDI+, SVG.NET |
+| Data Persistence | BinaryFormatter |
+| Screenshot | Win32 API (BitBlt) |
 
 ---
 
-## 更新日誌
+## Changelog
 
 ### v1.2.0 (2026.2.27)
-- 新增 12 語言完整切換（英/簡/繁/西/法/葡/俄/波斯/挪威/日/韓/阿），內置裝置名稱、菜單、幫助文檔同步本地化
-- JSON 匯入升級：支持單個 JSON、連續多 JSON、JSON 數組批量匯入，並兼容多語言鍵名/設備別名
-- JSON 報錯升級：精確顯示 JSON 序號、行號、位置與設備索引，錯誤彈窗支持一鍵複製
-- 畫布升級為雙向滾動（縱向+橫向），按內容邊界動態計算可視範圍
-- 新增「保存到目前模板」，按是否存在本地模板映射動態啟用/禁用
+- Added full 12-language switching (EN/zh-CN/zh-TW/ES/FR/PT/RU/FA/NO/JA/KO/AR), including built-in device names, menus, and help docs
+- JSON import upgraded: supports single JSON, concatenated multi-JSON input, and JSON arrays with multilingual key/type aliases
+- JSON diagnostics upgraded: reports JSON index, line, position, and device index; error dialog supports one-click copy
+- Canvas upgraded to bidirectional scrolling (vertical + horizontal) with dynamic bounds based on rendered content
+- Added **Save to Current Template** with dynamic enable/disable based on local template mapping state
 
 ### v1.1.0 (2026.2.26)
-- 模板庫由列表升級為樹狀結構，支持資料夾、重命名、刪除、複製/粘貼與搜索過濾
-- 標籤樹新增搜索框與實時過濾，修復過濾模式下新增/刪除/粘貼與本地文件不同步問題
-- 設置對話框整合「上色/未上色裝置」選項，替代主界面舊開關
-- 幫助系統重構為分級導航，內容隨語言切換
-- 優化 DPI 佈局與搜索框定位，提升高縮放下可用性
+- Template library upgraded from flat list to tree structure with folders, rename/delete, copy/paste, and search filtering
+- Added tag tree search with live filtering; fixed add/delete/paste persistence sync in filter mode
+- Moved colored/uncolored device toggle into Settings dialog (replacing main-form legacy switch)
+- Refactored help system into hierarchical navigation with language-aware content
+- Improved DPI layout strategy and search-box positioning for high scaling factors
 
 ### v1.0.0 (2026.2)
-- 標籤樹支持多層級結構
-- 模板庫支持資料夾分類
-- 新增標籤和模板搜索功能
-- 新增重命名功能
-- 優化幫助文檔
+- Label tree supports multi-level structure
+- Template library supports folder organization
+- Added label and template search functionality
+- Added rename feature
+- Improved help documentation
 
 ### v0.2.0 (2025.5)
-- 更新為 SVG 矢量圖形格式
-- 優化截圖功能，支持多方向截圖
-- 改進圖片縮放算法
+- Updated to SVG vector graphics format
+- Optimized screenshot functionality, supports multi-directional capture
+- Improved image scaling algorithm
 
 ### v0.1.0 (2025.2)
-- 初始版本發布
-- 基本裝置繪製功能
-- 截圖和模板保存
+- Initial release
+- Basic device drawing functionality
+- Screenshot and template saving
 
 ---
 
-## 貢獻指南
+## Contributing
 
-歡迎提交 Issue 和 Pull Request！
+Issues and Pull Requests are welcome!
 
-### 提交 Issue
-- Bug 報告：請附上復現步驟和錯誤信息
-- 功能建議：請描述使用場景和期望效果
+### Submitting Issues
+- Bug reports: Please include reproduction steps and error messages
+- Feature requests: Please describe use case and expected behavior
 
-### 提交 PR
-1. Fork 本倉庫
-2. 創建特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 開啟 Pull Request
+### Submitting PRs
+1. Fork this repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-### 代碼規範
-- 遵循 C# 命名規範
-- 添加必要的註釋
-- 保持代碼簡潔
+### Code Style
+- Follow C# naming conventions
+- Add necessary comments
+- Keep code clean and simple
 
 ---
 
-## 開源協議
+## License
 
-本項目採用 [MIT License](LICENSE) 開源協議。
+This project is licensed under the [MIT License](LICENSE).
 
 ---
 
 <p align="center">
-  如果這個項目對你有幫助，歡迎給一個 ⭐ Star！
+  If this project helps you, please give it a ⭐ Star!
 </p>
