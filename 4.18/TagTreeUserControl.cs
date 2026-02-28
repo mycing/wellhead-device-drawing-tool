@@ -51,6 +51,12 @@ namespace _4._18
         public event MouseEventHandler TreeViewMouseDown;
         private List<TreeNodeData> _fullData = new List<TreeNodeData>();
         private string _currentFilter = string.Empty;
+        private TreeNode _copiedNode;
+
+        /// <summary>
+        /// 設為 true 時，下一次右鍵彈起不彈出菜單（用於有預覽圖片時只取消預覽）
+        /// </summary>
+        public bool SuppressNextContextMenu { get; set; }
 
         public TagTreeUserControl()
         {
@@ -136,6 +142,7 @@ namespace _4._18
             {
                 SnapshotTreeToFullData();
             }
+            SaveTreeData();
         }
 
         /// <summary>
@@ -158,6 +165,76 @@ namespace _4._18
             {
                 targetData.Text = newName;
             }
+        }
+
+        /// <summary>
+        /// 在過濾模式下從 _fullData 中刪除對應的節點
+        /// </summary>
+        private void RemoveNodeFromFullData(TreeNode node)
+        {
+            // 構建節點路徑（node 已從 TreeView 移除，但 Parent 在移除前已記錄為 null）
+            // 由於 node.Remove() 後 Parent 為 null，需要用節點名稱在 _fullData 中搜索
+            RemoveNodeDataByName(_fullData, node.Text);
+        }
+
+        /// <summary>
+        /// 遞歸搜索並刪除名稱匹配的節點
+        /// </summary>
+        private bool RemoveNodeDataByName(List<TreeNodeData> nodes, string name)
+        {
+            if (nodes == null) return false;
+            for (int i = nodes.Count - 1; i >= 0; i--)
+            {
+                if (nodes[i].Text == name)
+                {
+                    nodes.RemoveAt(i);
+                    return true;
+                }
+                if (RemoveNodeDataByName(nodes[i].Children, name))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 在過濾模式下，根據父節點路徑在 _fullData 中找到父節點，並添加子節點名稱
+        /// </summary>
+        private void AddChildToFullData(TreeNode parentNode, string childName)
+        {
+            TreeNodeData parentData = FindNodeDataInFullData(parentNode);
+            if (parentData != null)
+            {
+                parentData.Children.Add(new TreeNodeData(childName));
+            }
+        }
+
+        /// <summary>
+        /// 在過濾模式下，根據父節點路徑在 _fullData 中找到父節點，並添加完整的子節點數據
+        /// </summary>
+        private void AddChildDataToFullData(TreeNode parentNode, TreeNodeData childData)
+        {
+            TreeNodeData parentData = FindNodeDataInFullData(parentNode);
+            if (parentData != null)
+            {
+                parentData.Children.Add(childData);
+            }
+        }
+
+        /// <summary>
+        /// 根據 TreeView 中的節點，在 _fullData 中查找對應的數據節點
+        /// </summary>
+        private TreeNodeData FindNodeDataInFullData(TreeNode node)
+        {
+            List<string> parentPath = new List<string>();
+            TreeNode current = node.Parent;
+            while (current != null)
+            {
+                parentPath.Insert(0, current.Text);
+                current = current.Parent;
+            }
+            return FindNodeDataByPath(_fullData, parentPath, node.Text);
         }
 
         /// <summary>
@@ -232,20 +309,57 @@ namespace _4._18
         {
             if (e.Button == MouseButtons.Right)
             {
+                if (SuppressNextContextMenu)
+                {
+                    SuppressNextContextMenu = false;
+                    return;
+                }
+
                 TreeNode node = treeViewTag.GetNodeAt(e.X, e.Y);
 
                 if (node == null)
                 {
                     // 右鍵點擊空白處，清除選中狀態並隱藏提示
                     ClearSelection();
+                    menuBlank.Items[1].Enabled = _copiedNode != null;
                     menuBlank.Show(treeViewTag, e.Location);
                 }
                 else
                 {
                     treeViewTag.SelectedNode = node;
+                    menuNode.Items[2].Enabled = _copiedNode != null;
                     menuNode.Show(treeViewTag, e.Location);
                 }
             }
+        }
+
+        /// <summary>
+        /// 程式化添加一個標籤組：一個父節點 + 多個子節點（供 JSON 匯入等功能調用）
+        /// </summary>
+        /// <param name="parentName">父節點名稱（例如井名）</param>
+        /// <param name="childNames">子節點名稱列表（例如各裝置說明）</param>
+        public void AddTagGroup(string parentName, List<string> childNames)
+        {
+            if (string.IsNullOrWhiteSpace(parentName))
+                return;
+
+            TreeNode parentNode = new TreeNode(parentName);
+            if (childNames != null)
+            {
+                foreach (string child in childNames)
+                {
+                    if (!string.IsNullOrWhiteSpace(child))
+                        parentNode.Nodes.Add(new TreeNode(child));
+                }
+            }
+
+            treeViewTag.Nodes.Add(parentNode);
+            parentNode.Expand();
+
+            if (!IsFilterActive())
+                SnapshotTreeToFullData();
+
+            SaveTreeData();
         }
 
         /// <summary>
@@ -312,10 +426,13 @@ namespace _4._18
         {
             menuBlank = new ContextMenuStrip();
             menuBlank.Items.Add(LocalizationManager.GetString("AddRootNode"), null, (s, e) => AddRootNode());
+            menuBlank.Items.Add(LocalizationManager.GetString("PasteAsChild"), null, (s, e) => PasteAsRootNode());
             MenuStyleHelper.Apply(menuBlank);
 
             menuNode = new ContextMenuStrip();
             menuNode.Items.Add(LocalizationManager.GetString("AddChildNode"), null, (s, e) => AddChildNode());
+            menuNode.Items.Add(LocalizationManager.GetString("CopyNode"), null, (s, e) => CopyNode());
+            menuNode.Items.Add(LocalizationManager.GetString("PasteAsChild"), null, (s, e) => PasteAsChildNode());
             menuNode.Items.Add(LocalizationManager.GetString("Rename"), null, (s, e) => RenameNode());
             menuNode.Items.Add(LocalizationManager.GetString("DeleteCurrentNode"), null, (s, e) => DeleteNode());
             MenuStyleHelper.Apply(menuNode);
@@ -334,6 +451,8 @@ namespace _4._18
             node.BeginEdit();
             if (IsFilterActive())
             {
+                // 過濾模式下，直接添加到 _fullData（名稱會在 AfterLabelEdit 中更新）
+                _fullData.Add(new TreeNodeData(node.Text));
                 return;
             }
             SnapshotTreeToFullData();
@@ -351,6 +470,8 @@ namespace _4._18
                 child.BeginEdit();
                 if (IsFilterActive())
                 {
+                    // 過濾模式下，找到 _fullData 中的父節點並添加子節點
+                    AddChildToFullData(node, child.Text);
                     return;
                 }
                 SnapshotTreeToFullData();
@@ -369,13 +490,73 @@ namespace _4._18
         private void DeleteNode()
         {
             TreeNode node = treeViewTag.SelectedNode;
-            if (node != null)
-                node.Remove();
+            if (node == null)
+                return;
+
+            node.Remove();
+
             if (IsFilterActive())
             {
-                return;
+                // 過濾模式下，需要從 _fullData 中找到並刪除對應節點
+                RemoveNodeFromFullData(node);
             }
-            SnapshotTreeToFullData();
+            else
+            {
+                SnapshotTreeToFullData();
+            }
+            SaveTreeData();
+        }
+
+        private void CopyNode()
+        {
+            _copiedNode = treeViewTag.SelectedNode;
+        }
+
+        private void PasteAsChildNode()
+        {
+            if (_copiedNode == null || treeViewTag.SelectedNode == null)
+                return;
+            TreeNode clone = CloneTreeNode(_copiedNode);
+            treeViewTag.SelectedNode.Nodes.Add(clone);
+            treeViewTag.SelectedNode.Expand();
+            if (IsFilterActive())
+            {
+                // 過濾模式下，找到 _fullData 中的父節點並添加克隆數據
+                AddChildDataToFullData(treeViewTag.SelectedNode, ConvertToTreeNodeData(clone));
+            }
+            else
+            {
+                SnapshotTreeToFullData();
+            }
+            SaveTreeData();
+        }
+
+        private void PasteAsRootNode()
+        {
+            if (_copiedNode == null)
+                return;
+            TreeNode clone = CloneTreeNode(_copiedNode);
+            treeViewTag.Nodes.Add(clone);
+            if (IsFilterActive())
+            {
+                // 過濾模式下，直接添加到 _fullData
+                _fullData.Add(ConvertToTreeNodeData(clone));
+            }
+            else
+            {
+                SnapshotTreeToFullData();
+            }
+            SaveTreeData();
+        }
+
+        private static TreeNode CloneTreeNode(TreeNode source)
+        {
+            TreeNode clone = new TreeNode(source.Text);
+            foreach (TreeNode child in source.Nodes)
+            {
+                clone.Nodes.Add(CloneTreeNode(child));
+            }
+            return clone;
         }
 
         #region 數據持久化
@@ -387,7 +568,10 @@ namespace _4._18
         {
             try
             {
-                EnsureFullData();
+                // 不調用 EnsureFullData()，因為刪除最後一個節點後
+                // _fullData 為空列表是正確的，EnsureFullData 會錯誤地從舊文件重新加載
+                if (_fullData == null)
+                    _fullData = new List<TreeNodeData>();
                 List<TreeNodeData> rootNodes = _fullData;
 
                 using (FileStream stream = new FileStream(dataFilePath, FileMode.Create))

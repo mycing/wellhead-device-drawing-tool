@@ -16,6 +16,7 @@ public class SvgDrawPicturePanel : Panel
     private List<Panel> _dynamicPanels; // 动态面板列表
     public byte[] _svgData; // 用于存储传入的 SVG 字节数组
     private readonly float _aspectRatio; // 存储SVG原始宽高比
+    private static readonly HashSet<string> _svgPanelLogged = new HashSet<string>();
 
     public SvgDrawPicturePanel(Point location, byte[] svgData, Panel parentPanel, MouseEventHandler parentMouseWheelHandler, List<Panel> dynamicPanels)
     {
@@ -56,15 +57,39 @@ public class SvgDrawPicturePanel : Panel
     /// <param name="resourceData">资源中的 SVG 字节数组</param>
     public void LoadSvgFromResource(byte[] resourceData)
     {
-        using (var stream = new MemoryStream(resourceData))
+        if (resourceData == null || resourceData.Length == 0)
         {
-            _svgDocument = SvgDocument.Open<SvgDocument>(stream); // 从流加载 SVG
-            // 设置初始尺寸
-            if (_svgDocument != null)
+            LogSvgPanelIssue("LoadSvgFromResource: empty svgData");
+            return;
+        }
+
+        try
+        {
+            using (var stream = new MemoryStream(resourceData))
             {
-                this.Size = new Size((int)_svgDocument.Width, (int)_svgDocument.Height);
+                _svgDocument = SvgDocument.Open<SvgDocument>(stream); // 从流加载 SVG
+                // 设置初始尺寸
+                if (_svgDocument != null)
+                {
+                    int width = (int)_svgDocument.Width;
+                    int height = (int)_svgDocument.Height;
+                    this.Size = new Size(width, height);
+                    if (width <= 0 || height <= 0)
+                    {
+                        LogSvgPanelIssue($"LoadSvgFromResource: invalid size width={width}, height={height}");
+                    }
+                }
+                else
+                {
+                    LogSvgPanelIssue("LoadSvgFromResource: SvgDocument is null");
+                }
             }
         }
+        catch (Exception ex)
+        {
+            LogSvgPanelIssue("LoadSvgFromResource exception: " + ex.Message);
+        }
+
         this.Invalidate(); // 触发重绘
     }
 
@@ -141,10 +166,7 @@ public class SvgDrawPicturePanel : Panel
     {
         if (e.Button == MouseButtons.Right)
         {
-            // 创建右键菜单
-            ContextMenuStrip contextMenu = new ContextMenuStrip();
-
-            ToolStripMenuItem deleteItem = new ToolStripMenuItem(LocalizationManager.GetString("Delete"), null, (s, ev) =>
+            ContextMenuStrip contextMenu = CanvasContextMenuFactory.Create(this, () =>
             {
                 if (_parentPanel != null)
                 {
@@ -154,53 +176,7 @@ public class SvgDrawPicturePanel : Panel
                 {
                     _dynamicPanels.Remove(this);
                 }
-            });
-            contextMenu.Items.Add(deleteItem);
-
-            ToolStripMenuItem autoAlignItem = new ToolStripMenuItem(LocalizationManager.GetString("AutoAlign"), null, (s, ev) =>
-            {
-                var form = this.FindForm() as _4._18.Form1;
-                form?.AutoAlignControls();
-            });
-            contextMenu.Items.Add(autoAlignItem);
-
-            ToolStripMenuItem autoCaptureItem = new ToolStripMenuItem(LocalizationManager.GetString("AutoCapture"), null, (s, ev) =>
-            {
-                var form = this.FindForm() as _4._18.Form1;
-                form?.StartAutoCapture();
-            });
-            contextMenu.Items.Add(autoCaptureItem);
-            contextMenu.Items.Add(new ToolStripSeparator());
-
-            ToolStripMenuItem captureItem = new ToolStripMenuItem(LocalizationManager.GetString("Capture"), null, (s, ev) =>
-            {
-                var form = this.FindForm() as _4._18.Form1;
-                form?.StartCapture();
-            });
-            contextMenu.Items.Add(captureItem);
-
-            ToolStripMenuItem clearItem = new ToolStripMenuItem(LocalizationManager.GetString("ClearCanvas"), null, (s, ev) =>
-            {
-                _parentPanel?.Controls.Clear();
-                _parentPanel?.Refresh();
-            });
-            contextMenu.Items.Add(clearItem);
-
-            ToolStripMenuItem openSampleItem = new ToolStripMenuItem(LocalizationManager.GetString("OpenSample"), null, (s, ev) =>
-            {
-                var form = this.FindForm() as _4._18.Form1;
-                form?.OpenDeviceSample();
-            });
-            contextMenu.Items.Add(openSampleItem);
-
-            ToolStripMenuItem saveSampleItem = new ToolStripMenuItem(LocalizationManager.GetString("AddSampleToLibrary"), null, (s, ev) =>
-            {
-                var form = this.FindForm() as _4._18.Form1;
-                form?.SaveSampleToLibrary();
-            });
-            contextMenu.Items.Add(saveSampleItem);
-
-            MenuStyleHelper.Apply(contextMenu);
+            }, includeImportJson: true);
             this.ContextMenuStrip = contextMenu;
             contextMenu.Show(this, e.Location);
         }
@@ -258,5 +234,28 @@ public class SvgDrawPicturePanel : Panel
             return; // 不调用base，阻止消息上传到父panel
         }
         base.WndProc(ref m);
+    }
+
+    private static void LogSvgPanelIssue(string message)
+    {
+        try
+        {
+            string key = message ?? string.Empty;
+            lock (_svgPanelLogged)
+            {
+                if (_svgPanelLogged.Contains(key))
+                {
+                    return;
+                }
+                _svgPanelLogged.Add(key);
+            }
+
+            string logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "svg_parse.log");
+            File.AppendAllText(logPath, $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {message}{Environment.NewLine}");
+        }
+        catch
+        {
+            // Diagnostics should never impact runtime behavior.
+        }
     }
 }

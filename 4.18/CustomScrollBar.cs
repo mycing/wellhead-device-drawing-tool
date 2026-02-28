@@ -11,14 +11,15 @@ namespace _4._18
     {
         private Panel thumbPanel;
         private bool isDragging = false;
-        private int dragStartY;
-        private int thumbStartTop;
+        private int dragStartPos;
+        private int thumbStartPos;
 
         private int minimum = 0;
         private int maximum = 100;
         private int value = 0;
         private int largeChange = 10;
         private int smallChange = 1;
+        private Orientation orientation = Orientation.Vertical;
 
         // 顏色設置 - 與 listBox1 保持一致
         private Color trackColor = Color.FromArgb(230, 232, 235);
@@ -38,8 +39,9 @@ namespace _4._18
             thumbPanel = new Panel
             {
                 BackColor = thumbColor,
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Default
             };
+            this.Cursor = Cursors.Default;
             thumbPanel.MouseDown += ThumbPanel_MouseDown;
             thumbPanel.MouseMove += ThumbPanel_MouseMove;
             thumbPanel.MouseUp += ThumbPanel_MouseUp;
@@ -104,6 +106,17 @@ namespace _4._18
             set { thumbColor = value; thumbPanel.BackColor = value; }
         }
 
+        public Orientation Orientation
+        {
+            get => orientation;
+            set
+            {
+                if (orientation == value) return;
+                orientation = value;
+                UpdateThumbSize();
+            }
+        }
+
         private int GetMaxScrollValue()
         {
             return Math.Max(0, maximum - largeChange);
@@ -111,39 +124,63 @@ namespace _4._18
 
         private void UpdateThumbSize()
         {
-            if (this.Height <= 0 || maximum <= minimum) return;
+            int trackLength = (orientation == Orientation.Vertical ? this.Height : this.Width) - 4;
+            if (trackLength <= 0 || maximum <= minimum) return;
 
-            int trackHeight = this.Height - 4; // 留出邊距
             int range = maximum - minimum;
 
-            // 計算滾動塊高度（最小50像素）
-            int thumbHeight = Math.Max(50, (int)((float)largeChange / range * trackHeight));
-            thumbHeight = Math.Min(thumbHeight, trackHeight);
+            // 計算滾動塊長度（最小50像素）
+            int thumbLength = Math.Max(50, (int)((float)largeChange / range * trackLength));
+            thumbLength = Math.Min(thumbLength, trackLength);
 
-            thumbPanel.Width = this.Width - 4;
-            thumbPanel.Height = thumbHeight;
-            thumbPanel.Left = 2;
+            if (orientation == Orientation.Vertical)
+            {
+                thumbPanel.Width = this.Width - 4;
+                thumbPanel.Height = thumbLength;
+                thumbPanel.Left = 2;
+            }
+            else
+            {
+                thumbPanel.Height = this.Height - 4;
+                thumbPanel.Width = thumbLength;
+                thumbPanel.Top = 2;
+            }
 
             UpdateThumbPosition();
         }
 
         private void UpdateThumbPosition()
         {
-            if (this.Height <= 0) return;
+            int trackLength = (orientation == Orientation.Vertical ? this.Height : this.Width) - 4;
+            if (trackLength <= 0) return;
 
-            int trackHeight = this.Height - 4;
-            int thumbHeight = thumbPanel.Height;
-            int scrollableHeight = trackHeight - thumbHeight;
+            int thumbLength = orientation == Orientation.Vertical ? thumbPanel.Height : thumbPanel.Width;
+            int scrollableLength = trackLength - thumbLength;
             int maxScrollValue = GetMaxScrollValue();
 
-            if (maxScrollValue > 0 && scrollableHeight > 0)
+            if (maxScrollValue > 0 && scrollableLength > 0)
             {
-                int thumbTop = 2 + (int)((float)value / maxScrollValue * scrollableHeight);
-                thumbPanel.Top = Math.Max(2, Math.Min(thumbTop, trackHeight - thumbHeight + 2));
+                int thumbPos = 2 + (int)((float)value / maxScrollValue * scrollableLength);
+                thumbPos = Math.Max(2, Math.Min(thumbPos, trackLength - thumbLength + 2));
+                if (orientation == Orientation.Vertical)
+                {
+                    thumbPanel.Top = thumbPos;
+                }
+                else
+                {
+                    thumbPanel.Left = thumbPos;
+                }
             }
             else
             {
-                thumbPanel.Top = 2;
+                if (orientation == Orientation.Vertical)
+                {
+                    thumbPanel.Top = 2;
+                }
+                else
+                {
+                    thumbPanel.Left = 2;
+                }
             }
         }
 
@@ -152,8 +189,10 @@ namespace _4._18
             if (e.Button == MouseButtons.Left)
             {
                 isDragging = true;
-                dragStartY = e.Y;
-                thumbStartTop = thumbPanel.Top;
+                Point p = this.PointToClient(Cursor.Position);
+                dragStartPos = orientation == Orientation.Vertical ? p.Y : p.X;
+                thumbStartPos = orientation == Orientation.Vertical ? thumbPanel.Top : thumbPanel.Left;
+                thumbPanel.Capture = true;
                 thumbPanel.BackColor = thumbHoverColor;
             }
         }
@@ -162,17 +201,19 @@ namespace _4._18
         {
             if (isDragging)
             {
-                int trackHeight = this.Height - 4;
-                int thumbHeight = thumbPanel.Height;
-                int scrollableHeight = trackHeight - thumbHeight;
+                int trackLength = (orientation == Orientation.Vertical ? this.Height : this.Width) - 4;
+                int thumbLength = orientation == Orientation.Vertical ? thumbPanel.Height : thumbPanel.Width;
+                int scrollableLength = trackLength - thumbLength;
 
-                int newTop = thumbStartTop + (e.Y - dragStartY);
-                newTop = Math.Max(2, Math.Min(newTop, scrollableHeight + 2));
+                Point p = this.PointToClient(Cursor.Position);
+                int currentPos = orientation == Orientation.Vertical ? p.Y : p.X;
+                int newPos = thumbStartPos + (currentPos - dragStartPos);
+                newPos = Math.Max(2, Math.Min(newPos, scrollableLength + 2));
 
                 int maxScrollValue = GetMaxScrollValue();
-                if (scrollableHeight > 0 && maxScrollValue > 0)
+                if (scrollableLength > 0 && maxScrollValue > 0)
                 {
-                    int newValue = (int)((float)(newTop - 2) / scrollableHeight * maxScrollValue);
+                    int newValue = (int)((float)(newPos - 2) / scrollableLength * maxScrollValue);
                     Value = newValue;
                 }
             }
@@ -181,17 +222,22 @@ namespace _4._18
         private void ThumbPanel_MouseUp(object sender, MouseEventArgs e)
         {
             isDragging = false;
+            thumbPanel.Capture = false;
             thumbPanel.BackColor = thumbColor;
         }
 
         private void CustomScrollBar_MouseClick(object sender, MouseEventArgs e)
         {
             // 點擊軌道時跳轉
-            if (e.Y < thumbPanel.Top)
+            int clickPos = orientation == Orientation.Vertical ? e.Y : e.X;
+            int thumbStart = orientation == Orientation.Vertical ? thumbPanel.Top : thumbPanel.Left;
+            int thumbEnd = orientation == Orientation.Vertical ? thumbPanel.Bottom : thumbPanel.Right;
+
+            if (clickPos < thumbStart)
             {
                 Value -= largeChange;
             }
-            else if (e.Y > thumbPanel.Bottom)
+            else if (clickPos > thumbEnd)
             {
                 Value += largeChange;
             }

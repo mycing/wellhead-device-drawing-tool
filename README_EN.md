@@ -41,6 +41,8 @@
 - **Custom Device Import** - Supports JPG, PNG, BMP, GIF, SVG formats
 - **Tree-structured Label Management** - Multi-level categorization for text labels
 - **Template Library System** - Save/load device combinations with folder organization
+- **Batch JSON Diagram Import** - Supports single JSON, multiple concatenated JSON blocks, and JSON arrays
+- **Multilingual UI** - English, Simplified Chinese, Traditional Chinese, Spanish, French, Portuguese, Russian, Persian, Norwegian, Japanese, Korean, Arabic
 
 ### Canvas Features
 - **Drag & Drop** - Intuitive drag-to-move and scroll-to-zoom
@@ -51,6 +53,7 @@
 - **Real-time Preview** - Hover to show device preview
 - **Instant Search** - Quick filtering for labels and templates
 - **Auto Save** - Automatic data persistence
+- **Copyable Error Reports** - JSON import errors can be copied with full diagnostic details
 
 ---
 
@@ -59,7 +62,7 @@
 ### Installation
 1. Download the latest version from [Releases](https://github.com/mycing/wellhead-device-drawing-tool/releases)
 2. Extract to any directory
-3. Run `4.18.exe`
+3. Run `WellheadDiagram.exe`
 
 ### System Requirements
 - Windows 7 / 8 / 10 / 11
@@ -114,6 +117,8 @@ Select Device → Click Canvas to Place → Add Text Labels → Adjust Position/
 - **Screenshot** - Manual selection capture
 - **Clear Canvas** - Remove all content
 - **Add to Library** - Save as template
+- **Save to Current Template** - Overwrite the currently loaded template
+- **Import JSON** - Build diagrams quickly from AI-generated JSON
 
 ---
 
@@ -125,7 +130,7 @@ Select Device → Click Canvas to Place → Add Text Labels → Adjust Position/
 ├── README.md                   # Project description (Chinese)
 ├── README_EN.md                # Project description (English)
 └── 4.18/                       # Main project directory
-    ├── 4.18.csproj             # Project file
+    ├── 4.18.csproj             # Project file (output: WellheadDiagram.exe)
     ├── App.config              # Application config
     ├── packages.config         # NuGet packages config
     │
@@ -149,14 +154,21 @@ Select Device → Click Canvas to Place → Add Text Labels → Adjust Position/
     ├── ScreenCaptureManager.cs # Manual screenshot
     ├── PanelManager.cs         # Panel management
     ├── PanelSampleLibrarySaver.cs  # Template saving
+    ├── CanvasContextMenuFactory.cs # Canvas context menu factory
     │
     ├── # Data Models
     ├── Device.cs               # Device class
     ├── TemplateTreeNodeData.cs # Template tree node data
+    ├── WellheadJsonSchema.cs   # JSON schema model
     │
     ├── # Helper Classes
     ├── HelpDialog.cs           # Help dialog
     ├── MenuStyleHelper.cs      # Menu style helper
+    ├── LocalizationManager.cs  # Localization manager
+    ├── LanguageOptionMapper.cs # Language option mapping
+    ├── BuiltInDeviceCatalog.cs # Built-in device mapping
+    ├── WellheadJsonImporter.cs # JSON import parser
+    ├── JsonImportDialog.cs     # JSON import dialog
     │
     ├── Properties/             # Project properties
     │   ├── AssemblyInfo.cs
@@ -266,8 +278,12 @@ Panel (System.Windows.Forms)
 |---------|---------|---------|
 | Svg | 3.4.7 | SVG vector rendering |
 | Newtonsoft.Json | 13.0.3 | JSON serialization |
-| System.Data.SQLite | 1.0.119 | SQLite database |
-| EntityFramework | 6.4.4 | ORM framework |
+| ExCSS | 4.2.3 | SVG/CSS style parsing |
+| System.Buffers | 4.5.1 | Buffer utilities |
+| System.Memory | 4.5.5 | Memory/span support |
+| System.Numerics.Vectors | 4.5.0 | Vector math support |
+| System.Resources.Extensions | 9.0.0 | Resource extension support |
+| System.Runtime.CompilerServices.Unsafe | 6.0.0 | Runtime low-level support |
 
 ---
 
@@ -279,6 +295,9 @@ Panel (System.Windows.Forms)
 | `template_library.bin` | Binary | Template library (folder structure + templates) |
 | `tagtree_items.bin` | Binary | Label tree structure |
 | `pictures/` | Directory | User custom device images |
+| `language.conf` | Text | Language/UI setting persistence |
+| `listbox3_items.bin` | Binary | Legacy template data (migration compatibility) |
+| `listbox3_items.json` | JSON | Legacy template data (debug/compatibility) |
 
 ### Serialization
 Uses `BinaryFormatter` for binary serialization to ensure data integrity.
@@ -303,6 +322,20 @@ Uses `BinaryFormatter` for binary serialization to ensure data integrity.
 ---
 
 ## Changelog
+
+### v1.2.0 (2026.2.27)
+- Added full 12-language switching (EN/zh-CN/zh-TW/ES/FR/PT/RU/FA/NO/JA/KO/AR), including built-in device names, menus, and help docs
+- JSON import upgraded: supports single JSON, concatenated multi-JSON input, and JSON arrays with multilingual key/type aliases
+- JSON diagnostics upgraded: reports JSON index, line, position, and device index; error dialog supports one-click copy
+- Canvas upgraded to bidirectional scrolling (vertical + horizontal) with dynamic bounds based on rendered content
+- Added **Save to Current Template** with dynamic enable/disable based on local template mapping state
+
+### v1.1.0 (2026.2.26)
+- Template library upgraded from flat list to tree structure with folders, rename/delete, copy/paste, and search filtering
+- Added tag tree search with live filtering; fixed add/delete/paste persistence sync in filter mode
+- Moved colored/uncolored device toggle into Settings dialog (replacing main-form legacy switch)
+- Refactored help system into hierarchical navigation with language-aware content
+- Improved DPI layout strategy and search-box positioning for high scaling factors
 
 ### v1.0.0 (2026.2)
 - Label tree supports multi-level structure

@@ -61,62 +61,10 @@ public class DrawstringPanel : Panel
     {
         if (e.Button == MouseButtons.Right)
         {
-            // 创建右键菜单
-            ContextMenuStrip contextMenu = new ContextMenuStrip();
-
-            ToolStripMenuItem deleteItem = new ToolStripMenuItem(LocalizationManager.GetString("Delete"), null, (s, ev) =>
+            ContextMenuStrip contextMenu = CanvasContextMenuFactory.Create(this, () =>
             {
-                if (this.Parent != null)
-                {
-                    this.Parent.Controls.Remove(this);
-                }
-            });
-            contextMenu.Items.Add(deleteItem);
-
-            ToolStripMenuItem autoAlignItem = new ToolStripMenuItem(LocalizationManager.GetString("AutoAlign"), null, (s, ev) =>
-            {
-                var form = this.FindForm() as _4._18.Form1;
-                form?.AutoAlignControls();
-            });
-            contextMenu.Items.Add(autoAlignItem);
-
-            ToolStripMenuItem autoCaptureItem = new ToolStripMenuItem(LocalizationManager.GetString("AutoCapture"), null, (s, ev) =>
-            {
-                var form = this.FindForm() as _4._18.Form1;
-                form?.StartAutoCapture();
-            });
-            contextMenu.Items.Add(autoCaptureItem);
-            contextMenu.Items.Add(new ToolStripSeparator());
-
-            ToolStripMenuItem captureItem = new ToolStripMenuItem(LocalizationManager.GetString("Capture"), null, (s, ev) =>
-            {
-                var form = this.FindForm() as _4._18.Form1;
-                form?.StartCapture();
-            });
-            contextMenu.Items.Add(captureItem);
-
-            ToolStripMenuItem clearItem = new ToolStripMenuItem(LocalizationManager.GetString("ClearCanvas"), null, (s, ev) =>
-            {
-                this.Parent?.Controls.Clear();
-                (this.Parent as Panel)?.Refresh();
-            });
-            contextMenu.Items.Add(clearItem);
-
-            ToolStripMenuItem openSampleItem = new ToolStripMenuItem(LocalizationManager.GetString("OpenSample"), null, (s, ev) =>
-            {
-                var form = this.FindForm() as _4._18.Form1;
-                form?.OpenDeviceSample();
-            });
-            contextMenu.Items.Add(openSampleItem);
-
-            ToolStripMenuItem saveSampleItem = new ToolStripMenuItem(LocalizationManager.GetString("AddSampleToLibrary"), null, (s, ev) =>
-            {
-                var form = this.FindForm() as _4._18.Form1;
-                form?.SaveSampleToLibrary();
-            });
-            contextMenu.Items.Add(saveSampleItem);
-
-            MenuStyleHelper.Apply(contextMenu);
+                this.Parent?.Controls.Remove(this);
+            }, includeImportJson: true);
             this.ContextMenuStrip = contextMenu;
             contextMenu.Show(this, e.Location);
         }

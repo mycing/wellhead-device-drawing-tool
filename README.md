@@ -41,6 +41,8 @@
 - **自定義裝置導入** - 支持 JPG、PNG、BMP、GIF、SVG 格式
 - **樹狀標籤管理** - 多層級分類管理文字標籤
 - **模板庫系統** - 保存/載入常用裝置組合，支持資料夾分類
+- **JSON 批量建圖** - 支持單個 JSON、連續多個 JSON、JSON 數組匯入
+- **多語言界面** - 支持英語、簡中、繁中、西語、法語、葡語、俄語、波斯語、挪威語、日語、韓語、阿語
 
 ### 畫布功能
 - **拖放操作** - 直覺的拖動移動、滾輪縮放
@@ -51,6 +53,7 @@
 - **實時預覽** - 懸停顯示裝置預覽圖
 - **即時搜索** - 標籤和模板的快速過濾
 - **自動保存** - 數據自動持久化，無需手動保存
+- **可複製錯誤報告** - JSON 匯入失敗可直接複製詳細錯誤信息
 
 ---
 
@@ -59,7 +62,7 @@
 ### 下載安裝
 1. 從 [Releases](https://github.com/mycing/wellhead-device-drawing-tool/releases) 下載最新版本
 2. 解壓到任意目錄
-3. 運行 `4.18.exe`
+3. 運行 `WellheadDiagram.exe`
 
 ### 系統要求
 - Windows 7 / 8 / 10 / 11
@@ -114,6 +117,8 @@
 - **截圖** - 手動框選截圖區域
 - **清空畫布** - 清除所有內容
 - **添加樣例到庫** - 保存為模板
+- **保存到目前模板** - 覆蓋保存當前已載入模板
+- **匯入 JSON** - 通過 AI 生成的 JSON 快速建圖
 
 ---
 
@@ -125,7 +130,7 @@
 ├── README.md                   # 項目說明（中文）
 ├── README_EN.md                # 項目說明（英文）
 └── 4.18/                       # 主項目目錄
-    ├── 4.18.csproj             # 項目文件
+    ├── 4.18.csproj             # 項目文件（輸出名：WellheadDiagram.exe）
     ├── App.config              # 應用配置
     ├── packages.config         # NuGet 包配置
     │
@@ -149,14 +154,21 @@
     ├── ScreenCaptureManager.cs # 手動截圖管理
     ├── PanelManager.cs         # 面板管理
     ├── PanelSampleLibrarySaver.cs  # 模板保存
+    ├── CanvasContextMenuFactory.cs # 畫布右鍵菜單工廠
     │
     ├── # 數據模型
     ├── Device.cs               # 裝置類
     ├── TemplateTreeNodeData.cs # 模板樹節點數據
+    ├── WellheadJsonSchema.cs   # JSON 數據模型
     │
     ├── # 輔助類
     ├── HelpDialog.cs           # 幫助對話框
     ├── MenuStyleHelper.cs      # 菜單樣式輔助
+    ├── LocalizationManager.cs  # 多語言管理
+    ├── LanguageOptionMapper.cs # 語言選項映射
+    ├── BuiltInDeviceCatalog.cs # 內置裝置映射
+    ├── WellheadJsonImporter.cs # JSON 匯入解析器
+    ├── JsonImportDialog.cs     # JSON 匯入對話框
     │
     ├── Properties/             # 項目屬性
     │   ├── AssemblyInfo.cs
@@ -266,8 +278,12 @@ Panel (System.Windows.Forms)
 |------|------|------|
 | Svg | 3.4.7 | SVG 矢量圖渲染 |
 | Newtonsoft.Json | 13.0.3 | JSON 序列化 |
-| System.Data.SQLite | 1.0.119 | SQLite 數據庫 |
-| EntityFramework | 6.4.4 | ORM 框架 |
+| ExCSS | 4.2.3 | SVG/CSS 樣式解析 |
+| System.Buffers | 4.5.1 | 內存緩衝支持 |
+| System.Memory | 4.5.5 | 高性能內存訪問 |
+| System.Numerics.Vectors | 4.5.0 | 向量計算支持 |
+| System.Resources.Extensions | 9.0.0 | 資源擴展支持 |
+| System.Runtime.CompilerServices.Unsafe | 6.0.0 | 低層運行時支持 |
 
 ---
 
@@ -279,6 +295,9 @@ Panel (System.Windows.Forms)
 | `template_library.bin` | Binary | 模板庫（資料夾結構+模板內容） |
 | `tagtree_items.bin` | Binary | 標籤樹結構 |
 | `pictures/` | 目錄 | 用戶自定義裝置圖片 |
+| `language.conf` | Text | 語言與界面顯示設置 |
+| `listbox3_items.bin` | Binary | 舊版模板數據（兼容遷移） |
+| `listbox3_items.json` | JSON | 舊版模板數據（調試/兼容） |
 
 ### 序列化方式
 使用 `BinaryFormatter` 進行二進制序列化，確保數據完整性。
@@ -303,6 +322,20 @@ Panel (System.Windows.Forms)
 ---
 
 ## 更新日誌
+
+### v1.2.0 (2026.2.27)
+- 新增 12 語言完整切換（英/簡/繁/西/法/葡/俄/波斯/挪威/日/韓/阿），內置裝置名稱、菜單、幫助文檔同步本地化
+- JSON 匯入升級：支持單個 JSON、連續多 JSON、JSON 數組批量匯入，並兼容多語言鍵名/設備別名
+- JSON 報錯升級：精確顯示 JSON 序號、行號、位置與設備索引，錯誤彈窗支持一鍵複製
+- 畫布升級為雙向滾動（縱向+橫向），按內容邊界動態計算可視範圍
+- 新增「保存到目前模板」，按是否存在本地模板映射動態啟用/禁用
+
+### v1.1.0 (2026.2.26)
+- 模板庫由列表升級為樹狀結構，支持資料夾、重命名、刪除、複製/粘貼與搜索過濾
+- 標籤樹新增搜索框與實時過濾，修復過濾模式下新增/刪除/粘貼與本地文件不同步問題
+- 設置對話框整合「上色/未上色裝置」選項，替代主界面舊開關
+- 幫助系統重構為分級導航，內容隨語言切換
+- 優化 DPI 佈局與搜索框定位，提升高縮放下可用性
 
 ### v1.0.0 (2026.2)
 - 標籤樹支持多層級結構

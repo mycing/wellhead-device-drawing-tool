@@ -18,6 +18,8 @@ namespace _4._18
         Russian,
         Persian,
         Norwegian,
+        Japanese,
+        Korean,
         Arabic
     }
 
@@ -61,6 +63,60 @@ namespace _4._18
             new[] { "Single Bore Double Well",    "单筒双井",          "單筒雙井",           "Pozo doble de un solo conducto",  "Double puits à alésage unique",       "Poço duplo de furo único",       "Двухскважинная одноствольная",   "دوچاه تک‌مجرایی",           "Dobbel brønn, enkelt boreløp","بئر مزدوج أحادي الفتحة" },   // 20
             new[] { "Marine Conductor",           "隔水导管",          "隔水導管",           "Conductor marino",                "Conduite marine",                    "Condutor marinho",               "Морской кондуктор",              "هادی دریایی",              "Sjø-conductor",            "موصل بحري" },               // 21
             new[] { "Choke & Kill Manifold",      "节流压井管汇",      "節流壓井管匯",       "Colector de estrangulación y kill","Collecteur choke & kill",            "Manifold de choke e kill",       "Коллектор глушения и дросселирования","منیفولد چوک و کیل",        "Choke- og kill-manifold", "مشعب الخنق والقتل" },        // 22
+        };
+
+        private static readonly string[] DeviceNamesJapanese =
+        {
+            "回転テーブル",
+            "ベルニップル",
+            "パッキンググランドライザーサブ",
+            "MPD回転制御ヘッド",
+            "仮設ウェルヘッド",
+            "アニュラBOP",
+            "ラムBOP",
+            "ダブルラムBOP",
+            "掘削スプール",
+            "チュービングスプール",
+            "ケーシングスプール",
+            "異径フランジ",
+            "アダプタフランジ",
+            "ライザー",
+            "ケーシングヘッド",
+            "ウェルヘッドプラットフォーム",
+            "ダイバータ",
+            "単層ケーシング",
+            "二層ケーシング",
+            "三層ケーシング",
+            "単孔二井",
+            "マリンコンダクタ",
+            "チョーク・キルマニホールド"
+        };
+
+        private static readonly string[] DeviceNamesKorean =
+        {
+            "로터리 테이블",
+            "벨 니플",
+            "패킹 글랜드 라이저 서브",
+            "MPD 회전 제어 헤드",
+            "임시 웰헤드",
+            "환형 BOP",
+            "램 BOP",
+            "더블 램 BOP",
+            "드릴링 스풀",
+            "튜빙 스풀",
+            "케이싱 스풀",
+            "리듀서 플랜지",
+            "어댑터 플랜지",
+            "라이저",
+            "케이싱 헤드",
+            "웰헤드 플랫폼",
+            "다이버터",
+            "단층 케이싱",
+            "이중 케이싱",
+            "삼중 케이싱",
+            "단일 보어 이중정",
+            "해양 컨덕터",
+            "초크 앤 킬 매니폴드"
         };
 
         private static readonly Dictionary<string, Dictionary<Language, string>> Strings = new Dictionary<string, Dictionary<Language, string>>
@@ -276,6 +332,32 @@ namespace _4._18
                 { Language.Norwegian, "Autojuster" },
                 { Language.Arabic, "محاذاة تلقائية" }
             },
+            ["AutoAlignCenter"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Auto Align (Center)" },
+                { Language.SimplifiedChinese, "自动对齐（居中）" },
+                { Language.TraditionalChinese, "自動對齊（居中顯示）" },
+                { Language.Spanish, "Alinear automáticamente (centrado)" },
+                { Language.French, "Aligner automatiquement (centré)" },
+                { Language.Portuguese, "Alinhar automaticamente (centralizado)" },
+                { Language.Russian, "Автовыравнивание (по центру)" },
+                { Language.Persian, "تراز خودکار (وسط)" },
+                { Language.Norwegian, "Autojuster (sentrert)" },
+                { Language.Arabic, "محاذاة تلقائية (مركز)" }
+            },
+            ["AutoAlignRight"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Auto Align (Right)" },
+                { Language.SimplifiedChinese, "自动对齐（右侧）" },
+                { Language.TraditionalChinese, "自動對齊（右側顯示）" },
+                { Language.Spanish, "Alinear automáticamente (derecha)" },
+                { Language.French, "Aligner automatiquement (droite)" },
+                { Language.Portuguese, "Alinhar automaticamente (direita)" },
+                { Language.Russian, "Автовыравнивание (справа)" },
+                { Language.Persian, "تراز خودکار (راست)" },
+                { Language.Norwegian, "Autojuster (høyre)" },
+                { Language.Arabic, "محاذاة تلقائية (يمين)" }
+            },
             ["AddSampleToLibrary"] = new Dictionary<Language, string>
             {
                 { Language.English, "Add to Library" },
@@ -288,6 +370,660 @@ namespace _4._18
                 { Language.Persian, "افزودن به کتابخانه" },
                 { Language.Norwegian, "Legg til i biblioteket" },
                 { Language.Arabic, "إضافة إلى المكتبة" }
+            },
+            ["SaveCurrentTemplate"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Save to Current Template" },
+                { Language.SimplifiedChinese, "保存到当前模板" },
+                { Language.TraditionalChinese, "保存到目前模板" },
+                { Language.Spanish, "Guardar en la plantilla actual" },
+                { Language.French, "Enregistrer dans le modèle actuel" },
+                { Language.Portuguese, "Salvar no modelo atual" },
+                { Language.Russian, "Сохранить в текущий шаблон" },
+                { Language.Persian, "ذخیره در قالب فعلی" },
+                { Language.Norwegian, "Lagre til gjeldende mal" },
+                { Language.Arabic, "حفظ في القالب الحالي" }
+            },
+
+            // ===== JSON 匯入 =====
+            ["ImportJson"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Import JSON" },
+                { Language.SimplifiedChinese, "导入JSON" },
+                { Language.TraditionalChinese, "匯入JSON" },
+                { Language.Spanish, "Importar JSON" },
+                { Language.French, "Importer JSON" },
+                { Language.Portuguese, "Importar JSON" },
+                { Language.Russian, "Импорт JSON" },
+                { Language.Persian, "وارد کردن JSON" },
+                { Language.Norwegian, "Importer JSON" },
+                { Language.Arabic, "استيراد JSON" }
+            },
+            ["JsonImportError"] = new Dictionary<Language, string>
+            {
+                { Language.English, "JSON import failed:\n{0}" },
+                { Language.SimplifiedChinese, "JSON导入失败：\n{0}" },
+                { Language.TraditionalChinese, "JSON匯入失敗：\n{0}" },
+                { Language.Spanish, "Error al importar JSON:\n{0}" },
+                { Language.French, "Échec de l'importation JSON:\n{0}" },
+                { Language.Portuguese, "Falha ao importar JSON:\n{0}" },
+                { Language.Russian, "Ошибка импорта JSON:\n{0}" },
+                { Language.Persian, "خطا در وارد کردن JSON:\n{0}" },
+                { Language.Norwegian, "JSON-import feilet:\n{0}" },
+                { Language.Arabic, "فشل استيراد JSON:\n{0}" }
+            },
+            ["JsonNoDevices"] = new Dictionary<Language, string>
+            {
+                { Language.English, "No devices found in JSON" },
+                { Language.SimplifiedChinese, "JSON中未找到设备" },
+                { Language.TraditionalChinese, "JSON中未找到裝置" },
+                { Language.Spanish, "No se encontraron dispositivos en el JSON" },
+                { Language.French, "Aucun appareil trouvé dans le JSON" },
+                { Language.Portuguese, "Nenhum dispositivo encontrado no JSON" },
+                { Language.Russian, "Устройства не найдены в JSON" },
+                { Language.Persian, "دستگاهی در JSON یافت نشد" },
+                { Language.Norwegian, "Ingen enheter funnet i JSON" },
+                { Language.Arabic, "لم يتم العثور على أجهزة في JSON" }
+            },
+            ["JsonInvalidType"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Device #{0}: unknown type \"{1}\"" },
+                { Language.SimplifiedChinese, "设备#{0}：未知类型\"{1}\"" },
+                { Language.TraditionalChinese, "裝置#{0}：未知類型\"{1}\"" },
+                { Language.Spanish, "Dispositivo #{0}: tipo desconocido \"{1}\"" },
+                { Language.French, "Appareil #{0}: type inconnu \"{1}\"" },
+                { Language.Portuguese, "Dispositivo #{0}: tipo desconhecido \"{1}\"" },
+                { Language.Russian, "Устройство #{0}: неизвестный тип \"{1}\"" },
+                { Language.Persian, "دستگاه #{0}: نوع ناشناخته \"{1}\"" },
+                { Language.Norwegian, "Enhet #{0}: ukjent type \"{1}\"" },
+                { Language.Arabic, "الجهاز #{0}: نوع غير معروف \"{1}\"" }
+            },
+            ["JsonTopArrayItemNotObject"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Top-level array item #{0} is not an object (actual: {1})." },
+                { Language.SimplifiedChinese, "顶层数组第#{0}项不是对象（实际类型：{1}）。" },
+                { Language.TraditionalChinese, "頂層陣列第#{0}項不是物件（實際類型：{1}）。" },
+                { Language.Spanish, "Top-level array item #{0} is not an object (actual: {1})." },
+                { Language.French, "Top-level array item #{0} is not an object (actual: {1})." },
+                { Language.Portuguese, "Top-level array item #{0} is not an object (actual: {1})." },
+                { Language.Russian, "Top-level array item #{0} is not an object (actual: {1})." },
+                { Language.Persian, "Top-level array item #{0} is not an object (actual: {1})." },
+                { Language.Norwegian, "Top-level array item #{0} is not an object (actual: {1})." },
+                { Language.Arabic, "Top-level array item #{0} is not an object (actual: {1})." }
+            },
+            ["JsonTopLevelMustObjectOrArray"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Top-level JSON must be object or array." },
+                { Language.SimplifiedChinese, "顶层JSON必须是对象或数组。" },
+                { Language.TraditionalChinese, "頂層JSON必須是物件或陣列。" },
+                { Language.Spanish, "Top-level JSON must be object or array." },
+                { Language.French, "Top-level JSON must be object or array." },
+                { Language.Portuguese, "Top-level JSON must be object or array." },
+                { Language.Russian, "Top-level JSON must be object or array." },
+                { Language.Persian, "Top-level JSON must be object or array." },
+                { Language.Norwegian, "Top-level JSON must be object or array." },
+                { Language.Arabic, "Top-level JSON must be object or array." }
+            },
+            ["JsonNoTopLevelBlocks"] = new Dictionary<Language, string>
+            {
+                { Language.English, "No top-level JSON object/array blocks found." },
+                { Language.SimplifiedChinese, "未找到顶层JSON对象/数组块。" },
+                { Language.TraditionalChinese, "未找到頂層JSON物件/陣列塊。" },
+                { Language.Spanish, "No top-level JSON object/array blocks found." },
+                { Language.French, "No top-level JSON object/array blocks found." },
+                { Language.Portuguese, "No top-level JSON object/array blocks found." },
+                { Language.Russian, "No top-level JSON object/array blocks found." },
+                { Language.Persian, "No top-level JSON object/array blocks found." },
+                { Language.Norwegian, "No top-level JSON object/array blocks found." },
+                { Language.Arabic, "No top-level JSON object/array blocks found." }
+            },
+            ["JsonBlockErrorAtLine"] = new Dictionary<Language, string>
+            {
+                { Language.English, "JSON #{0} (line {1}): {2}" },
+                { Language.SimplifiedChinese, "JSON #{0}（第{1}行）：{2}" },
+                { Language.TraditionalChinese, "JSON #{0}（第{1}行）：{2}" },
+                { Language.Spanish, "JSON #{0} (line {1}): {2}" },
+                { Language.French, "JSON #{0} (line {1}): {2}" },
+                { Language.Portuguese, "JSON #{0} (line {1}): {2}" },
+                { Language.Russian, "JSON #{0} (line {1}): {2}" },
+                { Language.Persian, "JSON #{0} (line {1}): {2}" },
+                { Language.Norwegian, "JSON #{0} (line {1}): {2}" },
+                { Language.Arabic, "JSON #{0} (line {1}): {2}" }
+            },
+            ["JsonSchemaImportFailed"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Schema #{0} ({1}{2}): {3}" },
+                { Language.SimplifiedChinese, "Schema #{0}（{1}{2}）：{3}" },
+                { Language.TraditionalChinese, "Schema #{0}（{1}{2}）：{3}" },
+                { Language.Spanish, "Schema #{0} ({1}{2}): {3}" },
+                { Language.French, "Schema #{0} ({1}{2}): {3}" },
+                { Language.Portuguese, "Schema #{0} ({1}{2}): {3}" },
+                { Language.Russian, "Schema #{0} ({1}{2}): {3}" },
+                { Language.Persian, "Schema #{0} ({1}{2}): {3}" },
+                { Language.Norwegian, "Schema #{0} ({1}{2}): {3}" },
+                { Language.Arabic, "Schema #{0} ({1}{2}): {3}" }
+            },
+            ["JsonSkippedInvalidBlocks"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Skipped invalid JSON blocks:" },
+                { Language.SimplifiedChinese, "已跳过无效JSON块：" },
+                { Language.TraditionalChinese, "已跳過無效JSON塊：" },
+                { Language.Spanish, "Skipped invalid JSON blocks:" },
+                { Language.French, "Skipped invalid JSON blocks:" },
+                { Language.Portuguese, "Skipped invalid JSON blocks:" },
+                { Language.Russian, "Skipped invalid JSON blocks:" },
+                { Language.Persian, "Skipped invalid JSON blocks:" },
+                { Language.Norwegian, "Skipped invalid JSON blocks:" },
+                { Language.Arabic, "Skipped invalid JSON blocks:" }
+            },
+            ["JsonSchemaDevicesEmpty"] = new Dictionary<Language, string>
+            {
+                { Language.English, "No devices found in JSON (schema.devices is null or empty)." },
+                { Language.SimplifiedChinese, "JSON中未找到设备（schema.devices为空）。" },
+                { Language.TraditionalChinese, "JSON中未找到裝置（schema.devices為空）。" },
+                { Language.Spanish, "No devices found in JSON (schema.devices is null or empty)." },
+                { Language.French, "No devices found in JSON (schema.devices is null or empty)." },
+                { Language.Portuguese, "No devices found in JSON (schema.devices is null or empty)." },
+                { Language.Russian, "No devices found in JSON (schema.devices is null or empty)." },
+                { Language.Persian, "No devices found in JSON (schema.devices is null or empty)." },
+                { Language.Norwegian, "No devices found in JSON (schema.devices is null or empty)." },
+                { Language.Arabic, "No devices found in JSON (schema.devices is null or empty)." }
+            },
+            ["JsonTypeRequired"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Device #{0} is missing the required \"type\" field." },
+                { Language.SimplifiedChinese, "设备#{0}缺少必填字段\"type\"。" },
+                { Language.TraditionalChinese, "裝置#{0}缺少必填欄位\"type\"。" },
+                { Language.Spanish, "Device #{0} is missing the required \"type\" field." },
+                { Language.French, "Device #{0} is missing the required \"type\" field." },
+                { Language.Portuguese, "Device #{0} is missing the required \"type\" field." },
+                { Language.Russian, "Device #{0} is missing the required \"type\" field." },
+                { Language.Persian, "Device #{0} is missing the required \"type\" field." },
+                { Language.Norwegian, "Device #{0} is missing the required \"type\" field." },
+                { Language.Arabic, "Device #{0} is missing the required \"type\" field." }
+            },
+            ["JsonTypeFieldExample"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Each device object must have: {\"type\": \"device_type_here\", ...}" },
+                { Language.SimplifiedChinese, "每个设备对象都必须包含：{\"type\": \"device_type_here\", ...}" },
+                { Language.TraditionalChinese, "每個裝置物件都必須包含：{\"type\": \"device_type_here\", ...}" },
+                { Language.Spanish, "Each device object must have: {\"type\": \"device_type_here\", ...}" },
+                { Language.French, "Each device object must have: {\"type\": \"device_type_here\", ...}" },
+                { Language.Portuguese, "Each device object must have: {\"type\": \"device_type_here\", ...}" },
+                { Language.Russian, "Each device object must have: {\"type\": \"device_type_here\", ...}" },
+                { Language.Persian, "Each device object must have: {\"type\": \"device_type_here\", ...}" },
+                { Language.Norwegian, "Each device object must have: {\"type\": \"device_type_here\", ...}" },
+                { Language.Arabic, "Each device object must have: {\"type\": \"device_type_here\", ...}" }
+            },
+            ["JsonDevicePathHint"] = new Dictionary<Language, string>
+            {
+                { Language.English, "(devices[{0}]{1})" },
+                { Language.SimplifiedChinese, "（devices[{0}]{1}）" },
+                { Language.TraditionalChinese, "（devices[{0}]{1}）" },
+                { Language.Spanish, "(devices[{0}]{1})" },
+                { Language.French, "(devices[{0}]{1})" },
+                { Language.Portuguese, "(devices[{0}]{1})" },
+                { Language.Russian, "(devices[{0}]{1})" },
+                { Language.Persian, "(devices[{0}]{1})" },
+                { Language.Norwegian, "(devices[{0}]{1})" },
+                { Language.Arabic, "(devices[{0}]{1})" }
+            },
+            ["JsonUnknownDeviceType"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Unknown device type: \"{0}\"." },
+                { Language.SimplifiedChinese, "未知设备类型：\"{0}\"。" },
+                { Language.TraditionalChinese, "未知裝置類型：\"{0}\"。" },
+                { Language.Spanish, "Unknown device type: \"{0}\"." },
+                { Language.French, "Unknown device type: \"{0}\"." },
+                { Language.Portuguese, "Unknown device type: \"{0}\"." },
+                { Language.Russian, "Unknown device type: \"{0}\"." },
+                { Language.Persian, "Unknown device type: \"{0}\"." },
+                { Language.Norwegian, "Unknown device type: \"{0}\"." },
+                { Language.Arabic, "Unknown device type: \"{0}\"." }
+            },
+            ["JsonDidYouMean"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Did you mean: \"{0}\"?" },
+                { Language.SimplifiedChinese, "你是否想写：\"{0}\"？" },
+                { Language.TraditionalChinese, "你是否想寫：\"{0}\"？" },
+                { Language.Spanish, "Did you mean: \"{0}\"?" },
+                { Language.French, "Did you mean: \"{0}\"?" },
+                { Language.Portuguese, "Did you mean: \"{0}\"?" },
+                { Language.Russian, "Did you mean: \"{0}\"?" },
+                { Language.Persian, "Did you mean: \"{0}\"?" },
+                { Language.Norwegian, "Did you mean: \"{0}\"?" },
+                { Language.Arabic, "Did you mean: \"{0}\"?" }
+            },
+            ["JsonExpectedBuiltInTypes"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Expected one of the 23 built-in types (e.g. annular_bop, ram_bop, rotary_table, casing_head)." },
+                { Language.SimplifiedChinese, "应为23种内建设备类型之一（如 annular_bop、ram_bop、rotary_table、casing_head）。" },
+                { Language.TraditionalChinese, "應為23種內建裝置類型之一（如 annular_bop、ram_bop、rotary_table、casing_head）。" },
+                { Language.Spanish, "Expected one of the 23 built-in types (e.g. annular_bop, ram_bop, rotary_table, casing_head)." },
+                { Language.French, "Expected one of the 23 built-in types (e.g. annular_bop, ram_bop, rotary_table, casing_head)." },
+                { Language.Portuguese, "Expected one of the 23 built-in types (e.g. annular_bop, ram_bop, rotary_table, casing_head)." },
+                { Language.Russian, "Expected one of the 23 built-in types (e.g. annular_bop, ram_bop, rotary_table, casing_head)." },
+                { Language.Persian, "Expected one of the 23 built-in types (e.g. annular_bop, ram_bop, rotary_table, casing_head)." },
+                { Language.Norwegian, "Expected one of the 23 built-in types (e.g. annular_bop, ram_bop, rotary_table, casing_head)." },
+                { Language.Arabic, "Expected one of the 23 built-in types (e.g. annular_bop, ram_bop, rotary_table, casing_head)." }
+            },
+            ["JsonOrCustomDevices"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Or one of the custom devices:" },
+                { Language.SimplifiedChinese, "或使用以下自定义设备之一：" },
+                { Language.TraditionalChinese, "或使用以下自訂裝置之一：" },
+                { Language.Spanish, "Or one of the custom devices:" },
+                { Language.French, "Or one of the custom devices:" },
+                { Language.Portuguese, "Or one of the custom devices:" },
+                { Language.Russian, "Or one of the custom devices:" },
+                { Language.Persian, "Or one of the custom devices:" },
+                { Language.Norwegian, "Or one of the custom devices:" },
+                { Language.Arabic, "Or one of the custom devices:" }
+            },
+            ["JsonSeeSchemaTypeList"] = new Dictionary<Language, string>
+            {
+                { Language.English, "See the full type list in the JSON schema (copy via the schema button)." },
+                { Language.SimplifiedChinese, "请在JSON规范中查看完整type列表（可通过上方按钮复制）。" },
+                { Language.TraditionalChinese, "請在JSON規範中查看完整type列表（可透過上方按鈕複製）。" },
+                { Language.Spanish, "See the full type list in the JSON schema (copy via the schema button)." },
+                { Language.French, "See the full type list in the JSON schema (copy via the schema button)." },
+                { Language.Portuguese, "See the full type list in the JSON schema (copy via the schema button)." },
+                { Language.Russian, "See the full type list in the JSON schema (copy via the schema button)." },
+                { Language.Persian, "See the full type list in the JSON schema (copy via the schema button)." },
+                { Language.Norwegian, "See the full type list in the JSON schema (copy via the schema button)." },
+                { Language.Arabic, "See the full type list in the JSON schema (copy via the schema button)." }
+            },
+            ["JsonDeviceNoDrawableResource"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Device #{0} ({1}, devices[{2}]{3}): no drawable resource found." },
+                { Language.SimplifiedChinese, "设备#{0}（{1}，devices[{2}]{3}）：未找到可绘制资源。" },
+                { Language.TraditionalChinese, "裝置#{0}（{1}，devices[{2}]{3}）：未找到可繪製資源。" },
+                { Language.Spanish, "Device #{0} ({1}, devices[{2}]{3}): no drawable resource found." },
+                { Language.French, "Device #{0} ({1}, devices[{2}]{3}): no drawable resource found." },
+                { Language.Portuguese, "Device #{0} ({1}, devices[{2}]{3}): no drawable resource found." },
+                { Language.Russian, "Device #{0} ({1}, devices[{2}]{3}): no drawable resource found." },
+                { Language.Persian, "Device #{0} ({1}, devices[{2}]{3}): no drawable resource found." },
+                { Language.Norwegian, "Device #{0} ({1}, devices[{2}]{3}): no drawable resource found." },
+                { Language.Arabic, "Device #{0} ({1}, devices[{2}]{3}): no drawable resource found." }
+            },
+            ["JsonDeviceReadSvgSizeFailed"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Device #{0} ({1}, devices[{2}]{3}): failed to read SVG size." },
+                { Language.SimplifiedChinese, "设备#{0}（{1}，devices[{2}]{3}）：读取SVG尺寸失败。" },
+                { Language.TraditionalChinese, "裝置#{0}（{1}，devices[{2}]{3}）：讀取SVG尺寸失敗。" },
+                { Language.Spanish, "Device #{0} ({1}, devices[{2}]{3}): failed to read SVG size." },
+                { Language.French, "Device #{0} ({1}, devices[{2}]{3}): failed to read SVG size." },
+                { Language.Portuguese, "Device #{0} ({1}, devices[{2}]{3}): failed to read SVG size." },
+                { Language.Russian, "Device #{0} ({1}, devices[{2}]{3}): failed to read SVG size." },
+                { Language.Persian, "Device #{0} ({1}, devices[{2}]{3}): failed to read SVG size." },
+                { Language.Norwegian, "Device #{0} ({1}, devices[{2}]{3}): failed to read SVG size." },
+                { Language.Arabic, "Device #{0} ({1}, devices[{2}]{3}): failed to read SVG size." }
+            },
+            ["JsonCustomImageNotFound"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Device #{0} ({1}, devices[{2}]{3}): custom image not found: {4}" },
+                { Language.SimplifiedChinese, "设备#{0}（{1}，devices[{2}]{3}）：未找到自定义图片：{4}" },
+                { Language.TraditionalChinese, "裝置#{0}（{1}，devices[{2}]{3}）：未找到自訂圖片：{4}" },
+                { Language.Spanish, "Device #{0} ({1}, devices[{2}]{3}): custom image not found: {4}" },
+                { Language.French, "Device #{0} ({1}, devices[{2}]{3}): custom image not found: {4}" },
+                { Language.Portuguese, "Device #{0} ({1}, devices[{2}]{3}): custom image not found: {4}" },
+                { Language.Russian, "Device #{0} ({1}, devices[{2}]{3}): custom image not found: {4}" },
+                { Language.Persian, "Device #{0} ({1}, devices[{2}]{3}): custom image not found: {4}" },
+                { Language.Norwegian, "Device #{0} ({1}, devices[{2}]{3}): custom image not found: {4}" },
+                { Language.Arabic, "Device #{0} ({1}, devices[{2}]{3}): custom image not found: {4}" }
+            },
+            ["JsonDeviceRenderFailed"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Device #{0} ({1}, devices[{2}]{3}): render failed - {4}" },
+                { Language.SimplifiedChinese, "设备#{0}（{1}，devices[{2}]{3}）：渲染失败 - {4}" },
+                { Language.TraditionalChinese, "裝置#{0}（{1}，devices[{2}]{3}）：渲染失敗 - {4}" },
+                { Language.Spanish, "Device #{0} ({1}, devices[{2}]{3}): render failed - {4}" },
+                { Language.French, "Device #{0} ({1}, devices[{2}]{3}): render failed - {4}" },
+                { Language.Portuguese, "Device #{0} ({1}, devices[{2}]{3}): render failed - {4}" },
+                { Language.Russian, "Device #{0} ({1}, devices[{2}]{3}): render failed - {4}" },
+                { Language.Persian, "Device #{0} ({1}, devices[{2}]{3}): render failed - {4}" },
+                { Language.Norwegian, "Device #{0} ({1}, devices[{2}]{3}): render failed - {4}" },
+                { Language.Arabic, "Device #{0} ({1}, devices[{2}]{3}): render failed - {4}" }
+            },
+            ["JsonEachBlockMustObject"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Each JSON block must be an object." },
+                { Language.SimplifiedChinese, "每个JSON块都必须是对象。" },
+                { Language.TraditionalChinese, "每個JSON塊都必須是物件。" },
+                { Language.Spanish, "Each JSON block must be an object." },
+                { Language.French, "Each JSON block must be an object." },
+                { Language.Portuguese, "Each JSON block must be an object." },
+                { Language.Russian, "Each JSON block must be an object." },
+                { Language.Persian, "Each JSON block must be an object." },
+                { Language.Norwegian, "Each JSON block must be an object." },
+                { Language.Arabic, "Each JSON block must be an object." }
+            },
+            ["JsonDevicesFieldNotFound"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Could not find a \"devices\" field (also tried: device, items, equipment, components, stack, etc.)" },
+                { Language.SimplifiedChinese, "未找到\"devices\"字段（也尝试了：device、items、equipment、components、stack等）。" },
+                { Language.TraditionalChinese, "未找到\"devices\"欄位（也嘗試了：device、items、equipment、components、stack等）。" },
+                { Language.Spanish, "Could not find a \"devices\" field (also tried: device, items, equipment, components, stack, etc.)" },
+                { Language.French, "Could not find a \"devices\" field (also tried: device, items, equipment, components, stack, etc.)" },
+                { Language.Portuguese, "Could not find a \"devices\" field (also tried: device, items, equipment, components, stack, etc.)" },
+                { Language.Russian, "Could not find a \"devices\" field (also tried: device, items, equipment, components, stack, etc.)" },
+                { Language.Persian, "Could not find a \"devices\" field (also tried: device, items, equipment, components, stack, etc.)" },
+                { Language.Norwegian, "Could not find a \"devices\" field (also tried: device, items, equipment, components, stack, etc.)" },
+                { Language.Arabic, "Could not find a \"devices\" field (also tried: device, items, equipment, components, stack, etc.)" }
+            },
+            ["JsonObjectKeysFound"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Keys found in this object: {0}" },
+                { Language.SimplifiedChinese, "该对象中找到的键：{0}" },
+                { Language.TraditionalChinese, "該物件中找到的鍵：{0}" },
+                { Language.Spanish, "Keys found in this object: {0}" },
+                { Language.French, "Keys found in this object: {0}" },
+                { Language.Portuguese, "Keys found in this object: {0}" },
+                { Language.Russian, "Keys found in this object: {0}" },
+                { Language.Persian, "Keys found in this object: {0}" },
+                { Language.Norwegian, "Keys found in this object: {0}" },
+                { Language.Arabic, "Keys found in this object: {0}" }
+            },
+            ["JsonExpectedFormat"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Expected format: { \"devices\": [ {\"type\": \"...\", ...}, ... ] }" },
+                { Language.SimplifiedChinese, "期望格式：{ \"devices\": [ {\"type\": \"...\", ...}, ... ] }" },
+                { Language.TraditionalChinese, "期望格式：{ \"devices\": [ {\"type\": \"...\", ...}, ... ] }" },
+                { Language.Spanish, "Expected format: { \"devices\": [ {\"type\": \"...\", ...}, ... ] }" },
+                { Language.French, "Expected format: { \"devices\": [ {\"type\": \"...\", ...}, ... ] }" },
+                { Language.Portuguese, "Expected format: { \"devices\": [ {\"type\": \"...\", ...}, ... ] }" },
+                { Language.Russian, "Expected format: { \"devices\": [ {\"type\": \"...\", ...}, ... ] }" },
+                { Language.Persian, "Expected format: { \"devices\": [ {\"type\": \"...\", ...}, ... ] }" },
+                { Language.Norwegian, "Expected format: { \"devices\": [ {\"type\": \"...\", ...}, ... ] }" },
+                { Language.Arabic, "Expected format: { \"devices\": [ {\"type\": \"...\", ...}, ... ] }" }
+            },
+            ["JsonInvalidDeviceItemAtIndex"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Invalid device item at devices[{0}] (token type: {1}{2})." },
+                { Language.SimplifiedChinese, "devices[{0}] 处的设备项无效（token类型：{1}{2}）。" },
+                { Language.TraditionalChinese, "devices[{0}] 處的裝置項無效（token類型：{1}{2}）。" },
+                { Language.Spanish, "Invalid device item at devices[{0}] (token type: {1}{2})." },
+                { Language.French, "Invalid device item at devices[{0}] (token type: {1}{2})." },
+                { Language.Portuguese, "Invalid device item at devices[{0}] (token type: {1}{2})." },
+                { Language.Russian, "Invalid device item at devices[{0}] (token type: {1}{2})." },
+                { Language.Persian, "Invalid device item at devices[{0}] (token type: {1}{2})." },
+                { Language.Norwegian, "Invalid device item at devices[{0}] (token type: {1}{2})." },
+                { Language.Arabic, "Invalid device item at devices[{0}] (token type: {1}{2})." }
+            },
+            ["JsonInvalidDeviceItem"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Invalid device item in JSON (token type: {0}{1})." },
+                { Language.SimplifiedChinese, "JSON中的设备项无效（token类型：{0}{1}）。" },
+                { Language.TraditionalChinese, "JSON中的裝置項無效（token類型：{0}{1}）。" },
+                { Language.Spanish, "Invalid device item in JSON (token type: {0}{1})." },
+                { Language.French, "Invalid device item in JSON (token type: {0}{1})." },
+                { Language.Portuguese, "Invalid device item in JSON (token type: {0}{1})." },
+                { Language.Russian, "Invalid device item in JSON (token type: {0}{1})." },
+                { Language.Persian, "Invalid device item in JSON (token type: {0}{1})." },
+                { Language.Norwegian, "Invalid device item in JSON (token type: {0}{1})." },
+                { Language.Arabic, "Invalid device item in JSON (token type: {0}{1})." }
+            },
+            ["JsonUnnamedSchema"] = new Dictionary<Language, string>
+            {
+                { Language.English, "unnamed-{0}" },
+                { Language.SimplifiedChinese, "未命名-{0}" },
+                { Language.TraditionalChinese, "未命名-{0}" },
+                { Language.Spanish, "unnamed-{0}" },
+                { Language.French, "unnamed-{0}" },
+                { Language.Portuguese, "unnamed-{0}" },
+                { Language.Russian, "unnamed-{0}" },
+                { Language.Persian, "unnamed-{0}" },
+                { Language.Norwegian, "unnamed-{0}" },
+                { Language.Arabic, "unnamed-{0}" }
+            },
+            ["JsonLinePosHint"] = new Dictionary<Language, string>
+            {
+                { Language.English, ", line {0}, pos {1}" },
+                { Language.SimplifiedChinese, "，第{0}行，第{1}列" },
+                { Language.TraditionalChinese, "，第{0}行，第{1}列" },
+                { Language.Spanish, ", line {0}, pos {1}" },
+                { Language.French, ", line {0}, pos {1}" },
+                { Language.Portuguese, ", line {0}, pos {1}" },
+                { Language.Russian, ", line {0}, pos {1}" },
+                { Language.Persian, ", line {0}, pos {1}" },
+                { Language.Norwegian, ", line {0}, pos {1}" },
+                { Language.Arabic, ", line {0}, pos {1}" }
+            },
+            ["JsonUnknownReaderError"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Unknown JSON reader error." },
+                { Language.SimplifiedChinese, "未知JSON读取错误。" },
+                { Language.TraditionalChinese, "未知JSON讀取錯誤。" },
+                { Language.Spanish, "Unknown JSON reader error." },
+                { Language.French, "Unknown JSON reader error." },
+                { Language.Portuguese, "Unknown JSON reader error." },
+                { Language.Russian, "Unknown JSON reader error." },
+                { Language.Persian, "Unknown JSON reader error." },
+                { Language.Norwegian, "Unknown JSON reader error." },
+                { Language.Arabic, "Unknown JSON reader error." }
+            },
+            ["JsonSyntaxErrorAtLinePos"] = new Dictionary<Language, string>
+            {
+                { Language.English, "JSON syntax error at line {0}, position {1}:" },
+                { Language.SimplifiedChinese, "JSON语法错误：第{0}行，第{1}列：" },
+                { Language.TraditionalChinese, "JSON語法錯誤：第{0}行，第{1}列：" },
+                { Language.Spanish, "JSON syntax error at line {0}, position {1}:" },
+                { Language.French, "JSON syntax error at line {0}, position {1}:" },
+                { Language.Portuguese, "JSON syntax error at line {0}, position {1}:" },
+                { Language.Russian, "JSON syntax error at line {0}, position {1}:" },
+                { Language.Persian, "JSON syntax error at line {0}, position {1}:" },
+                { Language.Norwegian, "JSON syntax error at line {0}, position {1}:" },
+                { Language.Arabic, "JSON syntax error at line {0}, position {1}:" }
+            },
+            ["JsonNearContext"] = new Dictionary<Language, string>
+            {
+                { Language.English, "  Near: ...{0}..." },
+                { Language.SimplifiedChinese, "  附近：...{0}..." },
+                { Language.TraditionalChinese, "  附近：...{0}..." },
+                { Language.Spanish, "  Near: ...{0}..." },
+                { Language.French, "  Near: ...{0}..." },
+                { Language.Portuguese, "  Near: ...{0}..." },
+                { Language.Russian, "  Near: ...{0}..." },
+                { Language.Persian, "  Near: ...{0}..." },
+                { Language.Norwegian, "  Near: ...{0}..." },
+                { Language.Arabic, "  Near: ...{0}..." }
+            },
+            ["JsonContextHeader"] = new Dictionary<Language, string>
+            {
+                { Language.English, "  Context:" },
+                { Language.SimplifiedChinese, "  上下文：" },
+                { Language.TraditionalChinese, "  上下文：" },
+                { Language.Spanish, "  Context:" },
+                { Language.French, "  Context:" },
+                { Language.Portuguese, "  Context:" },
+                { Language.Russian, "  Context:" },
+                { Language.Persian, "  Context:" },
+                { Language.Norwegian, "  Context:" },
+                { Language.Arabic, "  Context:" }
+            },
+            ["JsonCommonFixes"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Common fixes:" },
+                { Language.SimplifiedChinese, "常见修复建议：" },
+                { Language.TraditionalChinese, "常見修復建議：" },
+                { Language.Spanish, "Common fixes:" },
+                { Language.French, "Common fixes:" },
+                { Language.Portuguese, "Common fixes:" },
+                { Language.Russian, "Common fixes:" },
+                { Language.Persian, "Common fixes:" },
+                { Language.Norwegian, "Common fixes:" },
+                { Language.Arabic, "Common fixes:" }
+            },
+            ["JsonFixMissingComma"] = new Dictionary<Language, string>
+            {
+                { Language.English, "  - Check for missing commas between array items or object properties" },
+                { Language.SimplifiedChinese, "  - 检查数组项或对象属性之间是否缺少逗号" },
+                { Language.TraditionalChinese, "  - 檢查陣列項或物件屬性之間是否缺少逗號" },
+                { Language.Spanish, "  - Check for missing commas between array items or object properties" },
+                { Language.French, "  - Check for missing commas between array items or object properties" },
+                { Language.Portuguese, "  - Check for missing commas between array items or object properties" },
+                { Language.Russian, "  - Check for missing commas between array items or object properties" },
+                { Language.Persian, "  - Check for missing commas between array items or object properties" },
+                { Language.Norwegian, "  - Check for missing commas between array items or object properties" },
+                { Language.Arabic, "  - Check for missing commas between array items or object properties" }
+            },
+            ["JsonFixTrailingComma"] = new Dictionary<Language, string>
+            {
+                { Language.English, "  - Check for trailing commas before } or ]" },
+                { Language.SimplifiedChinese, "  - 检查是否在 } 或 ] 之前有多余逗号" },
+                { Language.TraditionalChinese, "  - 檢查是否在 } 或 ] 之前有多餘逗號" },
+                { Language.Spanish, "  - Check for trailing commas before } or ]" },
+                { Language.French, "  - Check for trailing commas before } or ]" },
+                { Language.Portuguese, "  - Check for trailing commas before } or ]" },
+                { Language.Russian, "  - Check for trailing commas before } or ]" },
+                { Language.Persian, "  - Check for trailing commas before } or ]" },
+                { Language.Norwegian, "  - Check for trailing commas before } or ]" },
+                { Language.Arabic, "  - Check for trailing commas before } or ]" }
+            },
+            ["JsonFixDoubleQuotes"] = new Dictionary<Language, string>
+            {
+                { Language.English, "  - Check all strings use standard double quotes \"" },
+                { Language.SimplifiedChinese, "  - 检查所有字符串是否使用标准双引号 \"" },
+                { Language.TraditionalChinese, "  - 檢查所有字串是否使用標準雙引號 \"" },
+                { Language.Spanish, "  - Check all strings use standard double quotes \"" },
+                { Language.French, "  - Check all strings use standard double quotes \"" },
+                { Language.Portuguese, "  - Check all strings use standard double quotes \"" },
+                { Language.Russian, "  - Check all strings use standard double quotes \"" },
+                { Language.Persian, "  - Check all strings use standard double quotes \"" },
+                { Language.Norwegian, "  - Check all strings use standard double quotes \"" },
+                { Language.Arabic, "  - Check all strings use standard double quotes \"" }
+            },
+            ["JsonFixBalancedBrackets"] = new Dictionary<Language, string>
+            {
+                { Language.English, "  - Check all brackets {} and [] are balanced" },
+                { Language.SimplifiedChinese, "  - 检查所有括号 {} 和 [] 是否成对" },
+                { Language.TraditionalChinese, "  - 檢查所有括號 {} 和 [] 是否成對" },
+                { Language.Spanish, "  - Check all brackets {} and [] are balanced" },
+                { Language.French, "  - Check all brackets {} and [] are balanced" },
+                { Language.Portuguese, "  - Check all brackets {} and [] are balanced" },
+                { Language.Russian, "  - Check all brackets {} and [] are balanced" },
+                { Language.Persian, "  - Check all brackets {} and [] are balanced" },
+                { Language.Norwegian, "  - Check all brackets {} and [] are balanced" },
+                { Language.Arabic, "  - Check all brackets {} and [] are balanced" }
+            },
+            ["JsonOriginalError"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Original error: {0}" },
+                { Language.SimplifiedChinese, "原始错误：{0}" },
+                { Language.TraditionalChinese, "原始錯誤：{0}" },
+                { Language.Spanish, "Original error: {0}" },
+                { Language.French, "Original error: {0}" },
+                { Language.Portuguese, "Original error: {0}" },
+                { Language.Russian, "Original error: {0}" },
+                { Language.Persian, "Original error: {0}" },
+                { Language.Norwegian, "Original error: {0}" },
+                { Language.Arabic, "Original error: {0}" }
+            },
+            ["JsonUnknown"] = new Dictionary<Language, string>
+            {
+                { Language.English, "unknown" },
+                { Language.SimplifiedChinese, "未知" },
+                { Language.TraditionalChinese, "未知" },
+                { Language.Spanish, "unknown" },
+                { Language.French, "unknown" },
+                { Language.Portuguese, "unknown" },
+                { Language.Russian, "unknown" },
+                { Language.Persian, "unknown" },
+                { Language.Norwegian, "unknown" },
+                { Language.Arabic, "unknown" }
+            },
+            ["JsonNone"] = new Dictionary<Language, string>
+            {
+                { Language.English, "(none)" },
+                { Language.SimplifiedChinese, "（无）" },
+                { Language.TraditionalChinese, "（無）" },
+                { Language.Spanish, "(none)" },
+                { Language.French, "(none)" },
+                { Language.Portuguese, "(none)" },
+                { Language.Russian, "(none)" },
+                { Language.Persian, "(none)" },
+                { Language.Norwegian, "(none)" },
+                { Language.Arabic, "(none)" }
+            },
+            ["JsonPasteHint"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Send Excel/image + JSON schema (copy above) to any AI to generate JSON, then paste here." },
+                { Language.SimplifiedChinese, "将Excel或图片加上JSON规则（点上方按钮复制）发给任意AI，让AI生成JSON后粘贴到此处。" },
+                { Language.TraditionalChinese, "將Excel或圖片加上JSON規則（點上方按鈕複製）發給任意AI，讓AI生成JSON後貼上到此處。" },
+                { Language.Spanish, "Envíe Excel/imagen + esquema JSON (copiar arriba) a cualquier IA para generar JSON, luego pegue aquí." },
+                { Language.French, "Envoyez Excel/image + schéma JSON (copier ci-dessus) à n'importe quelle IA, puis collez le JSON ici." },
+                { Language.Portuguese, "Envie Excel/imagem + esquema JSON (copiar acima) para qualquer IA, depois cole o JSON aqui." },
+                { Language.Russian, "Отправьте Excel/изображение + схему JSON (скопируйте выше) любому ИИ, затем вставьте JSON сюда." },
+                { Language.Persian, "Excel/تصویر + طرح JSON (کپی بالا) را به هر هوش مصنوعی بفرستید، سپس JSON را اینجا بچسبانید." },
+                { Language.Norwegian, "Send Excel/bilde + JSON-skjema (kopier ovenfor) til en AI, lim deretter inn JSON her." },
+                { Language.Arabic, "أرسل Excel/صورة + مخطط JSON (انسخ أعلاه) إلى أي ذكاء اصطناعي، ثم الصق JSON هنا." }
+            },
+            ["CopyJsonSchema"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Copy JSON Schema to Clipboard" },
+                { Language.SimplifiedChinese, "复制JSON规范到剪贴板" },
+                { Language.TraditionalChinese, "複製JSON規範到剪貼板" },
+                { Language.Spanish, "Copiar esquema JSON al portapapeles" },
+                { Language.French, "Copier le schéma JSON dans le presse-papiers" },
+                { Language.Portuguese, "Copiar esquema JSON para a área de transferência" },
+                { Language.Russian, "Скопировать схему JSON в буфер обмена" },
+                { Language.Persian, "کپی طرح JSON به کلیپ بورد" },
+                { Language.Norwegian, "Kopier JSON-skjema til utklippstavlen" },
+                { Language.Arabic, "نسخ مخطط JSON إلى الحافظة" }
+            },
+            ["Copied"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Copied!" },
+                { Language.SimplifiedChinese, "已复制！" },
+                { Language.TraditionalChinese, "已複製！" },
+                { Language.Spanish, "¡Copiado!" },
+                { Language.French, "Copié !" },
+                { Language.Portuguese, "Copiado!" },
+                { Language.Russian, "Скопировано!" },
+                { Language.Persian, "!کپی شد" },
+                { Language.Norwegian, "Kopiert!" },
+                { Language.Arabic, "!تم النسخ" }
+            },
+            ["CopyError"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Copy Error" },
+                { Language.SimplifiedChinese, "复制错误信息" },
+                { Language.TraditionalChinese, "複製錯誤信息" },
+                { Language.Spanish, "Copiar error" },
+                { Language.French, "Copier l'erreur" },
+                { Language.Portuguese, "Copiar erro" },
+                { Language.Russian, "Копировать ошибку" },
+                { Language.Persian, "کپی خطا" },
+                { Language.Norwegian, "Kopier feil" },
+                { Language.Arabic, "نسخ الخطأ" }
+            },
+
+            // ===== 複製粘貼 =====
+            ["CopyNode"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Copy" },
+                { Language.SimplifiedChinese, "复制" },
+                { Language.TraditionalChinese, "複製" },
+                { Language.Spanish, "Copiar" },
+                { Language.French, "Copier" },
+                { Language.Portuguese, "Copiar" },
+                { Language.Russian, "Копировать" },
+                { Language.Persian, "کپی" },
+                { Language.Norwegian, "Kopier" },
+                { Language.Arabic, "نسخ" }
+            },
+            ["PasteAsChild"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Paste as Child" },
+                { Language.SimplifiedChinese, "粘贴为子节点" },
+                { Language.TraditionalChinese, "貼上為子節點" },
+                { Language.Spanish, "Pegar como hijo" },
+                { Language.French, "Coller en tant qu'enfant" },
+                { Language.Portuguese, "Colar como filho" },
+                { Language.Russian, "Вставить как дочерний" },
+                { Language.Persian, "چسباندن به عنوان زیرمجموعه" },
+                { Language.Norwegian, "Lim inn som underordnet" },
+                { Language.Arabic, "لصق كعنصر فرعي" }
             },
 
             // ===== ListBox1 右鍵菜單 =====
@@ -624,6 +1360,19 @@ namespace _4._18
                 { Language.Norwegian, "Brukerhåndbok" },
                 { Language.Arabic, "دليل المستخدم" }
             },
+            ["HelpNavHeader"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Contents" },
+                { Language.SimplifiedChinese, "目录" },
+                { Language.TraditionalChinese, "目錄" },
+                { Language.Spanish, "Contenido" },
+                { Language.French, "Sommaire" },
+                { Language.Portuguese, "Conteúdo" },
+                { Language.Russian, "Содержание" },
+                { Language.Persian, "فهرست" },
+                { Language.Norwegian, "Innhold" },
+                { Language.Arabic, "المحتويات" }
+            },
             ["HelpNavQuick"] = new Dictionary<Language, string>
             {
                 { Language.English, "Quick Start" },
@@ -936,6 +1685,46 @@ namespace _4._18
                 { Language.SimplifiedChinese, "长图截取" },
                 { Language.Arabic, "لقطة طويلة" }
             },
+            // ===== JSON 匯入幫助 =====
+            ["HelpNavJsonImport"] = new Dictionary<Language, string>
+            {
+                { Language.English, "JSON Import" },
+                { Language.Spanish, "Importar JSON" },
+                { Language.French, "Import JSON" },
+                { Language.Portuguese, "Importar JSON" },
+                { Language.Russian, "Импорт JSON" },
+                { Language.Persian, "ورود JSON" },
+                { Language.Norwegian, "JSON-import" },
+                { Language.TraditionalChinese, "JSON 匯入" },
+                { Language.SimplifiedChinese, "JSON 导入" },
+                { Language.Arabic, "استيراد JSON" }
+            },
+            ["HelpNavJsonUsage"] = new Dictionary<Language, string>
+            {
+                { Language.English, "How to Use" },
+                { Language.Spanish, "Cómo usar" },
+                { Language.French, "Comment utiliser" },
+                { Language.Portuguese, "Como usar" },
+                { Language.Russian, "Как использовать" },
+                { Language.Persian, "نحوه استفاده" },
+                { Language.Norwegian, "Slik bruker du" },
+                { Language.TraditionalChinese, "使用方法" },
+                { Language.SimplifiedChinese, "使用方法" },
+                { Language.Arabic, "كيفية الاستخدام" }
+            },
+            ["HelpNavJsonSchema"] = new Dictionary<Language, string>
+            {
+                { Language.English, "Copy Schema Rules" },
+                { Language.Spanish, "Copiar reglas" },
+                { Language.French, "Copier les règles" },
+                { Language.Portuguese, "Copiar regras" },
+                { Language.Russian, "Копировать правила" },
+                { Language.Persian, "کپی قوانین" },
+                { Language.Norwegian, "Kopier regler" },
+                { Language.TraditionalChinese, "複製 JSON 規則" },
+                { Language.SimplifiedChinese, "复制 JSON 规则" },
+                { Language.Arabic, "نسخ القواعد" }
+            },
             ["HelpNavSample"] = new Dictionary<Language, string>
             {
                 { Language.English, "Samples" },
@@ -962,278 +1751,110 @@ namespace _4._18
                 { Language.SimplifiedChinese, "数据说明" },
                 { Language.Arabic, "ملفات البيانات" }
             },
+            // ===== 幫助內容（合併版） =====
             ["HelpContentQuick"] = new Dictionary<Language, string>
             {
-                { Language.English, "Quick Start\\r\\n\\r\\n1) Select a device on the left and click on the canvas to place it.\\r\\n2) Select a label and click the canvas to place text.\\r\\n3) Use right-click menu for align, capture, and save templates." },
-                { Language.Spanish, "Inicio rápido\\r\\n\\r\\n1) Seleccione un dispositivo a la izquierda y haga clic en el lienzo para colocarlo.\\r\\n2) Seleccione una etiqueta y haga clic en el lienzo para colocar el texto.\\r\\n3) Use el menú con clic derecho para alinear, capturar y guardar plantillas." },
-                { Language.French, "Démarrage rapide\\r\\n\\r\\n1) Sélectionnez un appareil à gauche et cliquez sur la toile pour le placer.\\r\\n2) Sélectionnez une étiquette et cliquez sur la toile pour placer le texte.\\r\\n3) Utilisez le menu du clic droit pour aligner, capturer et enregistrer les modèles." },
-                { Language.Portuguese, "Início rápido\\r\\n\\r\\n1) Selecione um dispositivo à esquerda e clique na tela para colocá-lo.\\r\\n2) Selecione um rótulo e clique na tela para colocar o texto.\\r\\n3) Use o menu do botão direito para alinhar, capturar e salvar modelos." },
-                { Language.Russian, "Быстрый старт\\r\\n\\r\\n1) Выберите устройство слева и щёлкните по холсту, чтобы разместить его.\\r\\n2) Выберите метку и щёлкните по холсту, чтобы разместить текст.\\r\\n3) Используйте меню правой кнопки для выравнивания, снимков и сохранения шаблонов." },
-                { Language.Persian, "شروع سریع\\r\\n\\r\\n1) از سمت چپ یک دستگاه انتخاب کنید و روی بوم کلیک کنید تا قرار بگیرد.\\r\\n2) یک برچسب انتخاب کنید و روی بوم کلیک کنید تا متن قرار گیرد.\\r\\n3) از منوی راست‌کلیک برای تراز، گرفتن تصویر و ذخیره قالب‌ها استفاده کنید." },
-                { Language.Norwegian, "Hurtigstart\\r\\n\\r\\n1) Velg en enhet til venstre og klikk på lerretet for å plassere den.\\r\\n2) Velg en etikett og klikk på lerretet for å plassere tekst.\\r\\n3) Bruk høyreklikkmenyen for justering, skjermbilder og lagring av maler." },
-                { Language.TraditionalChinese, "【快速開始】\\r\\n\\r\\n請在左側選擇裝置後在畫布點擊放置，選擇標籤後點擊畫布放置文字，右鍵菜單可保存模板與截圖。" },
-                { Language.SimplifiedChinese, "【快速开始】\\r\\n\\r\\n在左侧选择装置后在画布点击放置，选择标签后点击画布放置文字，右键菜单可保存模板与截图。" },
-                { Language.Arabic, "بدء سريع\\r\\n\\r\\nحدد جهازاً ثم انقر اللوحة لوضعه، حدد تسمية لوضع نص. زر الفأرة الأيمن يوفر الحفظ واللقطات." }
+                { Language.TraditionalChinese, "【快速開始】\r\n\r\n本軟件用於繪製井口裝置示意圖，以下是基本操作流程：\r\n\r\n第一步：放置裝置\r\n• 在左側「井口裝置選擇」列表中點擊選中一個裝置\r\n• 將鼠標移到右側畫布，點擊左鍵放置裝置\r\n• 可重複點擊放置多個相同裝置\r\n\r\n第二步：添加文字標籤\r\n• 在中間「標籤管理」樹中點擊選中一個標籤\r\n• 將鼠標移到畫布，點擊左鍵放置文字\r\n\r\n第三步：調整位置和大小\r\n• 左鍵拖動：移動裝置或文字的位置\r\n• 滾輪滾動：放大或縮小裝置或文字\r\n• 右鍵菜單「自動對齊」：一鍵整理排列\r\n\r\n第四步：保存或截圖\r\n• 右鍵菜單「添加樣例到庫」：保存為模板\r\n• 右鍵菜單「保存到目前模板」：覆蓋保存已載入的模板\r\n• 右鍵菜單「自動截圖」：一鍵截圖到剪貼簿\r\n• 右鍵菜單「匯入 JSON」：通過 AI 生成的 JSON 快速建圖\r\n\r\n提示：畫布上右鍵點擊空白處或控件均可打開功能菜單。在「設置」中可切換語言與上色/未上色裝置樣式。" },
+                { Language.SimplifiedChinese, "【快速开始】\r\n\r\n本软件用于绘制井口装置示意图，以下是基本操作流程：\r\n\r\n第一步：放置装置\r\n• 在左侧「井口装置选择」列表中点击选中一个装置\r\n• 将鼠标移到右侧画布，点击左键放置装置\r\n• 可重复点击放置多个相同装置\r\n\r\n第二步：添加文字标签\r\n• 在中间「标签管理」树中点击选中一个标签\r\n• 将鼠标移到画布，点击左键放置文字\r\n\r\n第三步：调整位置和大小\r\n• 左键拖动：移动装置或文字的位置\r\n• 滚轮滚动：放大或缩小装置或文字\r\n• 右键菜单「自动对齐」：一键整理排列\r\n\r\n第四步：保存或截图\r\n• 右键菜单「添加样例到库」：保存为模板\r\n• 右键菜单「保存到当前模板」：覆盖保存已加载的模板\r\n• 右键菜单「自动截图」：一键截图到剪贴板\r\n• 右键菜单「导入 JSON」：通过 AI 生成的 JSON 快速建图\r\n\r\n提示：画布上右键点击空白处或控件均可打开功能菜单。在「设置」中可切换语言与上色/未上色装置样式。" },
+                { Language.English, "[Quick Start]\r\n\r\nThis software is used to draw wellhead device diagrams. Basic workflow:\r\n\r\nStep 1: Place a device\r\n• Click a device name in the left Device List\r\n• Move to the canvas and left-click to place it\r\n• Click multiple times to place copies\r\n\r\nStep 2: Add a text label\r\n• Click a label in the Tag Tree\r\n• Move to the canvas and left-click to place the text\r\n\r\nStep 3: Adjust position and size\r\n• Drag with left button to move\r\n• Scroll wheel to resize\r\n• Right-click menu > Auto Align to arrange automatically\r\n\r\nStep 4: Save or capture\r\n• Right-click > Add to Library to save as template\r\n• Right-click > Save to Current Template to overwrite a loaded template\r\n• Right-click > Auto Screenshot to copy to clipboard\r\n• Right-click > Import JSON to build diagrams from AI-generated JSON\r\n\r\nTip: Right-click on the canvas (blank area or any element) to open the context menu. Open Settings to switch language and colored/uncolored device style." },
+                { Language.Spanish, "[Inicio rápido]\r\n\r\nEste software dibuja diagramas de equipos de cabeza de pozo.\r\n\r\n1. Seleccione un dispositivo en la lista izquierda y haga clic en el lienzo para colocarlo\r\n2. Seleccione una etiqueta y haga clic en el lienzo para colocar texto\r\n3. Arrastre para mover, rueda para redimensionar\r\n4. Clic derecho: Alinear, Captura, Añadir a biblioteca, Guardar en plantilla actual, Importar JSON\r\n5. Abra Configuración para cambiar idioma y estilo con/sin color" },
+                { Language.French, "[Démarrage rapide]\r\n\r\nCe logiciel dessine des schémas d'équipements de tête de puits.\r\n\r\n1. Sélectionnez un appareil dans la liste de gauche et cliquez sur la toile pour le placer\r\n2. Sélectionnez une étiquette et cliquez sur la toile pour placer le texte\r\n3. Glissez pour déplacer, molette pour redimensionner\r\n4. Clic droit : Aligner, Capturer, Ajouter à la bibliothèque, Enregistrer dans le modèle actuel, Importer JSON\r\n5. Ouvrez Paramètres pour la langue et le style coloré/non coloré" },
+                { Language.Portuguese, "[Início rápido]\r\n\r\nEste software desenha diagramas de equipamentos de cabeça de poço.\r\n\r\n1. Selecione um dispositivo na lista esquerda e clique na tela para posicionar\r\n2. Selecione um rótulo e clique na tela para colocar texto\r\n3. Arraste para mover, roda para redimensionar\r\n4. Clique direito: Alinhar, Capturar, Adicionar à biblioteca, Salvar no modelo atual, Importar JSON\r\n5. Abra Configurações para idioma e estilo colorido/sem cor" },
+                { Language.Russian, "[Быстрый старт]\r\n\r\nПрограмма для чертежа устьевого оборудования.\r\n\r\n1. Выберите устройство в списке слева и щёлкните по холсту для размещения\r\n2. Выберите метку и щёлкните по холсту для размещения текста\r\n3. Перетаскивайте для перемещения, колёсико для масштабирования\r\n4. ПКМ: Выравнивание, Снимок, Добавить в библиотеку, Сохранить в текущий шаблон, Импорт JSON\r\n5. В Настройках — язык и стиль цветной/без цвета" },
+                { Language.Persian, "[شروع سریع]\r\n\r\nاین نرم‌افزار برای ترسیم تجهیزات سرچاه استفاده می‌شود.\r\n\r\n1. یک دستگاه را از فهرست سمت چپ انتخاب کنید و روی بوم کلیک کنید\r\n2. یک برچسب انتخاب کنید و روی بوم کلیک کنید\r\n3. برای جابجایی بکشید، برای تغییر اندازه اسکرول کنید\r\n4. راست‌کلیک: تراز، اسکرین‌شات، افزودن به کتابخانه، ذخیره در قالب فعلی، ورود JSON\r\n5. در تنظیمات زبان و سبک رنگی/بدون رنگ را تغییر دهید" },
+                { Language.Norwegian, "[Hurtigstart]\r\n\r\nDenne programvaren tegner brønnhodeutstyrsdiagrammer.\r\n\r\n1. Velg en enhet fra listen til venstre og klikk på lerretet for å plassere\r\n2. Velg en etikett og klikk på lerretet for å plassere tekst\r\n3. Dra for å flytte, rull for å endre størrelse\r\n4. Høyreklikk: Juster, Skjermbilde, Legg til i bibliotek, Lagre til gjeldende mal, Importer JSON\r\n5. Åpne Innstillinger for språk og farget/ufarget enhetsstil" },
+                { Language.Arabic, "[بدء سريع]\r\n\r\nهذا البرنامج لرسم مخططات معدات رأس البئر.\r\n\r\n1. اختر جهازاً من القائمة اليسرى وانقر على اللوحة\r\n2. اختر تسمية وانقر على اللوحة\r\n3. اسحب للتحريك، مرر العجلة لتغيير الحجم\r\n4. انقر يمين: محاذاة، لقطة، إضافة للمكتبة، حفظ في القالب الحالي، استيراد JSON\r\n5. افتح الإعدادات للغة ونمط ملون/غير ملون" }
             },
-            ["HelpContentDeviceSelect"] = new Dictionary<Language, string>
+            ["HelpContentDevice"] = new Dictionary<Language, string>
             {
-                { Language.English, "Select & Place\\r\\n\\r\\nClick a device name, move to the canvas, and left-click to place it." },
-                { Language.Spanish, "Seleccionar y colocar\\r\\n\\r\\nHaga clic en el nombre de un dispositivo, mueva el cursor al lienzo y haga clic izquierdo para colocarlo." },
-                { Language.French, "Sélectionner et placer\\r\\n\\r\\nCliquez sur le nom d’un appareil, déplacez-vous vers la toile et cliquez avec le bouton gauche pour le placer." },
-                { Language.Portuguese, "Selecionar e posicionar\\r\\n\\r\\nClique no nome de um dispositivo, vá até a tela e clique com o botão esquerdo para colocá-lo." },
-                { Language.Russian, "Выбор и размещение\\r\\n\\r\\nЩёлкните по названию устройства, наведите на холст и щёлкните левой кнопкой, чтобы разместить." },
-                { Language.Persian, "انتخاب و قرار دادن\\r\\n\\r\\nروی نام دستگاه کلیک کنید، به بوم بروید و با کلیک چپ آن را قرار دهید." },
-                { Language.Norwegian, "Velg og plasser\\r\\n\\r\\nKlikk på enhetsnavnet, gå til lerretet og venstreklikk for å plassere." },
-                { Language.TraditionalChinese, "【選擇與放置裝置】\\r\\n\\r\\n點擊裝置名稱後，移到畫布左鍵放置。" },
-                { Language.SimplifiedChinese, "【选择与放置装置】\\r\\n\\r\\n点击装置名称后，移到画布左键放置。" },
-                { Language.Arabic, "تحديد ووضع\\r\\n\\r\\nاختر الاسم ثم انقر اللوحة لوضعه." }
+                { Language.TraditionalChinese, "【裝置選擇與放置】\r\n\r\n選擇裝置：\r\n• 在左側「井口裝置選擇」列表中單擊選中裝置\r\n• 選中後鼠標會顯示裝置預覽圖\r\n• 移開鼠標後預覽圖自動消失\r\n\r\n放置裝置：\r\n• 將鼠標移到右側畫布區域\r\n• 在想要的位置點擊左鍵即可放置\r\n• 可連續點擊放置多個相同裝置\r\n\r\n取消選擇：\r\n• 在畫布空白處點擊右鍵\r\n• 或點擊其他區域（標籤樹、模板庫等）\r\n\r\n添加自定義裝置：\r\n• 在裝置列表空白處或任意位置點擊右鍵\r\n• 選擇「添加自繪裝置」，選擇圖片文件\r\n• 支持 JPG、PNG、BMP、GIF、SVG 格式\r\n• 刪除自定義裝置：右鍵點擊選擇「刪除當前裝置」\r\n\r\n上色/未上色切換：\r\n• 打開「設置」，在裝置樣式下拉框中選擇\r\n• 彩色版本適合演示彙報，線條版本適合技術文檔\r\n\r\n注意：此設置影響新放置的裝置，已放置的裝置不會改變。\r\n提示：建議自定義裝置使用透明背景的 PNG 或 SVG 格式。" },
+                { Language.SimplifiedChinese, "【装置选择与放置】\r\n\r\n选择装置：\r\n• 在左侧「井口装置选择」列表中单击选中装置\r\n• 选中后鼠标会显示装置预览图\r\n• 移开鼠标后预览图自动消失\r\n\r\n放置装置：\r\n• 将鼠标移到右侧画布区域\r\n• 在想要的位置点击左键即可放置\r\n• 可连续点击放置多个相同装置\r\n\r\n取消选择：\r\n• 在画布空白处点击右键\r\n• 或点击其他区域（标签树、模板库等）\r\n\r\n添加自定义装置：\r\n• 在装置列表空白处点击右键\r\n• 选择「添加自绘装置」，选择图片文件\r\n• 支持 JPG、PNG、BMP、GIF、SVG 格式\r\n• 删除：右键点击选择「删除当前装置」\r\n\r\n上色/未上色切换：\r\n• 打开「设置」，在装置样式下拉框中选择\r\n• 彩色版本适合演示汇报，线条版本适合技术文档\r\n\r\n注意：此设置影响新放置的装置，已放置的不会改变。\r\n提示：建议自定义装置使用透明背景的 PNG 或 SVG 格式。" },
+                { Language.English, "[Device Selection & Placement]\r\n\r\nSelect a device:\r\n• Click a device name in the left Device List\r\n• A preview image follows your cursor\r\n• The preview disappears when you move away\r\n\r\nPlace a device:\r\n• Move your cursor to the canvas\r\n• Left-click at the desired position to place\r\n• Click multiple times to place copies\r\n\r\nCancel selection:\r\n• Right-click on the canvas\r\n• Or click another area (tag tree, template library, etc.)\r\n\r\nCustom devices:\r\n• Right-click in the Device List > Add Custom Device\r\n• Select an image file (JPG, PNG, BMP, GIF, SVG)\r\n• Delete: right-click the custom device > Delete Current Device\r\n\r\nColored / Uncolored style:\r\n• Open Settings and change Device Style\r\n• Colored: suitable for presentations; Uncolored: suitable for technical documents\r\n\r\nNote: This setting affects newly placed devices only.\r\nTip: PNG or SVG with transparent background is recommended for custom devices." },
+                { Language.Spanish, "[Selección y colocación de dispositivos]\r\n\r\nSeleccionar：Haga clic en un dispositivo en la lista izquierda; se muestra una vista previa.\r\nColocar：Mueva el cursor al lienzo y haga clic izquierdo.\r\nCancelar：Clic derecho en el lienzo o haga clic en otra área.\r\n\r\nDispositivos personalizados：\r\n• Clic derecho en la lista > Agregar dispositivo personalizado\r\n• Formatos: JPG, PNG, BMP, GIF, SVG\r\n• Eliminar: clic derecho > Eliminar dispositivo actual\r\n\r\nEstilo con/sin color：Configuración > Estilo del dispositivo.\r\nNota: Solo afecta a los nuevos dispositivos colocados." },
+                { Language.French, "[Sélection et placement des appareils]\r\n\r\nSélectionner：Cliquez sur un appareil dans la liste; un aperçu s'affiche.\r\nPlacer：Déplacez le curseur sur la toile et cliquez avec le bouton gauche.\r\nAnnuler：Clic droit sur la toile ou cliquez sur une autre zone.\r\n\r\nAppareils personnalisés：\r\n• Clic droit dans la liste > Ajouter un appareil personnalisé\r\n• Formats : JPG, PNG, BMP, GIF, SVG\r\n• Supprimer : clic droit > Supprimer l'appareil actuel\r\n\r\nStyle coloré/non coloré：Paramètres > Style d'appareil.\r\nNote : N'affecte que les nouveaux éléments placés." },
+                { Language.Portuguese, "[Seleção e posicionamento de dispositivos]\r\n\r\nSelecionar：Clique em um dispositivo na lista; uma pré-visualização é exibida.\r\nColocar：Mova o cursor para a tela e clique com o botão esquerdo.\r\nCancelar：Clique direito na tela ou clique em outra área.\r\n\r\nDispositivos personalizados：\r\n• Clique direito na lista > Adicionar dispositivo personalizado\r\n• Formatos: JPG, PNG, BMP, GIF, SVG\r\n• Excluir: clique direito > Excluir dispositivo atual\r\n\r\nEstilo colorido/sem cor：Configurações > Estilo do dispositivo.\r\nNota: Afeta apenas novos dispositivos posicionados." },
+                { Language.Russian, "[Выбор и размещение устройств]\r\n\r\nВыбор：Щёлкните по устройству в списке; появится предпросмотр.\r\nРазмещение：Наведите на холст и щёлкните ЛКМ.\r\nОтмена：ПКМ по холсту или щёлкните другую область.\r\n\r\nПользовательские устройства：\r\n• ПКМ в списке > Добавить пользовательское устройство\r\n• Форматы: JPG, PNG, BMP, GIF, SVG\r\n• Удалить: ПКМ > Удалить текущее устройство\r\n\r\nСтиль цветной/без цвета：Настройки > Стиль устройства.\r\nПримечание: Влияет только на новые размещённые элементы." },
+                { Language.Persian, "[انتخاب و قراردادن دستگاه]\r\n\r\nانتخاب：روی دستگاه در فهرست کلیک کنید؛ پیش‌نمایش نمایش داده می‌شود.\r\nقراردادن：نشانگر را به بوم ببرید و کلیک چپ کنید.\r\nلغو：راست‌کلیک روی بوم یا ناحیه دیگر.\r\n\r\nدستگاه‌های سفارشی：\r\n• راست‌کلیک > افزودن دستگاه سفارشی\r\n• فرمت‌ها: JPG, PNG, BMP, GIF, SVG\r\n• حذف: راست‌کلیک > حذف دستگاه فعلی\r\n\r\nسبک رنگی/بدون رنگ：تنظیمات > سبک دستگاه.\r\nتوجه: فقط دستگاه‌های جدید تأثیر می‌پذیرند." },
+                { Language.Norwegian, "[Valg og plassering av enheter]\r\n\r\nVelg：Klikk på en enhet i listen; forhåndsvisning vises.\r\nPlasser：Flytt markøren til lerretet og venstreklikk.\r\nAvbryt：Høyreklikk på lerretet eller klikk et annet område.\r\n\r\nEgendefinerte enheter：\r\n• Høyreklikk > Legg til egendefinert enhet\r\n• Formater: JPG, PNG, BMP, GIF, SVG\r\n• Slett: høyreklikk > Slett gjeldende enhet\r\n\r\nFarget/ufarget stil：Innstillinger > Enhetsstil.\r\nMerk: Påvirker kun nye plasserte enheter." },
+                { Language.Arabic, "[اختيار ووضع الأجهزة]\r\n\r\nاختيار：انقر على جهاز في القائمة؛ تظهر معاينة.\r\nوضع：حرك المؤشر إلى اللوحة وانقر بالزر الأيسر.\r\nإلغاء：انقر بالزر الأيمن أو انقر منطقة أخرى.\r\n\r\nأجهزة مخصصة：\r\n• انقر يمين > إضافة جهاز مخصص\r\n• الصيغ: JPG, PNG, BMP, GIF, SVG\r\n• حذف: انقر يمين > حذف الجهاز الحالي\r\n\r\nنمط ملون/غير ملون：الإعدادات > نمط الجهاز.\r\nملاحظة: يؤثر فقط على العناصر الجديدة." }
             },
-            ["HelpContentDevicePreview"] = new Dictionary<Language, string>
+            ["HelpContentTags"] = new Dictionary<Language, string>
             {
-                { Language.English, "Preview\\r\\n\\r\\nHover a device to see its preview image." },
-                { Language.Spanish, "Vista previa\\r\\n\\r\\nPase el cursor sobre un dispositivo para ver su imagen de vista previa." },
-                { Language.French, "Aperçu\\r\\n\\r\\nSurvolez un appareil pour voir son image d’aperçu." },
-                { Language.Portuguese, "Pré-visualização\\r\\n\\r\\nPasse o mouse sobre um dispositivo para ver a imagem de pré-visualização." },
-                { Language.Russian, "Предпросмотр\\r\\n\\r\\nНаведите на устройство, чтобы увидеть изображение предварительного просмотра." },
-                { Language.Persian, "پیش‌نمایش\\r\\n\\r\\nنشانگر را روی دستگاه ببرید تا تصویر پیش‌نمایش را ببینید." },
-                { Language.Norwegian, "Forhåndsvisning\\r\\n\\r\\nHold pekeren over en enhet for å se forhåndsvisningen." },
-                { Language.TraditionalChinese, "【裝置預覽】\\r\\n\\r\\n懸停裝置名稱可顯示預覽圖。" },
-                { Language.SimplifiedChinese, "【装置预览】\\r\\n\\r\\n悬停装置名称可显示预览图。" },
-                { Language.Arabic, "معاينة\\r\\n\\r\\nمرر المؤشر لرؤية المعاينة." }
+                { Language.TraditionalChinese, "【標籤管理】\r\n\r\n標籤用於在畫布上添加文字說明。\r\n\r\n添加標籤：\r\n• 在標籤樹空白處點擊右鍵，選擇「添加根節點」\r\n• 右鍵點擊已有標籤，選擇「添加子節點」\r\n• 輸入名稱後按 Enter 確認\r\n\r\n重命名/刪除：\r\n• 右鍵點擊標籤，選擇「重命名」或「刪除當前節點」\r\n• 重命名按 Enter 確認，按 Esc 取消\r\n\r\n放置文字：\r\n• 在標籤樹中單擊選中一個標籤\r\n• 將鼠標移到畫布上，在想要的位置點擊左鍵\r\n• 拖動可移動文字位置，滾輪可縮放\r\n• 右鍵點擊文字可選擇「刪除」\r\n\r\n搜索標籤：\r\n• 在標籤樹上方的搜索框中輸入關鍵字\r\n• 即時過濾顯示匹配的標籤，不區分大小寫\r\n• 清空搜索框恢復全部顯示\r\n\r\n提示：標籤支持多層級結構，方便分類管理。懸停在標籤上會顯示完整名稱提示框。" },
+                { Language.SimplifiedChinese, "【标签管理】\r\n\r\n标签用于在画布上添加文字说明。\r\n\r\n添加标签：\r\n• 在标签树空白处点击右键，选择「添加根节点」\r\n• 右键点击已有标签，选择「添加子节点」\r\n• 输入名称后按 Enter 确认\r\n\r\n重命名/删除：\r\n• 右键点击标签，选择「重命名」或「删除当前节点」\r\n• 重命名按 Enter 确认，按 Esc 取消\r\n\r\n放置文字：\r\n• 在标签树中单击选中一个标签\r\n• 将鼠标移到画布上，在想要的位置点击左键\r\n• 拖动可移动文字位置，滚轮可缩放\r\n• 右键点击文字可选择「删除」\r\n\r\n搜索标签：\r\n• 在标签树上方的搜索框中输入关键字\r\n• 即时过滤显示匹配的标签，不区分大小写\r\n• 清空搜索框恢复全部显示\r\n\r\n提示：标签支持多层级结构，方便分类管理。" },
+                { Language.English, "[Tag Management]\r\n\r\nTags are used to add text labels on the canvas.\r\n\r\nAdd tags:\r\n• Right-click in the Tag Tree blank area > Add Root Node\r\n• Right-click an existing node > Add Child Node\r\n• Type the name and press Enter to confirm\r\n\r\nRename / Delete:\r\n• Right-click a tag > Rename or Delete Current Node\r\n• Press Enter to confirm rename, Esc to cancel\r\n\r\nPlace text:\r\n• Click a tag in the Tag Tree to select it\r\n• Move to the canvas and left-click to place the text\r\n• Drag to move, scroll wheel to resize\r\n• Right-click text > Delete to remove\r\n\r\nSearch:\r\n• Type in the search box above the Tag Tree\r\n• Labels are filtered in real time, case-insensitive\r\n• Clear the search box to restore all labels\r\n\r\nTip: Tags support multiple levels for organized management." },
+                { Language.Spanish, "[Gestión de etiquetas]\r\n\r\nAgregar：Clic derecho en el árbol > Agregar nodo raíz / Agregar nodo hijo. Enter para confirmar.\r\nRenombrar/Eliminar：Clic derecho > Renombrar o Eliminar nodo actual.\r\n\r\nColocar texto：Seleccione una etiqueta, luego clic izquierdo en el lienzo.\r\n• Arrastre para mover, rueda para redimensionar, clic derecho > Eliminar.\r\n\r\nBúsqueda：Escriba en el cuadro de búsqueda para filtrar (no distingue mayúsculas)." },
+                { Language.French, "[Gestion des étiquettes]\r\n\r\nAjouter：Clic droit dans l'arbre > Ajouter un nœud racine / Ajouter un nœud enfant. Entrée pour confirmer.\r\nRenommer/Supprimer：Clic droit > Renommer ou Supprimer le nœud actuel.\r\n\r\nPlacer du texte：Sélectionnez une étiquette, puis cliquez sur la toile.\r\n• Glissez pour déplacer, molette pour redimensionner, clic droit > Supprimer.\r\n\r\nRecherche：Tapez dans la zone de recherche pour filtrer (insensible à la casse)." },
+                { Language.Portuguese, "[Gerenciamento de rótulos]\r\n\r\nAdicionar：Clique direito na árvore > Adicionar nó raiz / nó filho. Enter para confirmar.\r\nRenomear/Excluir：Clique direito > Renomear ou Excluir nó atual.\r\n\r\nColocar texto：Selecione um rótulo e clique na tela.\r\n• Arraste para mover, roda para redimensionar, clique direito > Excluir.\r\n\r\nPesquisa：Digite na caixa para filtrar (não diferencia maiúsculas)." },
+                { Language.Russian, "[Управление метками]\r\n\r\nДобавить：ПКМ в дереве > Добавить корневой/дочерний узел. Enter для подтверждения.\r\nПереименовать/Удалить：ПКМ > Переименовать или Удалить текущий узел.\r\n\r\nРазместить текст：Выберите метку, затем щёлкните ЛКМ по холсту.\r\n• Перетаскивание для перемещения, колёсико для масштабирования, ПКМ > Удалить.\r\n\r\nПоиск：Введите в поле поиска для фильтрации (без учёта регистра)." },
+                { Language.Persian, "[مدیریت برچسب‌ها]\r\n\r\nافزودن：راست‌کلیک در درخت > افزودن گره ریشه / گره فرزند. Enter برای تأیید.\r\nتغییرنام/حذف：راست‌کلیک > تغییرنام یا حذف گره فعلی.\r\n\r\nقراردادن متن：یک برچسب انتخاب کنید، سپس روی بوم کلیک کنید.\r\n• بکشید برای جابجایی، اسکرول برای تغییر اندازه، راست‌کلیک > حذف.\r\n\r\nجستجو：در کادر جستجو تایپ کنید (بدون حساسیت به حروف)." },
+                { Language.Norwegian, "[Etikettbehandling]\r\n\r\nLegg til：Høyreklikk i treet > Legg til rotnode / barnenode. Enter for å bekrefte.\r\nGi nytt navn/Slett：Høyreklikk > Gi nytt navn eller Slett gjeldende node.\r\n\r\nPlasser tekst：Velg en etikett, deretter venstreklikk på lerretet.\r\n• Dra for å flytte, rull for å endre størrelse, høyreklikk > Slett.\r\n\r\nSøk：Skriv i søkefeltet for å filtrere (ikke skille mellom store/små bokstaver)." },
+                { Language.Arabic, "[إدارة التسميات]\r\n\r\nإضافة：انقر يمين في الشجرة > إضافة عقدة جذر / فرعية. Enter للتأكيد.\r\nإعادة تسمية/حذف：انقر يمين > إعادة تسمية أو حذف العقدة الحالية.\r\n\r\nوضع النص：حدد تسمية ثم انقر على اللوحة.\r\n• اسحب للتحريك، مرر العجلة لتغيير الحجم، انقر يمين > حذف.\r\n\r\nبحث：اكتب في مربع البحث للتصفية (غير حساس لحالة الأحرف)." }
             },
-            ["HelpContentDeviceCustom"] = new Dictionary<Language, string>
+            ["HelpContentCanvas"] = new Dictionary<Language, string>
             {
-                { Language.English, "Custom Devices\\r\\n\\r\\nRight-click the device list and choose Add Custom Device." },
-                { Language.Spanish, "Dispositivos personalizados\\r\\n\\r\\nHaga clic derecho en la lista de dispositivos y elija Agregar dispositivo personalizado." },
-                { Language.French, "Appareils personnalisés\\r\\n\\r\\nCliquez avec le bouton droit sur la liste des appareils et choisissez « Ajouter un appareil personnalisé »." },
-                { Language.Portuguese, "Dispositivos personalizados\\r\\n\\r\\nClique com o botão direito na lista de dispositivos e escolha \"Adicionar dispositivo personalizado\"." },
-                { Language.Russian, "Пользовательские устройства\\r\\n\\r\\nЩёлкните правой кнопкой по списку устройств и выберите «Добавить пользовательское устройство»." },
-                { Language.Persian, "دستگاه‌های سفارشی\\r\\n\\r\\nروی فهرست دستگاه‌ها راست‌کلیک کنید و «افزودن دستگاه سفارشی» را انتخاب کنید." },
-                { Language.Norwegian, "Egendefinerte enheter\\r\\n\\r\\nHøyreklikk enhetslisten og velg «Legg til egendefinert enhet»." },
-                { Language.TraditionalChinese, "【添加自定義裝置】\\r\\n\\r\\n在裝置列表右鍵選擇「添加自繪裝置」。" },
-                { Language.SimplifiedChinese, "【添加自定义装置】\\r\\n\\r\\n在装置列表右键选择“添加自绘装置”。" },
-                { Language.Arabic, "أجهزة مخصصة\\r\\n\\r\\nانقر بزر الفأرة الأيمن واختر إضافة جهاز مخصص." }
+                { Language.TraditionalChinese, "【畫布操作】\r\n\r\n移動控件：\r\n• 將鼠標移到裝置或文字上\r\n• 按住左鍵拖動到新位置\r\n• 鬆開左鍵完成移動\r\n\r\n縮放控件：\r\n• 將鼠標移到裝置或文字上\r\n• 向上滾動滾輪：放大\r\n• 向下滾動滾輪：縮小\r\n• 縮放時保持原始比例不變形\r\n\r\n滾動畫布：\r\n• 在畫布空白處滾動滾輪可上下滾動\r\n• 使用縱向與橫向滾動條查看大圖\r\n• 畫布尺寸會依目前內容自動調整\r\n\r\n刪除控件：\r\n• 右鍵點擊要刪除的裝置或文字\r\n• 在彈出菜單中選擇「刪除」\r\n\r\n自動對齊：\r\n• 右鍵點擊畫布或任意控件\r\n• 選擇「自動對齊（居中顯示）」或「自動對齊（右側顯示）」\r\n• 連續點擊可在兩種模式間切換\r\n\r\n清空畫布：\r\n• 右鍵選擇「清空畫布」移除所有內容\r\n\r\n提示：鼠標在控件上時，滾輪用於縮放；在空白處時，滾輪用於滾動畫布。\r\n注意：刪除和清空操作無法撤銷，請謹慎使用。" },
+                { Language.SimplifiedChinese, "【画布操作】\r\n\r\n移动控件：\r\n• 将鼠标移到装置或文字上\r\n• 按住左键拖动到新位置\r\n\r\n缩放控件：\r\n• 将鼠标移到装置或文字上\r\n• 向上滚动滚轮：放大；向下：缩小\r\n• 缩放时保持原始比例\r\n\r\n滚动画布：\r\n• 在画布空白处滚动滚轮\r\n• 使用纵向与横向滚动条查看大图\r\n• 画布尺寸会按内容自动调整\r\n\r\n删除控件：\r\n• 右键点击控件选择「删除」\r\n\r\n自动对齐：\r\n• 右键画布选择「自动对齐（居中显示）」或「自动对齐（右侧显示）」\r\n• 连续点击可在两种模式间切换\r\n\r\n清空画布：\r\n• 右键选择「清空画布」移除所有内容\r\n\r\n提示：鼠标在控件上时滚轮用于缩放，在空白处时用于滚动画布。\r\n注意：删除和清空操作无法撤销。" },
+                { Language.English, "[Canvas Operations]\r\n\r\nMove elements:\r\n• Hover over a device or text\r\n• Hold left button and drag to new position\r\n\r\nResize elements:\r\n• Hover over a device or text\r\n• Scroll up to enlarge, scroll down to shrink\r\n• Aspect ratio is preserved\r\n\r\nScroll the canvas:\r\n• Scroll the wheel on the blank canvas area\r\n• Use vertical and horizontal scrollbars for large drawings\r\n• Canvas size auto-fits current content\r\n\r\nDelete:\r\n• Right-click an element > Delete\r\n\r\nAuto Align:\r\n• Right-click > Auto Align (Center) or Auto Align (Right)\r\n• Click repeatedly to alternate between modes\r\n\r\nClear Canvas:\r\n• Right-click > Clear Canvas to remove all elements\r\n\r\nTip: Wheel over an element = resize; wheel over blank = scroll canvas.\r\nNote: Delete and Clear cannot be undone." },
+                { Language.Spanish, "[Operaciones del lienzo]\r\n\r\nMover：Arrastre con el botón izquierdo.\r\nRedimensionar：Rueda del mouse sobre el elemento.\r\nDesplazar：Rueda en el área en blanco o barras de desplazamiento.\r\n\r\nEliminar：Clic derecho > Eliminar.\r\nAlinear：Clic derecho > Alinear automáticamente (Centro/Derecha). Alternar con clics repetidos.\r\nLimpiar：Clic derecho > Limpiar lienzo.\r\n\r\nNota: Eliminar y limpiar no se pueden deshacer." },
+                { Language.French, "[Opérations sur la toile]\r\n\r\nDéplacer：Glissez avec le bouton gauche.\r\nRedimensionner：Molette sur l'élément.\r\nDéfiler：Molette sur la zone vide ou barres de défilement.\r\n\r\nSupprimer：Clic droit > Supprimer.\r\nAligner：Clic droit > Alignement auto (Centre/Droite). Alternez en cliquant.\r\nEffacer：Clic droit > Effacer la toile.\r\n\r\nNote : Supprimer et Effacer sont irréversibles." },
+                { Language.Portuguese, "[Operações da tela]\r\n\r\nMover：Arraste com o botão esquerdo.\r\nRedimensionar：Roda do mouse sobre o elemento.\r\nRolar：Roda na área em branco ou barras de rolagem.\r\n\r\nExcluir：Clique direito > Excluir.\r\nAlinhar：Clique direito > Alinhar automaticamente (Centro/Direita). Alterne com cliques.\r\nLimpar：Clique direito > Limpar tela.\r\n\r\nNota: Excluir e Limpar não podem ser desfeitos." },
+                { Language.Russian, "[Операции с холстом]\r\n\r\nПеремещение：Перетаскивайте ЛКМ.\r\nМасштабирование：Колёсико на элементе.\r\nПрокрутка：Колёсико на пустой области или полосы прокрутки.\r\n\r\nУдаление：ПКМ > Удалить.\r\nВыравнивание：ПКМ > Автовыравнивание (По центру/Справа). Чередуйте кликами.\r\nОчистка：ПКМ > Очистить холст.\r\n\r\nПримечание: Удаление и очистка необратимы." },
+                { Language.Persian, "[عملیات بوم]\r\n\r\nجابجایی：با کلیک چپ بکشید.\r\nتغییر اندازه：اسکرول روی عنصر.\r\nپیمایش：اسکرول در ناحیه خالی یا نوارهای اسکرول.\r\n\r\nحذف：راست‌کلیک > حذف.\r\nتراز：راست‌کلیک > تراز خودکار (مرکز/راست). با کلیک‌های متوالی تناوب کنید.\r\nپاک کردن：راست‌کلیک > پاک کردن بوم.\r\n\r\nتوجه: حذف و پاک کردن قابل بازگشت نیست." },
+                { Language.Norwegian, "[Lerretsoperasjoner]\r\n\r\nFlytt：Dra med venstre museknapp.\r\nEndre størrelse：Rull på elementet.\r\nBla：Rull på tomt område eller bruk rullefelt.\r\n\r\nSlett：Høyreklikk > Slett.\r\nJuster：Høyreklikk > Autojustering (Senter/Høyre). Veksle med gjentatte klikk.\r\nTøm：Høyreklikk > Tøm lerret.\r\n\r\nMerk: Slett og Tøm kan ikke angres." },
+                { Language.Arabic, "[عمليات اللوحة]\r\n\r\nتحريك：اسحب بالزر الأيسر.\r\nتغيير الحجم：مرر العجلة على العنصر.\r\nتمرير：مرر العجلة في المنطقة الفارغة أو استخدم أشرطة التمرير.\r\n\r\nحذف：انقر يمين > حذف.\r\nمحاذاة：انقر يمين > محاذاة تلقائية (وسط/يمين). تبادل بالنقرات.\r\nمسح：انقر يمين > مسح اللوحة.\r\n\r\nملاحظة: الحذف والمسح لا يمكن التراجع عنهما." }
             },
-            ["HelpContentDeviceColor"] = new Dictionary<Language, string>
+            ["HelpContentTemplate"] = new Dictionary<Language, string>
             {
-                { Language.English, "Colored / Uncolored\\r\\n\\r\\nToggle the checkbox to switch styles for new devices." },
-                { Language.Spanish, "A color / sin color\\r\\n\\r\\nActive o desactive la casilla para cambiar el estilo de los dispositivos nuevos." },
-                { Language.French, "En couleur / sans couleur\\r\\n\\r\\nCochez/décochez la case pour changer le style des nouveaux appareils." },
-                { Language.Portuguese, "Colorido / sem cor\\r\\n\\r\\nMarque/desmarque a opção para mudar o estilo dos novos dispositivos." },
-                { Language.Russian, "Цветные / без цвета\\r\\n\\r\\nПереключите флажок, чтобы менять стиль новых устройств." },
-                { Language.Persian, "رنگی / بدون رنگ\\r\\n\\r\\nگزینه را فعال/غیرفعال کنید تا سبک دستگاه‌های جدید تغییر کند." },
-                { Language.Norwegian, "Farget / ufarget\\r\\n\\r\\nSlå av/på avmerkingen for å endre stil på nye enheter." },
-                { Language.TraditionalChinese, "【上色/未上色切換】\\r\\n\\r\\n勾選切換新放置裝置的樣式。" },
-                { Language.SimplifiedChinese, "【上色/未上色切换】\\r\\n\\r\\n勾选切换新放置装置的样式。" },
-                { Language.Arabic, "ملون / غير ملون\\r\\n\\r\\nبدّل خيار النمط للأجهزة الجديدة." }
+                { Language.TraditionalChinese, "【模板庫】\r\n\r\n可以將當前畫布內容保存為模板，以便日後重複使用。\r\n\r\n保存為新模板：\r\n• 右鍵點擊畫布，選擇「添加樣例到庫」\r\n• 在彈出對話框中輸入模板名稱\r\n• 可選擇保存到指定資料夾\r\n• 保存內容包括所有裝置和文字的類型、位置、大小\r\n\r\n保存到已有模板：\r\n• 先從模板庫載入一個模板，修改後\r\n• 右鍵選擇「保存到目前模板」覆蓋保存\r\n\r\n載入模板：\r\n• 在模板庫樹中單擊模板節點即可載入\r\n• 載入模板會清空當前畫布內容\r\n• 資料夾節點無法載入，只有模板節點可以\r\n\r\n管理資料夾：\r\n• 右鍵可新增資料夾、重命名、刪除\r\n• 刪除資料夾會連同內容一起刪除\r\n\r\n搜索模板：\r\n• 在模板庫上方的搜索框中輸入關鍵字\r\n• 同時搜索資料夾名和模板名，不區分大小寫\r\n• 清空搜索框恢復全部顯示\r\n\r\n提示：模板會自動保存到本地文件，關閉程序後不會丟失。建議按項目或類型分類存放。" },
+                { Language.SimplifiedChinese, "【模板库】\r\n\r\n可以将当前画布内容保存为模板，以便日后重复使用。\r\n\r\n保存为新模板：\r\n• 右键点击画布，选择「添加样例到库」\r\n• 输入模板名称，可选择保存到指定文件夹\r\n• 保存内容包括所有装置和文字的类型、位置、大小\r\n\r\n保存到已有模板：\r\n• 先从模板库加载一个模板，修改后\r\n• 右键选择「保存到当前模板」覆盖保存\r\n\r\n加载模板：\r\n• 在模板库树中单击模板节点即可加载\r\n• 加载模板会清空当前画布内容\r\n\r\n管理文件夹：\r\n• 右键可新增文件夹、重命名、删除\r\n• 删除文件夹会连同内容一起删除\r\n\r\n搜索模板：\r\n• 在模板库上方的搜索框中输入关键字\r\n• 同时搜索文件夹名和模板名，不区分大小写\r\n\r\n提示：模板自动保存到本地，关闭程序后不会丢失。" },
+                { Language.English, "[Template Library]\r\n\r\nSave your canvas as a template for future reuse.\r\n\r\nSave as new template:\r\n• Right-click the canvas > Add to Library\r\n• Enter a template name, optionally select a folder\r\n• Saves all device types, positions, and sizes\r\n\r\nSave to existing template:\r\n• Load a template from the library, make edits\r\n• Right-click > Save to Current Template to overwrite\r\n\r\nLoad a template:\r\n• Click a template node in the Template Library tree\r\n• Loading replaces the current canvas content\r\n• Only template nodes can be loaded (not folders)\r\n\r\nManage folders:\r\n• Right-click to add folders, rename, or delete\r\n• Deleting a folder also deletes its contents\r\n\r\nSearch:\r\n• Type in the search box above the Template Library\r\n• Searches both folder and template names, case-insensitive\r\n\r\nTip: Templates are stored locally and persist after closing." },
+                { Language.Spanish, "[Biblioteca de plantillas]\r\n\r\nGuardar nuevo：Clic derecho > Añadir a biblioteca. Ingrese un nombre.\r\nGuardar existente：Cargue una plantilla, edítela, clic derecho > Guardar en plantilla actual.\r\n\r\nCargar：Clic en un nodo de plantilla en el árbol.\r\nNota: Cargar reemplaza el contenido actual del lienzo.\r\n\r\nCarpetas：Clic derecho para agregar/renombrar/eliminar carpetas.\r\nBúsqueda：Escriba en el cuadro de búsqueda para filtrar.\r\n\r\nLas plantillas se guardan localmente y persisten tras cerrar." },
+                { Language.French, "[Bibliothèque de modèles]\r\n\r\nNouveau：Clic droit > Ajouter à la bibliothèque. Saisissez un nom.\r\nExistant：Chargez un modèle, modifiez-le, clic droit > Enregistrer dans le modèle actuel.\r\n\r\nCharger：Cliquez sur un nœud de modèle dans l'arbre.\r\nNote : Le chargement remplace le contenu actuel de la toile.\r\n\r\nDossiers：Clic droit pour ajouter/renommer/supprimer.\r\nRecherche：Tapez dans la zone de recherche pour filtrer.\r\n\r\nLes modèles sont stockés localement et persistent après fermeture." },
+                { Language.Portuguese, "[Biblioteca de modelos]\r\n\r\nNovo：Clique direito > Adicionar à biblioteca. Digite um nome.\r\nExistente：Carregue um modelo, edite, clique direito > Salvar no modelo atual.\r\n\r\nCarregar：Clique em um nó de modelo na árvore.\r\nNota: Carregar substitui o conteúdo atual da tela.\r\n\r\nPastas：Clique direito para adicionar/renomear/excluir.\r\nPesquisa：Digite na caixa para filtrar.\r\n\r\nModelos são armazenados localmente e persistem após fechar." },
+                { Language.Russian, "[Библиотека шаблонов]\r\n\r\nНовый：ПКМ > Добавить в библиотеку. Введите имя.\r\nСуществующий：Загрузите шаблон, отредактируйте, ПКМ > Сохранить в текущий шаблон.\r\n\r\nЗагрузить：Щёлкните по узлу шаблона в дереве.\r\nПримечание: Загрузка заменяет текущее содержимое холста.\r\n\r\nПапки：ПКМ для добавления/переименования/удаления.\r\nПоиск：Введите в поле поиска для фильтрации.\r\n\r\nШаблоны хранятся локально и сохраняются после закрытия." },
+                { Language.Persian, "[کتابخانه قالب‌ها]\r\n\r\nجدید：راست‌کلیک > افزودن به کتابخانه. نام وارد کنید.\r\nموجود：یک قالب بارگذاری کنید، ویرایش کنید، راست‌کلیک > ذخیره در قالب فعلی.\r\n\r\nبارگذاری：روی گره قالب در درخت کلیک کنید.\r\nتوجه: بارگذاری محتوای فعلی بوم را جایگزین می‌کند.\r\n\r\nپوشه‌ها：راست‌کلیک برای افزودن/تغییرنام/حذف.\r\nجستجو：در کادر جستجو تایپ کنید.\r\n\r\nقالب‌ها به صورت محلی ذخیره می‌شوند و پس از بسته شدن باقی می‌مانند." },
+                { Language.Norwegian, "[Malbibliotek]\r\n\r\nNy：Høyreklikk > Legg til i biblioteket. Skriv inn et navn.\r\nEksisterende：Last en mal, rediger, høyreklikk > Lagre til gjeldende mal.\r\n\r\nLast：Klikk på en mal-node i treet.\r\nMerk: Lasting erstatter gjeldende lerretsinnhold.\r\n\r\nMapper：Høyreklikk for å legge til/gi nytt navn/slette.\r\nSøk：Skriv i søkefeltet for å filtrere.\r\n\r\nMaler lagres lokalt og beholdes etter lukking." },
+                { Language.Arabic, "[مكتبة القوالب]\r\n\r\nجديد：انقر يمين > إضافة إلى المكتبة. أدخل اسماً.\r\nموجود：حمّل قالباً، عدّله، انقر يمين > حفظ في القالب الحالي.\r\n\r\nتحميل：انقر على عقدة القالب في الشجرة.\r\nملاحظة: التحميل يستبدل محتوى اللوحة الحالي.\r\n\r\nمجلدات：انقر يمين لإضافة/إعادة تسمية/حذف.\r\nبحث：اكتب في مربع البحث للتصفية.\r\n\r\nالقوالب تُخزن محلياً وتبقى بعد الإغلاق." }
             },
-            ["HelpContentTagCreate"] = new Dictionary<Language, string>
+            ["HelpContentCapture"] = new Dictionary<Language, string>
             {
-                { Language.English, "Create & Edit\\r\\n\\r\\nRight-click in the label tree to add, rename, or delete labels." },
-                { Language.Spanish, "Crear y editar\\r\\n\\r\\nHaga clic derecho en el árbol de etiquetas para añadir, renombrar o eliminar etiquetas." },
-                { Language.French, "Créer et modifier\\r\\n\\r\\nCliquez avec le bouton droit dans l’arborescence des étiquettes pour ajouter, renommer ou supprimer." },
-                { Language.Portuguese, "Criar e editar\\r\\n\\r\\nClique com o botão direito na árvore de rótulos para adicionar, renomear ou excluir." },
-                { Language.Russian, "Создать и редактировать\\r\\n\\r\\nЩёлкните правой кнопкой в дереве меток, чтобы добавить, переименовать или удалить." },
-                { Language.Persian, "ایجاد و ویرایش\\r\\n\\r\\nدر درخت برچسب‌ها راست‌کلیک کنید تا افزودن، تغییرنام یا حذف انجام شود." },
-                { Language.Norwegian, "Opprett og rediger\\r\\n\\r\\nHøyreklikk i etikett-treet for å legge til, gi nytt navn eller slette." },
-                { Language.TraditionalChinese, "【創建與編輯標籤】\\r\\n\\r\\n在標籤樹右鍵可新增/重命名/刪除。" },
-                { Language.SimplifiedChinese, "【创建与编辑标签】\\r\\n\\r\\n在标签树右键可新增/重命名/删除。" },
-                { Language.Arabic, "إنشاء وتحرير\\r\\n\\r\\nانقر بزر الفأرة الأيمن لإضافة أو إعادة تسمية أو حذف." }
+                { Language.TraditionalChinese, "【截圖功能】\r\n\r\n手動截圖：\r\n1. 右鍵點擊畫布，選擇「截圖」\r\n2. 鼠標變為十字形，進入截圖模式\r\n3. 按住左鍵，從左上角拖動到右下角\r\n4. 鬆開左鍵完成截圖，自動複製到剪貼簿\r\n• 在截圖模式下點擊右鍵可取消\r\n\r\n自動截圖：\r\n1. 右鍵點擊畫布，選擇「自動截圖」\r\n2. 程序自動計算所有控件的範圍\r\n3. 截取包含所有內容的最小區域，自動複製到剪貼簿\r\n• 畫布為空時會提示無法截圖\r\n\r\n長圖截取：\r\n1. 進入截圖模式後從左上角開始拖動\r\n2. 拖到畫布底部時，保持左鍵按住不放\r\n3. 滾動滾輪向下滾動畫布\r\n4. 到達目標位置後鬆開左鍵\r\n5. 程序自動拼接成完整長圖\r\n\r\n使用截圖：\r\n• 在 Word、PPT、微信等軟件中按 Ctrl+V 粘貼\r\n• 或在畫圖軟件中粘貼後保存為圖片文件" },
+                { Language.SimplifiedChinese, "【截图功能】\r\n\r\n手动截图：\r\n1. 右键点击画布，选择「截图」\r\n2. 鼠标变为十字形，进入截图模式\r\n3. 按住左键，从左上角拖动到右下角\r\n4. 松开左键完成截图，自动复制到剪贴板\r\n• 截图模式下点击右键可取消\r\n\r\n自动截图：\r\n1. 右键点击画布，选择「自动截图」\r\n2. 程序自动计算所有控件的范围\r\n3. 截取最小包含区域，自动复制到剪贴板\r\n• 画布为空时会提示无法截图\r\n\r\n长图截取：\r\n1. 进入截图模式后从左上角开始拖动\r\n2. 拖到画布底部时保持左键按住\r\n3. 滚动滚轮向下滚动画布\r\n4. 到达目标位置后松开左键，自动拼接\r\n\r\n使用截图：\r\n• 在 Word、PPT 等软件中按 Ctrl+V 粘贴" },
+                { Language.English, "[Screenshot & Capture]\r\n\r\nManual screenshot:\r\n1. Right-click canvas > Screenshot\r\n2. Cursor changes to crosshair (capture mode)\r\n3. Hold left button and drag from top-left to bottom-right\r\n4. Release to capture; image is copied to clipboard\r\n• Right-click to cancel capture mode\r\n\r\nAuto screenshot:\r\n1. Right-click canvas > Auto Screenshot\r\n2. The app detects all elements and captures the minimum bounding area\r\n3. Image is copied to clipboard automatically\r\n• Shows a warning if the canvas is empty\r\n\r\nLong screenshot:\r\n1. Enter capture mode and start dragging from top-left\r\n2. When reaching the bottom, keep left button held\r\n3. Scroll down with the wheel to extend the canvas\r\n4. Release to finish; images are stitched automatically\r\n\r\nUsage:\r\n• Press Ctrl+V in Word, PPT, etc. to paste the screenshot" },
+                { Language.Spanish, "[Captura de pantalla]\r\n\r\nManual：Clic derecho > Captura. Arrastre un rectángulo. Clic derecho para cancelar.\r\nAutomática：Clic derecho > Captura automática. Captura el área mínima que contiene todos los elementos.\r\nLarga：En modo captura, arrastre hasta el borde inferior, mantenga el botón y desplácese con la rueda.\r\n\r\nUso：Ctrl+V para pegar en Word, PPT, etc." },
+                { Language.French, "[Capture d'écran]\r\n\r\nManuelle：Clic droit > Capture. Dessinez un rectangle. Clic droit pour annuler.\r\nAutomatique：Clic droit > Capture auto. Capture la zone minimale contenant tous les éléments.\r\nLongue：En mode capture, glissez vers le bas, maintenez le bouton et faites défiler.\r\n\r\nUtilisation：Ctrl+V pour coller dans Word, PPT, etc." },
+                { Language.Portuguese, "[Captura de tela]\r\n\r\nManual：Clique direito > Captura. Arraste um retângulo. Clique direito para cancelar.\r\nAutomática：Clique direito > Captura automática. Captura a área mínima com todos os elementos.\r\nLonga：No modo captura, arraste até o fundo, segure o botão e role.\r\n\r\nUso：Ctrl+V para colar no Word, PPT, etc." },
+                { Language.Russian, "[Снимок экрана]\r\n\r\nВручную：ПКМ > Снимок. Выделите прямоугольник. ПКМ для отмены.\r\nАвтоматически：ПКМ > Автоснимок. Захватывает минимальную область со всеми элементами.\r\nДлинный：В режиме захвата тяните вниз, удерживая кнопку, и прокручивайте колёсиком.\r\n\r\nИспользование：Ctrl+V для вставки в Word, PPT и т.д." },
+                { Language.Persian, "[اسکرین‌شات]\r\n\r\nدستی：راست‌کلیک > اسکرین‌شات. مستطیل بکشید. راست‌کلیک برای لغو.\r\nخودکار：راست‌کلیک > اسکرین‌شات خودکار. ناحیه حداقل شامل همه عناصر را می‌گیرد.\r\nبلند：در حالت گرفتن، به پایین بکشید، دکمه را نگه دارید و اسکرول کنید.\r\n\r\nاستفاده：Ctrl+V برای چسباندن در Word, PPT و غیره." },
+                { Language.Norwegian, "[Skjermbilde]\r\n\r\nManuell：Høyreklikk > Skjermbilde. Dra et rektangel. Høyreklikk for å avbryte.\r\nAutomatisk：Høyreklikk > Automatisk skjermbilde. Fanger det minste området med alle elementer.\r\nLangt：I fangstmodus, dra til bunnen, hold knappen og rull.\r\n\r\nBruk：Ctrl+V for å lime inn i Word, PPT, osv." },
+                { Language.Arabic, "[لقطة الشاشة]\r\n\r\nيدوية：انقر يمين > لقطة. ارسم مستطيلاً. انقر يمين للإلغاء.\r\nتلقائية：انقر يمين > لقطة تلقائية. تلتقط أصغر منطقة تحتوي كل العناصر.\r\nطويلة：في وضع الالتقاط، اسحب للأسفل، أبقِ الزر مضغوطاً ومرر العجلة.\r\n\r\nالاستخدام：Ctrl+V للصق في Word, PPT, إلخ." }
             },
-            ["HelpContentTagPlace"] = new Dictionary<Language, string>
+            ["HelpContentJsonImport"] = new Dictionary<Language, string>
             {
-                { Language.English, "Place Text\\r\\n\\r\\nSelect a label, then click the canvas to place text." },
-                { Language.Spanish, "Colocar texto\\r\\n\\r\\nSeleccione una etiqueta y luego haga clic en el lienzo para colocar el texto." },
-                { Language.French, "Placer le texte\\r\\n\\r\\nSélectionnez une étiquette, puis cliquez sur la toile pour placer le texte." },
-                { Language.Portuguese, "Posicionar texto\\r\\n\\r\\nSelecione um rótulo e depois clique na tela para colocar o texto." },
-                { Language.Russian, "Разместить текст\\r\\n\\r\\nВыберите метку, затем щёлкните по холсту, чтобы разместить текст." },
-                { Language.Persian, "قراردادن متن\\r\\n\\r\\nیک برچسب را انتخاب کنید، سپس روی بوم کلیک کنید تا متن قرار گیرد." },
-                { Language.Norwegian, "Plasser tekst\\r\\n\\r\\nVelg en etikett, og klikk deretter på lerretet for å plassere tekst." },
-                { Language.TraditionalChinese, "【放置文字標籤】\\r\\n\\r\\n選中標籤後在畫布點擊放置文字。" },
-                { Language.SimplifiedChinese, "【放置文字标签】\\r\\n\\r\\n选中标签后在画布点击放置文字。" },
-                { Language.Arabic, "وضع النص\\r\\n\\r\\nحدد تسمية ثم انقر اللوحة." }
-            },
-            ["HelpContentTagSearch"] = new Dictionary<Language, string>
-            {
-                { Language.English, "Search Labels\\r\\n\\r\\nType in the search box to filter labels." },
-                { Language.Spanish, "Buscar etiquetas\\r\\n\\r\\nEscriba en el cuadro de búsqueda para filtrar etiquetas." },
-                { Language.French, "Rechercher des étiquettes\\r\\n\\r\\nSaisissez dans la zone de recherche pour filtrer les étiquettes." },
-                { Language.Portuguese, "Pesquisar rótulos\\r\\n\\r\\nDigite na caixa de pesquisa para filtrar rótulos." },
-                { Language.Russian, "Поиск меток\\r\\n\\r\\nВведите в поле поиска, чтобы отфильтровать метки." },
-                { Language.Persian, "جستجوی برچسب‌ها\\r\\n\\r\\nدر کادر جستجو تایپ کنید تا برچسب‌ها فیلتر شوند." },
-                { Language.Norwegian, "Søk i etiketter\\r\\n\\r\\nSkriv i søkefeltet for å filtrere etiketter." },
-                { Language.TraditionalChinese, "【搜索標籤】\\r\\n\\r\\n在搜索框輸入可過濾標籤。" },
-                { Language.SimplifiedChinese, "【搜索标签】\\r\\n\\r\\n在搜索框输入可过滤标签。" },
-                { Language.Arabic, "بحث التسميات\\r\\n\\r\\nاكتب لتصفية التسميات." }
-            },
-            ["HelpContentCanvasMove"] = new Dictionary<Language, string>
-            {
-                { Language.English, "Move & Zoom\\r\\n\\r\\nDrag to move. Use mouse wheel to scale items." },
-                { Language.Spanish, "Mover y acercar\\r\\n\\r\\nArrastre para mover. Use la rueda del ratón para escalar los elementos." },
-                { Language.French, "Déplacer et zoomer\\r\\n\\r\\nFaites glisser pour déplacer. Utilisez la molette pour mettre à l’échelle les éléments." },
-                { Language.Portuguese, "Mover e ampliar\\r\\n\\r\\nArraste para mover. Use a roda do mouse para escalar os itens." },
-                { Language.Russian, "Перемещение и масштаб\\r\\n\\r\\nПеретаскивайте для перемещения. Используйте колесо мыши для масштабирования элементов." },
-                { Language.Persian, "جابجایی و بزرگ‌نمایی\\r\\n\\r\\nبرای جابجایی بکشید. از چرخ ماوس برای تغییر مقیاس استفاده کنید." },
-                { Language.Norwegian, "Flytt og zoom\\r\\n\\r\\nDra for å flytte. Bruk musehjulet for å skalere elementer." },
-                { Language.TraditionalChinese, "【移動與縮放】\\r\\n\\r\\n拖動可移動，滾輪可縮放。" },
-                { Language.SimplifiedChinese, "【移动与缩放】\\r\\n\\r\\n拖动可移动，滚轮可缩放。" },
-                { Language.Arabic, "تحريك وتكبير\\r\\n\\r\\nاسحب للتحريك، عجلة للف缩." }
-            },
-            ["HelpContentCanvasDelete"] = new Dictionary<Language, string>
-            {
-                { Language.English, "Delete Items\\r\\n\\r\\nRight-click an item and choose Delete." },
-                { Language.Spanish, "Eliminar elementos\\r\\n\\r\\nHaga clic derecho en un elemento y elija Eliminar." },
-                { Language.French, "Supprimer des éléments\\r\\n\\r\\nCliquez avec le bouton droit sur un élément et choisissez Supprimer." },
-                { Language.Portuguese, "Excluir itens\\r\\n\\r\\nClique com o botão direito em um item e escolha Excluir." },
-                { Language.Russian, "Удалить элементы\\r\\n\\r\\nЩёлкните правой кнопкой по элементу и выберите «Удалить»." },
-                { Language.Persian, "حذف عناصر\\r\\n\\r\\nروی یک مورد راست‌کلیک کنید و حذف را انتخاب کنید." },
-                { Language.Norwegian, "Slett elementer\\r\\n\\r\\nHøyreklikk på et element og velg Slett." },
-                { Language.TraditionalChinese, "【刪除控件】\\r\\n\\r\\n右鍵控件選擇刪除。" },
-                { Language.SimplifiedChinese, "【删除控件】\\r\\n\\r\\n右键控件选择删除。" },
-                { Language.Arabic, "حذف العناصر\\r\\n\\r\\nانقر بزر الفأرة الأيمن واختر حذف." }
-            },
-            ["HelpContentCanvasAlign"] = new Dictionary<Language, string>
-            {
-                { Language.English, "Auto Align\\r\\n\\r\\nRight-click the canvas and choose Auto Align." },
-                { Language.Spanish, "Alinear automáticamente\\r\\n\\r\\nHaga clic derecho en el lienzo y elija Alinear automáticamente." },
-                { Language.French, "Alignement automatique\\r\\n\\r\\nCliquez avec le bouton droit sur la toile et choisissez Alignement automatique." },
-                { Language.Portuguese, "Alinhar automaticamente\\r\\n\\r\\nClique com o botão direito na tela e escolha Alinhar automaticamente." },
-                { Language.Russian, "Автовыравнивание\\r\\n\\r\\nЩёлкните правой кнопкой по холсту и выберите «Автовыравнивание»." },
-                { Language.Persian, "تراز خودکار\\r\\n\\r\\nروی بوم راست‌کلیک کنید و تراز خودکار را انتخاب کنید." },
-                { Language.Norwegian, "Automatisk justering\\r\\n\\r\\nHøyreklikk på lerretet og velg Automatisk justering." },
-                { Language.TraditionalChinese, "【自動對齊】\\r\\n\\r\\n右鍵畫布選擇自動對齊。" },
-                { Language.SimplifiedChinese, "【自动对齐】\\r\\n\\r\\n右键画布选择自动对齐。" },
-                { Language.Arabic, "محاذاة تلقائية\\r\\n\\r\\nانقر بزر الفأرة الأيمن واختر محاذاة." }
-            },
-            ["HelpContentCanvasClear"] = new Dictionary<Language, string>
-            {
-                { Language.English, "Clear Canvas\\r\\n\\r\\nRight-click and choose Clear Canvas." },
-                { Language.Spanish, "Limpiar lienzo\\r\\n\\r\\nHaga clic derecho y elija Limpiar lienzo." },
-                { Language.French, "Effacer la toile\\r\\n\\r\\nCliquez avec le bouton droit et choisissez Effacer la toile." },
-                { Language.Portuguese, "Limpar tela\\r\\n\\r\\nClique com o botão direito e escolha Limpar tela." },
-                { Language.Russian, "Очистить холст\\r\\n\\r\\nЩёлкните правой кнопкой и выберите «Очистить холст»." },
-                { Language.Persian, "پاک کردن بوم\\r\\n\\r\\nراست‌کلیک کنید و پاک کردن بوم را انتخاب کنید." },
-                { Language.Norwegian, "Tøm lerret\\r\\n\\r\\nHøyreklikk og velg Tøm lerret." },
-                { Language.TraditionalChinese, "【清空畫布】\\r\\n\\r\\n右鍵畫布選擇清空畫布。" },
-                { Language.SimplifiedChinese, "【清空画布】\\r\\n\\r\\n右键画布选择清空画布。" },
-                { Language.Arabic, "مسح اللوحة\\r\\n\\r\\nانقر بزر الفأرة الأيمن واختر المسح." }
-            },
-            ["HelpContentTemplateSave"] = new Dictionary<Language, string>
-            {
-                { Language.English, "Save Template\\r\\n\\r\\nRight-click canvas and choose Add to Library." },
-                { Language.Spanish, "Guardar plantilla\\r\\n\\r\\nHaga clic derecho en el lienzo y elija Añadir a la biblioteca." },
-                { Language.French, "Enregistrer le modèle\\r\\n\\r\\nCliquez avec le bouton droit sur la toile et choisissez « Ajouter à la bibliothèque »." },
-                { Language.Portuguese, "Salvar modelo\\r\\n\\r\\nClique com o botão direito na tela e escolha \"Adicionar à biblioteca\"." },
-                { Language.Russian, "Сохранить шаблон\\r\\n\\r\\nЩёлкните правой кнопкой по холсту и выберите «Добавить в библиотеку»." },
-                { Language.Persian, "ذخیره قالب\\r\\n\\r\\nروی بوم راست‌کلیک کنید و «افزودن به کتابخانه» را انتخاب کنید." },
-                { Language.Norwegian, "Lagre mal\\r\\n\\r\\nHøyreklikk på lerretet og velg «Legg til i biblioteket»." },
-                { Language.TraditionalChinese, "【保存模板】\\r\\n\\r\\n右鍵畫布選擇添加樣例到庫。" },
-                { Language.SimplifiedChinese, "【保存模板】\\r\\n\\r\\n右键画布选择添加样例到库。" },
-                { Language.Arabic, "حفظ القالب\\r\\n\\r\\nانقر بزر الفأرة الأيمن واختر إضافة إلى المكتبة." }
-            },
-            ["HelpContentTemplateLoad"] = new Dictionary<Language, string>
-            {
-                { Language.English, "Load Template\\r\\n\\r\\nClick a template node to load it." },
-                { Language.Spanish, "Cargar plantilla\\r\\n\\r\\nHaga clic en un nodo de plantilla para cargarlo." },
-                { Language.French, "Charger le modèle\\r\\n\\r\\nCliquez sur un nœud de modèle pour le charger." },
-                { Language.Portuguese, "Carregar modelo\\r\\n\\r\\nClique em um nó de modelo para carregá-lo." },
-                { Language.Russian, "Загрузить шаблон\\r\\n\\r\\nЩёлкните по узлу шаблона, чтобы загрузить его." },
-                { Language.Persian, "بارگذاری قالب\\r\\n\\r\\nبرای بارگذاری روی گره قالب کلیک کنید." },
-                { Language.Norwegian, "Last mal\\r\\n\\r\\nKlikk på en mal-node for å laste den." },
-                { Language.TraditionalChinese, "【載入模板】\\r\\n\\r\\n單擊模板節點載入。" },
-                { Language.SimplifiedChinese, "【加载模板】\\r\\n\\r\\n单击模板节点加载。" },
-                { Language.Arabic, "تحميل القالب\\r\\n\\r\\nانقر عقدة القالب للتحميل." }
-            },
-            ["HelpContentTemplateFolder"] = new Dictionary<Language, string>
-            {
-                { Language.English, "Manage Folders\\r\\n\\r\\nRight-click templates to add folders or rename." },
-                { Language.Spanish, "Administrar carpetas\\r\\n\\r\\nHaga clic derecho en las plantillas para agregar carpetas o renombrar." },
-                { Language.French, "Gérer les dossiers\\r\\n\\r\\nCliquez avec le bouton droit sur les modèles pour ajouter des dossiers ou renommer." },
-                { Language.Portuguese, "Gerenciar pastas\\r\\n\\r\\nClique com o botão direito nas plantilhas para adicionar pastas ou renomear." },
-                { Language.Russian, "Управление папками\\r\\n\\r\\nЩёлкните правой кнопкой по шаблонам, чтобы добавить папки или переименовать." },
-                { Language.Persian, "مدیریت پوشه‌ها\\r\\n\\r\\nروی قالب‌ها راست‌کلیک کنید تا پوشه اضافه کنید یا تغییرنام دهید." },
-                { Language.Norwegian, "Administrer mapper\\r\\n\\r\\nHøyreklikk på maler for å legge til mapper eller gi nytt navn." },
-                { Language.TraditionalChinese, "【管理資料夾】\\r\\n\\r\\n右鍵可新增資料夾或重命名。" },
-                { Language.SimplifiedChinese, "【管理文件夹】\\r\\n\\r\\n右键可新增文件夹或重命名。" },
-                { Language.Arabic, "إدارة المجلدات\\r\\n\\r\\nانقر بزر الفأرة الأيمن لإضافة مجلد أو إعادة تسمية." }
-            },
-            ["HelpContentTemplateSearch"] = new Dictionary<Language, string>
-            {
-                { Language.English, "Search Templates\\r\\n\\r\\nUse the search box above the template tree." },
-                { Language.Spanish, "Buscar plantillas\\r\\n\\r\\nUse el cuadro de búsqueda sobre el árbol de plantillas." },
-                { Language.French, "Rechercher des modèles\\r\\n\\r\\nUtilisez la zone de recherche au-dessus de l’arborescence des modèles." },
-                { Language.Portuguese, "Pesquisar modelos\\r\\n\\r\\nUse a caixa de pesquisa acima da árvore de modelos." },
-                { Language.Russian, "Поиск шаблонов\\r\\n\\r\\nИспользуйте поле поиска над деревом шаблонов." },
-                { Language.Persian, "جستجوی قالب‌ها\\r\\n\\r\\nاز کادر جستجو بالای درخت قالب‌ها استفاده کنید." },
-                { Language.Norwegian, "Søk i maler\\r\\n\\r\\nBruk søkefeltet over mal-treet." },
-                { Language.TraditionalChinese, "【搜索模板】\\r\\n\\r\\n使用模板搜索框過濾。" },
-                { Language.SimplifiedChinese, "【搜索模板】\\r\\n\\r\\n使用模板搜索框过滤。" },
-                { Language.Arabic, "بحث القوالب\\r\\n\\r\\nاستخدم مربع البحث أعلى القوالب." }
-            },
-            ["HelpContentCaptureManual"] = new Dictionary<Language, string>
-            {
-                { Language.English, "Manual Capture\\r\\n\\r\\nRight-click canvas and choose Screenshot." },
-                { Language.Spanish, "Captura manual\\r\\n\\r\\nHaga clic derecho en el lienzo y elija Captura de pantalla." },
-                { Language.French, "Capture manuelle\\r\\n\\r\\nCliquez avec le bouton droit sur la toile et choisissez Capture d’écran." },
-                { Language.Portuguese, "Captura manual\\r\\n\\r\\nClique com o botão direito na tela e escolha Captura de tela." },
-                { Language.Russian, "Ручной снимок\\r\\n\\r\\nЩёлкните правой кнопкой по холсту и выберите «Снимок экрана»." },
-                { Language.Persian, "گرفتن دستی\\r\\n\\r\\nروی بوم راست‌کلیک کنید و «گرفتن اسکرین‌شات» را انتخاب کنید." },
-                { Language.Norwegian, "Manuell fangst\\r\\n\\r\\nHøyreklikk på lerretet og velg Skjermbilde." },
-                { Language.TraditionalChinese, "【手動截圖】\\r\\n\\r\\n右鍵畫布選擇截圖後拖拽。" },
-                { Language.SimplifiedChinese, "【手动截图】\\r\\n\\r\\n右键画布选择截图后拖拽。" },
-                { Language.Arabic, "لقطة يدوية\\r\\n\\r\\nانقر بزر الفأرة الأيمن واختر لقطة." }
-            },
-            ["HelpContentCaptureAuto"] = new Dictionary<Language, string>
-            {
-                { Language.English, "Auto Capture\\r\\n\\r\\nRight-click canvas and choose Auto Screenshot." },
-                { Language.Spanish, "Captura automática\\r\\n\\r\\nHaga clic derecho en el lienzo y elija Captura automática." },
-                { Language.French, "Capture automatique\\r\\n\\r\\nCliquez avec le bouton droit sur la toile et choisissez Capture automatique." },
-                { Language.Portuguese, "Captura automática\\r\\n\\r\\nClique com o botão direito na tela e escolha Captura automática." },
-                { Language.Russian, "Автоснимок\\r\\n\\r\\nЩёлкните правой кнопкой по холсту и выберите «Автоснимок»." },
-                { Language.Persian, "گرفتن خودکار\\r\\n\\r\\nروی بوم راست‌کلیک کنید و «اسکرین‌شات خودکار» را انتخاب کنید." },
-                { Language.Norwegian, "Automatisk fangst\\r\\n\\r\\nHøyreklikk på lerretet og velg Automatisk skjermbilde." },
-                { Language.TraditionalChinese, "【自動截圖】\\r\\n\\r\\n右鍵畫布選擇自動截圖。" },
-                { Language.SimplifiedChinese, "【自动截图】\\r\\n\\r\\n右键画布选择自动截图。" },
-                { Language.Arabic, "لقطة تلقائية\\r\\n\\r\\nانقر بزر الفأرة الأيمن واختر لقطة تلقائية." }
-            },
-            ["HelpContentCaptureLong"] = new Dictionary<Language, string>
-            {
-                { Language.English, "Long Screenshot\\r\\n\\r\\nDrag to capture, keep mouse pressed, scroll to extend." },
-                { Language.Spanish, "Captura larga\\r\\n\\r\\nArrastre para capturar, mantenga el botón presionado y desplácese para ampliar." },
-                { Language.French, "Capture longue\\r\\n\\r\\nFaites glisser pour capturer, maintenez le bouton enfoncé et faites défiler pour étendre." },
-                { Language.Portuguese, "Captura longa\\r\\n\\r\\nArraste para capturar, mantenha o botão pressionado e role para ampliar." },
-                { Language.Russian, "Длинный скриншот\\r\\n\\r\\nПеретащите для захвата, удерживайте кнопку и прокручивайте для расширения." },
-                { Language.Persian, "اسکرین‌شات بلند\\r\\n\\r\\nبرای گرفتن بکشید، دکمه را نگه دارید و برای گسترش اسکرول کنید." },
-                { Language.Norwegian, "Langt skjermbilde\\r\\n\\r\\nDra for å fange, hold knappen nede og rull for å utvide." },
-                { Language.TraditionalChinese, "【長圖截取】\\r\\n\\r\\n拖拽選區，保持按住並滾動滾輪擴展。" },
-                { Language.SimplifiedChinese, "【长图截取】\\r\\n\\r\\n拖拽选区，保持按住并滚动滚轮扩展。" },
-                { Language.Arabic, "لقطة طويلة\\r\\n\\r\\nاسحب وحدد ثم استمر بالتمرير للتوسيع." }
-            },
-            ["HelpContentSample"] = new Dictionary<Language, string>
-            {
-                { Language.English, "Samples\\r\\n\\r\\nUse Open Device Sample to view example images." },
-                { Language.Spanish, "Muestras\\r\\n\\r\\nUse Abrir ejemplo de dispositivo para ver imágenes de ejemplo." },
-                { Language.French, "Exemples\\r\\n\\r\\nUtilisez « Ouvrir un exemple d’appareil » pour voir des images d’exemple." },
-                { Language.Portuguese, "Amostras\\r\\n\\r\\nUse \"Abrir amostra do dispositivo\" para ver imagens de exemplo." },
-                { Language.Russian, "Примеры\\r\\n\\r\\nИспользуйте «Открыть пример устройства», чтобы посмотреть примеры." },
-                { Language.Persian, "نمونه‌ها\\r\\n\\r\\nاز «باز کردن نمونه دستگاه» برای دیدن تصاویر نمونه استفاده کنید." },
-                { Language.Norwegian, "Eksempler\\r\\n\\r\\nBruk «Åpne enhetsprøve» for å se eksempelbilder." },
-                { Language.TraditionalChinese, "【裝置樣例】\\r\\n\\r\\n右鍵選擇打開裝置樣例查看示例。" },
-                { Language.SimplifiedChinese, "【装置样例】\\r\\n\\r\\n右键选择打开装置样例查看示例。" },
-                { Language.Arabic, "عينات\\r\\n\\r\\nافتح عينات الجهاز لعرض الأمثلة." }
+                { Language.TraditionalChinese, "【JSON 匯入】\r\n\r\nJSON 匯入功能可讓您通過粘貼 AI 工具（ChatGPT、Claude 等）生成的 JSON 文字，快速創建井口裝置示意圖。\r\n\r\n使用流程：\r\n1. 在畫布上右鍵選擇「匯入 JSON」\r\n2. 在彈出對話框中點擊「複製 JSON 規則」\r\n3. 將規則粘貼到任意 AI 對話中，描述您需要的井口配置\r\n4. 複製 AI 生成的 JSON，粘貼到文本框中\r\n5. 點擊確定匯入 — 裝置自動顯示在畫布上\r\n\r\n支持的格式：\r\n• 單個 JSON 物件（含 \"devices\" 陣列）\r\n• 多個 JSON 物件連續粘貼（每個成為獨立繪圖）\r\n• JSON 陣列格式（每個元素是一個繪圖）\r\n\r\n規則內容：\r\n• 全部 23 種內置裝置類型及其標識符\r\n• JSON 格式規則和常見錯誤提醒\r\n• 標籤和法蘭規格的格式指南\r\n• 各開次的典型裝置堆疊順序和完整示例\r\n• 如果您添加了自定義裝置，它們也會列出\r\n\r\n錯誤處理：\r\n• JSON 格式錯誤時，彈窗顯示具體行號和原因\r\n• 裝置類型無法識別時，提示最接近的正確名稱\r\n• 錯誤彈窗支持複製文字，方便發送給 AI 修正\r\n\r\n自定義裝置：\r\n• 已添加的自定義裝置圖片會出現在規則中\r\n• 使用文件名（不含擴展名）作為 type 值\r\n• 自定義裝置在畫布上以位圖方式渲染\r\n\r\n提示：匯入後，裝置標籤會自動添加到標籤樹中。規則設計兼容各種 AI 工具，如果出錯可複製錯誤訊息發送給 AI 修正。" },
+                { Language.SimplifiedChinese, "【JSON 导入】\r\n\r\nJSON 导入功能可让您通过粘贴 AI 工具（ChatGPT、Claude 等）生成的 JSON 文字，快速创建井口装置示意图。\r\n\r\n使用流程：\r\n1. 在画布上右键选择「导入 JSON」\r\n2. 在弹出对话框中点击「复制 JSON 规则」\r\n3. 将规则粘贴到任意 AI 对话中，描述您需要的井口配置\r\n4. 复制 AI 生成的 JSON，粘贴到文本框中\r\n5. 点击确定导入 — 装置自动显示在画布上\r\n\r\n支持的格式：\r\n• 单个 JSON 对象（含 \"devices\" 数组）\r\n• 多个 JSON 对象连续粘贴（每个成为独立绘图）\r\n• JSON 数组格式（每个元素是一个绘图）\r\n\r\n规则内容：\r\n• 全部 23 种内置装置类型及其标识符\r\n• JSON 格式规则和常见错误提醒\r\n• 标签和法兰规格的格式指南\r\n• 各开次的典型装置堆叠顺序和完整示例\r\n• 如果您添加了自定义装置，它们也会列出\r\n\r\n错误处理：\r\n• JSON 格式错误时，弹窗显示具体行号和原因\r\n• 装置类型无法识别时，提示最接近的正确名称\r\n• 错误弹窗支持复制文字，方便发送给 AI 修正\r\n\r\n自定义装置：\r\n• 已添加的自定义装置图片会出现在规则中\r\n• 使用文件名（不含扩展名）作为 type 值\r\n• 自定义装置在画布上以位图方式渲染\r\n\r\n提示：导入后，装置标签会自动添加到标签树中。规则设计兼容各种 AI 工具，如果出错可复制错误信息发送给 AI 修正。" },
+                { Language.English, "[JSON Import]\r\n\r\nJSON Import lets you create wellhead device stacks by pasting JSON text generated by AI tools (ChatGPT, Claude, etc.).\r\n\r\nWorkflow:\r\n1. Right-click the canvas > Import JSON\r\n2. Click \"Copy JSON Schema Rules\" to copy the schema to clipboard\r\n3. Paste the schema into any AI chat, describe the wellhead configuration\r\n4. Copy the AI-generated JSON, paste into the text box\r\n5. Click OK — devices appear on the canvas automatically\r\n\r\nSupported formats:\r\n• Single JSON object with a \"devices\" array\r\n• Multiple JSON objects pasted together (each becomes a drawing)\r\n• JSON array of objects\r\n\r\nSchema contents:\r\n• All 23 built-in device types with identifiers\r\n• JSON format rules and common mistakes\r\n• Label and flange formatting guidelines\r\n• Typical stacking orders and complete examples\r\n• Custom devices are also listed if you have added any\r\n\r\nError handling:\r\n• Invalid JSON shows exact line number and cause\r\n• Unrecognized device type suggests closest match\r\n• Error dialog has a Copy button for easy troubleshooting\r\n\r\nCustom devices:\r\n• Custom device images appear in the schema\r\n• Use filename (without extension) as the type value\r\n• Custom devices render as bitmap images on canvas\r\n\r\nTip: After import, device labels are automatically added to the tag tree." },
+                { Language.Spanish, "[Importar JSON]\r\n\r\nImportar JSON permite crear pilas de dispositivos pegando JSON generado por herramientas de IA.\r\n\r\nFlujo：\r\n1. Clic derecho > Importar JSON\r\n2. Copie las reglas del esquema con el botón\r\n3. Pegue las reglas en su IA, describa la configuración\r\n4. Copie el JSON generado y péguelo\r\n5. Clic en Aceptar para importar\r\n\r\nFormatos：JSON único, múltiples objetos, o arreglo JSON.\r\n\r\nErrores：Muestra línea/causa exactas; tipos no reconocidos sugieren coincidencias cercanas. Botón Copiar para enviar errores al AI.\r\n\r\nDispositivos personalizados：Los nombres de archivo (sin extensión) se usan como tipo." },
+                { Language.French, "[Import JSON]\r\n\r\nL'import JSON permet de créer des empilements en collant du JSON généré par des outils IA.\r\n\r\nFlux：\r\n1. Clic droit > Importer JSON\r\n2. Copiez les règles du schéma avec le bouton\r\n3. Collez les règles dans votre IA, décrivez la configuration\r\n4. Copiez le JSON généré et collez-le\r\n5. Cliquez OK pour importer\r\n\r\nFormats：JSON unique, plusieurs objets, ou tableau JSON.\r\n\r\nErreurs：Affiche la ligne/cause exactes ; types inconnus suggèrent des correspondances proches. Bouton Copier pour envoyer les erreurs à l'IA.\r\n\r\nAppareils personnalisés：Les noms de fichier (sans extension) sont utilisés comme type." },
+                { Language.Portuguese, "[Importar JSON]\r\n\r\nA importação JSON permite criar empilhamentos colando JSON gerado por ferramentas de IA.\r\n\r\nFluxo：\r\n1. Clique direito > Importar JSON\r\n2. Copie as regras do esquema com o botão\r\n3. Cole as regras na sua IA, descreva a configuração\r\n4. Copie o JSON gerado e cole\r\n5. Clique OK para importar\r\n\r\nFormatos：JSON único, múltiplos objetos, ou array JSON.\r\n\r\nErros：Mostra linha/causa exatas; tipos não reconhecidos sugerem correspondências. Botão Copiar para enviar erros à IA.\r\n\r\nDispositivos personalizados：Nomes de arquivo (sem extensão) são usados como tipo." },
+                { Language.Russian, "[Импорт JSON]\r\n\r\nИмпорт JSON позволяет создавать стеки устройств, вставляя JSON из ИИ-инструментов.\r\n\r\nПроцесс：\r\n1. ПКМ > Импорт JSON\r\n2. Скопируйте правила схемы кнопкой\r\n3. Вставьте правила в ИИ-чат, опишите конфигурацию\r\n4. Скопируйте сгенерированный JSON и вставьте\r\n5. Нажмите ОК для импорта\r\n\r\nФорматы：Один JSON, несколько объектов или JSON-массив.\r\n\r\nОшибки：Показывают точную строку/причину; нераспознанные типы предлагают ближайшие совпадения. Кнопка «Копировать» для отправки ошибок ИИ.\r\n\r\nПользовательские устройства：Имена файлов (без расширения) используются как тип." },
+                { Language.Persian, "[ورود JSON]\r\n\r\nورود JSON امکان ایجاد پشته تجهیزات با چسباندن JSON از ابزارهای هوش مصنوعی را فراهم می‌کند.\r\n\r\nگردش کار：\r\n1. راست‌کلیک > ورود JSON\r\n2. قوانین طرح را با دکمه کپی کنید\r\n3. قوانین را در هوش مصنوعی بچسبانید و پیکربندی را توضیح دهید\r\n4. JSON تولید شده را کپی و بچسبانید\r\n5. روی تأیید کلیک کنید\r\n\r\nفرمت‌ها：JSON تک، چند شیء، یا آرایه JSON.\r\n\r\nخطاها：خط/علت دقیق نمایش داده می‌شود؛ انواع ناشناخته نزدیک‌ترین تطابق را پیشنهاد می‌دهند. دکمه کپی برای ارسال خطاها.\r\n\r\nدستگاه‌های سفارشی：نام فایل (بدون پسوند) به‌عنوان نوع استفاده می‌شود." },
+                { Language.Norwegian, "[JSON-import]\r\n\r\nJSON-import lar deg lage enhetsstakker ved å lime inn JSON fra AI-verktøy.\r\n\r\nArbeidsflyt：\r\n1. Høyreklikk > Importer JSON\r\n2. Kopier skjemaregler med knappen\r\n3. Lim reglene inn i AI-chatten, beskriv konfigurasjonen\r\n4. Kopier den genererte JSON-en og lim inn\r\n5. Klikk OK for å importere\r\n\r\nFormater：Enkelt JSON, flere objekter, eller JSON-array.\r\n\r\nFeil：Viser nøyaktig linje/årsak; ukjente typer foreslår nærmeste treff. Kopier-knapp for å sende feil til AI.\r\n\r\nEgendefinerte enheter：Filnavn (uten filtype) brukes som type." },
+                { Language.Arabic, "[استيراد JSON]\r\n\r\nيتيح استيراد JSON إنشاء مكدسات بلصق JSON من أدوات الذكاء الاصطناعي.\r\n\r\nسير العمل：\r\n1. انقر يمين > استيراد JSON\r\n2. انسخ قواعد المخطط بالزر\r\n3. الصق القواعد في الذكاء الاصطناعي وصف التكوين\r\n4. انسخ JSON الناتج والصقه\r\n5. انقر موافق للاستيراد\r\n\r\nالتنسيقات：JSON واحد، عدة كائنات، أو مصفوفة JSON.\r\n\r\nالأخطاء：تعرض السطر/السبب بالضبط؛ الأنواع غير المعروفة تقترح أقرب تطابق. زر نسخ لإرسال الأخطاء.\r\n\r\nأجهزة مخصصة：اسم الملف (بدون الامتداد) يُستخدم كنوع." }
             },
             ["HelpContentData"] = new Dictionary<Language, string>
             {
-                { Language.English, "Data Files\\r\\n\\r\\nData is stored in the app folder (templates, tags, pictures)." },
-                { Language.Spanish, "Archivos de datos\\r\\n\\r\\nLos datos se guardan en la carpeta de la aplicación (plantillas, etiquetas, imágenes)." },
-                { Language.French, "Fichiers de données\\r\\n\\r\\nLes données sont stockées dans le dossier de l’application (modèles, étiquettes, images)." },
-                { Language.Portuguese, "Arquivos de dados\\r\\n\\r\\nOs dados são armazenados na pasta do aplicativo (modelos, rótulos, imagens)." },
-                { Language.Russian, "Файлы данных\\r\\n\\r\\nДанные хранятся в папке приложения (шаблоны, метки, изображения)." },
-                { Language.Persian, "فایل‌های داده\\r\\n\\r\\nداده‌ها در پوشه برنامه ذخیره می‌شوند (قالب‌ها، برچسب‌ها، تصاویر)." },
-                { Language.Norwegian, "Datafiler\\r\\n\\r\\nData lagres i program-mappen (maler, etiketter, bilder)." },
-                { Language.TraditionalChinese, "【數據說明】\\r\\n\\r\\n數據保存在程序目錄（模板、標籤、圖片）。" },
-                { Language.SimplifiedChinese, "【数据说明】\\r\\n\\r\\n数据保存在程序目录（模板、标签、图片）。" },
-                { Language.Arabic, "ملفات البيانات\\r\\n\\r\\nيتم حفظ البيانات في مجلد البرنامج." }
+                { Language.TraditionalChinese, "【數據與樣例】\r\n\r\n數據文件：\r\n• template_library.bin — 模板庫數據\r\n• tagtree_items.bin — 標籤樹數據\r\n• pictures 資料夾 — 自定義裝置圖片\r\n• language.conf — 語言設置\r\n\r\n自動保存：\r\n• 標籤和模板的修改會自動保存\r\n• 關閉程序時也會自動保存\r\n• 無需手動保存操作\r\n\r\n裝置樣例：\r\n• 右鍵點擊畫布，選擇「打開裝置樣例」\r\n• 會自動打開系統畫圖程序顯示樣例圖\r\n• 可作為繪製井口裝置示意圖的參考\r\n\r\n備份建議：\r\n• 定期備份程序目錄下的數據文件\r\n• 重裝系統前請備份整個程序資料夾\r\n\r\n注意事項：\r\n• 請勿手動刪除或修改數據文件\r\n• 數據文件損壞可能導致內容丟失\r\n• 遷移到其他電腦時請複製整個程序資料夾" },
+                { Language.SimplifiedChinese, "【数据与样例】\r\n\r\n数据文件：\r\n• template_library.bin — 模板库数据\r\n• tagtree_items.bin — 标签树数据\r\n• pictures 文件夹 — 自定义装置图片\r\n• language.conf — 语言设置\r\n\r\n自动保存：\r\n• 标签和模板的修改会自动保存\r\n• 关闭程序时也会自动保存\r\n• 无需手动保存操作\r\n\r\n装置样例：\r\n• 右键点击画布，选择「打开装置样例」\r\n• 会自动打开系统画图程序显示样例图\r\n• 可作为绘制井口装置示意图的参考\r\n\r\n备份建议：\r\n• 定期备份程序目录下的数据文件\r\n• 迁移到其他电脑时请复制整个程序文件夹\r\n\r\n注意事项：\r\n• 请勿手动删除或修改数据文件\r\n• 数据文件损坏可能导致内容丢失" },
+                { Language.English, "[Data & Samples]\r\n\r\nData files:\r\n• template_library.bin — template library\r\n• tagtree_items.bin — tag tree data\r\n• pictures folder — custom device images\r\n• language.conf — language setting\r\n\r\nAuto-save:\r\n• Changes to labels and templates save automatically\r\n• No manual save required\r\n\r\nDevice samples:\r\n• Right-click canvas > Open Device Sample\r\n• Opens system image viewer with example diagrams\r\n• Use as reference while drawing\r\n\r\nBackup:\r\n• Back up the app folder regularly\r\n• Copy the entire app folder when moving to a new PC\r\n\r\nNotes:\r\n• Do not manually edit or delete data files\r\n• Corrupted data files may cause content loss" },
+                { Language.Spanish, "[Datos y muestras]\r\n\r\nArchivos de datos：template_library.bin, tagtree_items.bin, carpeta pictures, language.conf.\r\nGuardado automático：Los cambios se guardan automáticamente.\r\nMuestras：Clic derecho > Abrir muestra de dispositivo para ver ejemplos.\r\n\r\nCopia de seguridad：Respalde la carpeta del programa regularmente.\r\nNota：No edite ni elimine manualmente los archivos de datos." },
+                { Language.French, "[Données et exemples]\r\n\r\nFichiers de données：template_library.bin, tagtree_items.bin, dossier pictures, language.conf.\r\nSauvegarde auto：Les modifications sont sauvegardées automatiquement.\r\nExemples：Clic droit > Ouvrir un exemple d'appareil pour voir des schémas.\r\n\r\nSauvegarde：Sauvegardez régulièrement le dossier du programme.\r\nNote：Ne modifiez ni supprimez manuellement les fichiers de données." },
+                { Language.Portuguese, "[Dados e amostras]\r\n\r\nArquivos de dados：template_library.bin, tagtree_items.bin, pasta pictures, language.conf.\r\nSalvamento auto：As alterações são salvas automaticamente.\r\nAmostras：Clique direito > Abrir amostra do dispositivo para ver exemplos.\r\n\r\nBackup：Faça backup da pasta do programa regularmente.\r\nNota：Não edite nem exclua manualmente os arquivos de dados." },
+                { Language.Russian, "[Данные и примеры]\r\n\r\nФайлы данных：template_library.bin, tagtree_items.bin, папка pictures, language.conf.\r\nАвтосохранение：Изменения сохраняются автоматически.\r\nПримеры：ПКМ > Открыть пример устройства для просмотра схем.\r\n\r\nРезервная копия：Регулярно копируйте папку программы.\r\nПримечание：Не редактируйте и не удаляйте файлы данных вручную." },
+                { Language.Persian, "[داده‌ها و نمونه‌ها]\r\n\r\nفایل‌های داده：template_library.bin, tagtree_items.bin, پوشه pictures, language.conf.\r\nذخیره خودکار：تغییرات به‌صورت خودکار ذخیره می‌شوند.\r\nنمونه‌ها：راست‌کلیک > باز کردن نمونه دستگاه.\r\n\r\nپشتیبان‌گیری：مرتباً از پوشه برنامه پشتیبان بگیرید.\r\nتوجه：فایل‌های داده را به‌صورت دستی ویرایش یا حذف نکنید." },
+                { Language.Norwegian, "[Data og eksempler]\r\n\r\nDatafiler：template_library.bin, tagtree_items.bin, pictures-mappe, language.conf.\r\nAutolagring：Endringer lagres automatisk.\r\nEksempler：Høyreklikk > Åpne enhetsprøve for å se diagrammer.\r\n\r\nSikkerhetskopiering：Sikkerhetskopier programmappen jevnlig.\r\nMerk：Ikke rediger eller slett datafiler manuelt." },
+                { Language.Arabic, "[البيانات والعينات]\r\n\r\nملفات البيانات：template_library.bin, tagtree_items.bin, مجلد pictures, language.conf.\r\nحفظ تلقائي：يتم حفظ التغييرات تلقائياً.\r\nعينات：انقر يمين > فتح عينة الجهاز لعرض الأمثلة.\r\n\r\nنسخ احتياطي：انسخ مجلد البرنامج بانتظام.\r\nملاحظة：لا تعدّل أو تحذف ملفات البيانات يدوياً." }
             },
             ["UserFolderError"] = new Dictionary<Language, string>
             {
@@ -1410,6 +2031,226 @@ namespace _4._18
             },
         };
 
+        static LocalizationManager()
+        {
+            EnsureLanguageEntriesForJapaneseAndKorean();
+            ApplyJapaneseKoreanOverrides();
+        }
+
+        private static void EnsureLanguageEntriesForJapaneseAndKorean()
+        {
+            foreach (var kv in Strings)
+            {
+                Dictionary<Language, string> langDict = kv.Value;
+                if (!langDict.ContainsKey(Language.Japanese) && langDict.TryGetValue(Language.English, out string en))
+                {
+                    langDict[Language.Japanese] = en;
+                }
+                if (!langDict.ContainsKey(Language.Korean) && langDict.TryGetValue(Language.English, out string en2))
+                {
+                    langDict[Language.Korean] = en2;
+                }
+            }
+        }
+
+        private static void ApplyJapaneseKoreanOverrides()
+        {
+            // 主界面與菜單
+            SetJaKo("FormTitle", "井口装置作図ツール", "웰헤드 장치 도면 도구");
+            SetJaKo("DeviceSelection", "装置選択", "장치 선택");
+            SetJaKo("TagManagement", "ラベル管理", "라벨 관리");
+            SetJaKo("BOPConfig", "BOP構成", "BOP 구성");
+            SetJaKo("SavedTemplates", "保存済みテンプレート", "저장된 템플릿");
+            SetJaKo("Help", "ヘルプ", "도움말");
+            SetJaKo("Settings", "設定", "설정");
+            SetJaKo("SettingsTitle", "設定", "설정");
+            SetJaKo("LanguageLabel", "言語 / Language:", "언어 / Language:");
+            SetJaKo("UseUncoloredDeviceLabel", "装置スタイル:", "장치 스타일:");
+            SetJaKo("UseColoredDevice", "着色", "컬러");
+            SetJaKo("UseUncoloredDevice", "無着色", "무채색");
+            SetJaKo("Delete", "削除", "삭제");
+            SetJaKo("AutoCapture", "自動キャプチャ", "자동 캡처");
+            SetJaKo("Capture", "キャプチャ", "캡처");
+            SetJaKo("ClearCanvas", "キャンバスをクリア", "캔버스 지우기");
+            SetJaKo("OpenSample", "装置サンプルを開く", "장치 샘플 열기");
+            SetJaKo("AutoAlign", "自動整列", "자동 정렬");
+            SetJaKo("AutoAlignCenter", "自動整列（中央）", "자동 정렬(가운데)");
+            SetJaKo("AutoAlignRight", "自動整列（右側）", "자동 정렬(오른쪽)");
+            SetJaKo("AddSampleToLibrary", "ライブラリに追加", "라이브러리에 추가");
+            SetJaKo("SaveCurrentTemplate", "現在のテンプレートに保存", "현재 템플릿에 저장");
+            SetJaKo("ImportJson", "JSONインポート", "JSON 가져오기");
+            SetJaKo("CopyNode", "コピー", "복사");
+            SetJaKo("PasteAsChild", "子ノードとして貼り付け", "하위 노드로 붙여넣기");
+            SetJaKo("AddCustomDevice", "カスタム装置を追加", "사용자 장치 추가");
+            SetJaKo("DeleteCurrentDevice", "現在の装置を削除", "현재 장치 삭제");
+            SetJaKo("Rename", "名前変更", "이름 바꾸기");
+            SetJaKo("AddFolder", "フォルダを追加", "폴더 추가");
+            SetJaKo("SaveTemplateTitle", "テンプレートをライブラリに保存", "템플릿 라이브러리에 저장");
+            SetJaKo("SelectTargetFolder", "保存先フォルダを選択（未選択ならルート）:", "대상 폴더 선택(미선택 시 루트):");
+            SetJaKo("TemplateName", "テンプレート名:", "템플릿 이름:");
+            SetJaKo("Save", "保存", "저장");
+            SetJaKo("Cancel", "キャンセル", "취소");
+            SetJaKo("TemplateNameEmpty", "テンプレート名を入力してください。", "템플릿 이름을 입력하세요.");
+            SetJaKo("Error", "エラー", "오류");
+            SetJaKo("SaveToFolder", "「{0}」に保存", "\"{0}\"에 저장");
+            SetJaKo("ConfirmDelete", "削除の確認", "삭제 확인");
+            SetJaKo("ConfirmDeleteFolder", "フォルダ「{0}」と中身を削除しますか？", "폴더 \"{0}\" 및 모든 내용을 삭제하시겠습니까?");
+            SetJaKo("ConfirmDeleteTemplate", "テンプレート「{0}」を削除しますか？", "템플릿 \"{0}\"을(를) 삭제하시겠습니까?");
+            SetJaKo("NewFolder", "新しいフォルダ", "새 폴더");
+            SetJaKo("ImageFileFilter", "画像ファイル|*.jpg;*.jpeg;*.png;*.bmp;*.gif;*.svg", "이미지 파일|*.jpg;*.jpeg;*.png;*.bmp;*.gif;*.svg");
+            SetJaKo("SelectCustomDevice", "カスタム装置を選択", "사용자 장치 선택");
+            SetJaKo("ImageNotExist", "画像ファイルが存在しません。", "이미지 파일이 존재하지 않습니다.");
+            SetJaKo("DeleteFileFailed", "ファイル削除失敗: {0}", "파일 삭제 실패: {0}");
+            SetJaKo("ErrorOccurred", "エラーが発生しました: {0}", "오류가 발생했습니다: {0}");
+            SetJaKo("OK", "OK", "확인");
+
+            // Help
+            SetJaKo("ImportJson", "JSONインポート", "JSON 가져오기");
+            SetJaKo("HelpTitle", "操作説明", "사용 안내");
+            SetJaKo("HelpNavHeader", "目次", "목차");
+            SetJaKo("HelpNavQuick", "クイックスタート", "빠른 시작");
+            SetJaKo("HelpNavDevice", "装置管理", "장치 관리");
+            SetJaKo("HelpNavDeviceSelect", "装置の選択と配置", "장치 선택 및 배치");
+            SetJaKo("HelpNavDevicePreview", "装置プレビュー", "장치 미리보기");
+            SetJaKo("HelpNavDeviceCustom", "カスタム装置追加", "사용자 장치 추가");
+            SetJaKo("HelpNavDeviceColor", "色付き/無色切替", "컬러/무채색 전환");
+            SetJaKo("HelpNavTags", "タグ管理", "태그 관리");
+            SetJaKo("HelpNavTagCreate", "タグ作成", "태그 만들기");
+            SetJaKo("HelpNavTagPlace", "タグ配置", "태그 배치");
+            SetJaKo("HelpNavTagSearch", "タグ検索", "태그 검색");
+            SetJaKo("HelpNavCanvas", "キャンバス操作", "캔버스 조작");
+            SetJaKo("HelpNavCanvasMove", "移動と拡縮", "이동 및 크기 조절");
+            SetJaKo("HelpNavCanvasDelete", "削除", "삭제");
+            SetJaKo("HelpNavCanvasAlign", "自動整列", "자동 정렬");
+            SetJaKo("HelpNavCanvasClear", "キャンバスクリア", "캔버스 지우기");
+            SetJaKo("HelpNavTemplate", "テンプレートライブラリ", "템플릿 라이브러리");
+            SetJaKo("HelpNavTemplateSave", "テンプレート保存", "템플릿 저장");
+            SetJaKo("HelpNavTemplateLoad", "テンプレート読込", "템플릿 불러오기");
+            SetJaKo("HelpNavTemplateFolder", "フォルダ管理", "폴더 관리");
+            SetJaKo("HelpNavTemplateSearch", "テンプレート検索", "템플릿 검색");
+            SetJaKo("HelpNavCapture", "キャプチャ", "캡처");
+            SetJaKo("HelpNavCaptureManual", "手動キャプチャ", "수동 캡처");
+            SetJaKo("HelpNavCaptureAuto", "自動キャプチャ", "자동 캡처");
+            SetJaKo("HelpNavCaptureLong", "長図キャプチャ", "장면 캡처");
+            SetJaKo("HelpNavJsonImport", "JSONインポート", "JSON 가져오기");
+            SetJaKo("HelpNavJsonUsage", "JSON使用法", "JSON 사용법");
+            SetJaKo("HelpNavJsonSchema", "JSON仕様", "JSON 규격");
+            SetJaKo("HelpNavSample", "サンプル", "샘플");
+            SetJaKo("HelpNavData", "データ保存", "데이터 저장");
+            // Help 正文（與其他語言相同，提供實際語言內容而非英文回退）
+            SetJaKo("HelpContentQuick",
+                "【クイックスタート】\r\n\r\n1) 左の装置一覧から装置を選択し、キャンバスを左クリックして配置します。\r\n2) タグツリーからタグを選択し、キャンバスを左クリックして文字を配置します。\r\n3) 左ドラッグで移動、マウスホイールで拡大/縮小します。\r\n4) 右クリックメニューから整列・スクリーンショット・テンプレート保存・JSONインポートを実行できます。\r\n5) 設定で言語と装置スタイル（着色/無着色）を切り替えます。",
+                "【빠른 시작】\r\n\r\n1) 왼쪽 장치 목록에서 장치를 선택하고 캔버스를 좌클릭해 배치합니다.\r\n2) 태그 트리에서 태그를 선택하고 캔버스를 좌클릭해 텍스트를 배치합니다.\r\n3) 좌클릭 드래그로 이동, 마우스 휠로 크기 조절합니다.\r\n4) 우클릭 메뉴에서 정렬, 스크린샷, 템플릿 저장, JSON 가져오기를 실행합니다.\r\n5) 설정에서 언어와 장치 스타일(컬러/무채색)을 변경합니다.");
+            SetJaKo("HelpContentDevice",
+                "【装置の選択と配置】\r\n\r\n・左の装置一覧をクリックするとカーソルにプレビューが表示されます。\r\n・キャンバス上で左クリックすると装置を配置できます。\r\n・同じ装置は連続クリックで複数配置できます。\r\n・右クリックまたは他領域クリックで選択解除できます。\r\n・カスタム装置は右クリックメニュー「カスタム装置を追加」から追加できます（JPG/PNG/BMP/GIF/SVG）。",
+                "【장치 선택 및 배치】\r\n\r\n· 왼쪽 장치 목록을 클릭하면 커서에 미리보기가 표시됩니다.\r\n· 캔버스에서 좌클릭하면 장치를 배치할 수 있습니다.\r\n· 같은 장치는 연속 클릭으로 여러 개 배치할 수 있습니다.\r\n· 우클릭 또는 다른 영역 클릭으로 선택 해제할 수 있습니다.\r\n· 사용자 장치는 우클릭 메뉴의 \"사용자 장치 추가\"에서 등록합니다(JPG/PNG/BMP/GIF/SVG).");
+            SetJaKo("HelpContentTags",
+                "【タグ管理】\r\n\r\n・空白右クリックでルートノード追加、ノード右クリックで子ノード追加ができます。\r\n・右クリックメニューで名前変更/削除/コピー/貼り付けが可能です。\r\n・タグを選択してキャンバスを左クリックすると文字を配置します。\r\n・上部検索ボックスでタグをリアルタイムに絞り込みできます。",
+                "【태그 관리】\r\n\r\n· 빈 영역 우클릭으로 루트 노드 추가, 노드 우클릭으로 하위 노드 추가가 가능합니다.\r\n· 우클릭 메뉴에서 이름 변경/삭제/복사/붙여넣기를 사용할 수 있습니다.\r\n· 태그를 선택한 뒤 캔버스를 좌클릭하면 텍스트가 배치됩니다.\r\n· 상단 검색창에서 태그를 실시간 필터링할 수 있습니다.");
+            SetJaKo("HelpContentCanvas",
+                "【キャンバス操作】\r\n\r\n・左ドラッグ: 要素移動\r\n・マウスホイール: 要素拡大/縮小\r\n・右クリックメニュー: 自動整列、削除、クリア、保存、JSONインポートなど\r\n・内容が大きい場合はスクロールバーで全体を確認できます。",
+                "【캔버스 조작】\r\n\r\n· 좌클릭 드래그: 요소 이동\r\n· 마우스 휠: 요소 크기 조절\r\n· 우클릭 메뉴: 자동 정렬, 삭제, 지우기, 저장, JSON 가져오기 등\r\n· 내용이 큰 경우 스크롤바로 전체 영역을 확인할 수 있습니다.");
+            SetJaKo("HelpContentTemplate",
+                "【テンプレートライブラリ】\r\n\r\n・キャンバス右クリック「ライブラリに追加」で現在図面を保存します。\r\n・テンプレートノードをクリックすると内容を読み込みます。\r\n・ノード右クリックでフォルダ追加、名前変更、削除、コピー/貼り付けが可能です。\r\n・上部検索ボックスでテンプレートを絞り込みできます。",
+                "【템플릿 라이브러리】\r\n\r\n· 캔버스 우클릭 \"라이브러리에 추가\"로 현재 도면을 저장합니다.\r\n· 템플릿 노드를 클릭하면 내용을 불러옵니다.\r\n· 노드 우클릭으로 폴더 추가, 이름 변경, 삭제, 복사/붙여넣기를 사용할 수 있습니다.\r\n· 상단 검색창에서 템플릿을 필터링할 수 있습니다.");
+            SetJaKo("HelpContentCapture",
+                "【スクリーンショット】\r\n\r\n・手動キャプチャ: 右クリック > キャプチャ\r\n・自動キャプチャ: 右クリック > 自動キャプチャ（内容範囲を自動計算）\r\n・キャプチャ結果はクリップボードにコピーされ、Word/PPTへ貼り付け可能です。",
+                "【스크린샷】\r\n\r\n· 수동 캡처: 우클릭 > 캡처\r\n· 자동 캡처: 우클릭 > 자동 캡처(내용 범위 자동 계산)\r\n· 결과는 클립보드로 복사되며 Word/PPT 등에 붙여넣을 수 있습니다.");
+            SetJaKo("HelpContentJsonImport",
+                "【JSONインポート】\r\n\r\n・右クリック > JSONインポートを開き、AI生成JSONを貼り付けます。\r\n・「JSON規則をクリップボードへコピー」で最新規則をAIへ渡せます。\r\n・単一JSON、複数JSON連続貼り付け、JSON配列に対応します。\r\n・失敗時はどのJSON/何行/どの装置で失敗したかを詳細表示します。",
+                "【JSON 가져오기】\r\n\r\n· 우클릭 > JSON 가져오기를 열고 AI가 생성한 JSON을 붙여넣습니다.\r\n· \"JSON 규격을 클립보드에 복사\"로 최신 규격을 AI에 전달할 수 있습니다.\r\n· 단일 JSON, 연속 다중 JSON, JSON 배열을 지원합니다.\r\n· 실패 시 어떤 JSON/몇 번째 줄/어떤 장치에서 실패했는지 상세 표시합니다.");
+            SetJaKo("HelpContentData",
+                "【データ保存】\r\n\r\n・template_library.bin: テンプレートデータ\r\n・tagtree_items.bin: タグツリーデータ\r\n・pictures フォルダ: カスタム装置画像\r\n・language.conf: 言語設定\r\n\r\nタグやテンプレートの変更は自動保存されます。移行時はプログラムフォルダ全体をコピーしてください。",
+                "【데이터 저장】\r\n\r\n· template_library.bin: 템플릿 데이터\r\n· tagtree_items.bin: 태그 트리 데이터\r\n· pictures 폴더: 사용자 장치 이미지\r\n· language.conf: 언어 설정\r\n\r\n태그/템플릿 변경은 자동 저장됩니다. 다른 PC로 옮길 때는 프로그램 폴더 전체를 복사하세요.");
+
+            // 常見提示與錯誤
+            SetJaKo("UserFolderError", "ユーザーフォルダにアクセスできません", "사용자 폴더에 접근할 수 없습니다");
+            SetJaKo("ImageProcessError", "画像処理失敗: {0}\n{1}", "이미지 처리 실패: {0}\n{1}");
+            SetJaKo("CanvasEmpty", "キャンバスにキャプチャ対象がありません。", "캔버스에 캡처할 내용이 없습니다.");
+            SetJaKo("Hint", "ヒント", "힌트");
+            SetJaKo("CannotCalculateBounds", "内容境界を計算できません。", "내용 경계를 계산할 수 없습니다.");
+            SetJaKo("CaptureSuccess", "スクリーンショットをクリップボードにコピーしました。", "스크린샷을 클립보드에 복사했습니다.");
+            SetJaKo("Success", "成功", "성공");
+            SetJaKo("CaptureFailed", "キャプチャ失敗: {0}", "캡처 실패: {0}");
+
+            // TagTree
+            SetJaKo("AddRootNode", "ルートノード追加", "루트 노드 추가");
+            SetJaKo("AddChildNode", "子ノード追加", "하위 노드 추가");
+            SetJaKo("DeleteCurrentNode", "現在のノードを削除", "현재 노드 삭제");
+            SetJaKo("NewRootNode", "新しいルートノード", "새 루트 노드");
+            SetJaKo("NewChildNode", "新しい子ノード", "새 하위 노드");
+
+            // JSON 解析報錯關鍵
+            SetJaKo("JsonImportError", "JSONインポート失敗:\n{0}", "JSON 가져오기 실패:\n{0}");
+            SetJaKo("JsonNoDevices", "JSON内に装置が見つかりません", "JSON에서 장치를 찾을 수 없습니다");
+            SetJaKo("JsonInvalidType", "装置#{0}: 不明なタイプ \"{1}\"", "장치 #{0}: 알 수 없는 타입 \"{1}\"");
+            SetJaKo("JsonTopArrayItemNotObject", "トップレベル配列の項目 #{0} はオブジェクトではありません（実際: {1}）。", "최상위 배열 항목 #{0} 이(가) 객체가 아닙니다(실제: {1}).");
+            SetJaKo("JsonTopLevelMustObjectOrArray", "トップレベルJSONはオブジェクトまたは配列である必要があります。", "최상위 JSON은 객체 또는 배열이어야 합니다.");
+            SetJaKo("JsonNoTopLevelBlocks", "トップレベルJSONオブジェクト/配列ブロックが見つかりません。", "최상위 JSON 객체/배열 블록을 찾을 수 없습니다.");
+            SetJaKo("JsonSchemaImportFailed", "Schema #{0} ({1}{2}): {3}", "스키마 #{0} ({1}{2}): {3}");
+            SetJaKo("JsonSkippedInvalidBlocks", "無効なJSONブロックをスキップしました:", "유효하지 않은 JSON 블록을 건너뜀:");
+            SetJaKo("JsonSchemaDevicesEmpty", "JSON内に装置が見つかりません（schema.devices が空です）。", "JSON에서 장치를 찾을 수 없습니다(schema.devices가 비어 있음).");
+            SetJaKo("JsonTypeRequired", "装置 #{0} に必須フィールド \"type\" がありません。", "장치 #{0} 에 필수 필드 \"type\" 이 없습니다.");
+            SetJaKo("JsonTypeFieldExample", "各装置オブジェクトには次が必要です: {\"type\": \"device_type_here\", ...}", "각 장치 객체에는 다음이 필요합니다: {\"type\": \"device_type_here\", ...}");
+            SetJaKo("JsonUnknownDeviceType", "不明な装置タイプ: \"{0}\"。", "알 수 없는 장치 타입: \"{0}\".");
+            SetJaKo("JsonDidYouMean", "もしかして: \"{0}\" ?", "혹시 \"{0}\" ?");
+            SetJaKo("JsonExpectedBuiltInTypes", "23種の内蔵タイプのいずれかを指定してください（例: annular_bop, ram_bop, rotary_table, casing_head）。", "23개 내장 타입 중 하나를 사용하세요(예: annular_bop, ram_bop, rotary_table, casing_head).");
+            SetJaKo("JsonOrCustomDevices", "または次のカスタム装置:", "또는 다음 사용자 장치:");
+            SetJaKo("JsonSeeSchemaTypeList", "JSON規則（上のボタンでコピー）で完全な type リストを確認してください。", "JSON 규격(상단 버튼 복사)에서 전체 type 목록을 확인하세요.");
+            SetJaKo("JsonDeviceNoDrawableResource", "装置 #{0} ({1}, devices[{2}]{3}): 描画可能なリソースが見つかりません。", "장치 #{0} ({1}, devices[{2}]{3}): 그릴 수 있는 리소스를 찾을 수 없습니다.");
+            SetJaKo("JsonDeviceReadSvgSizeFailed", "装置 #{0} ({1}, devices[{2}]{3}): SVGサイズの取得に失敗しました。", "장치 #{0} ({1}, devices[{2}]{3}): SVG 크기 읽기 실패.");
+            SetJaKo("JsonCustomImageNotFound", "装置 #{0} ({1}, devices[{2}]{3}): カスタム画像が見つかりません: {4}", "장치 #{0} ({1}, devices[{2}]{3}): 사용자 이미지 없음: {4}");
+            SetJaKo("JsonDeviceRenderFailed", "装置 #{0} ({1}, devices[{2}]{3}): 描画失敗 - {4}", "장치 #{0} ({1}, devices[{2}]{3}): 렌더링 실패 - {4}");
+            SetJaKo("JsonEachBlockMustObject", "各JSONブロックはオブジェクトである必要があります。", "각 JSON 블록은 객체여야 합니다.");
+            SetJaKo("JsonDevicesFieldNotFound", "\"devices\" フィールドが見つかりません（device/items/equipment/components/stack 等も試行）。", "\"devices\" 필드를 찾을 수 없습니다(device/items/equipment/components/stack 등도 시도).");
+            SetJaKo("JsonObjectKeysFound", "このオブジェクトで見つかったキー: {0}", "이 객체에서 찾은 키: {0}");
+            SetJaKo("JsonExpectedFormat", "期待形式: { \"devices\": [ {\"type\": \"...\", ...}, ... ] }", "기대 형식: { \"devices\": [ {\"type\": \"...\", ...}, ... ] }");
+            SetJaKo("JsonInvalidDeviceItemAtIndex", "devices[{0}] の装置項目が無効です（token type: {1}{2}）。", "devices[{0}] 장치 항목이 잘못되었습니다(token type: {1}{2}).");
+            SetJaKo("JsonInvalidDeviceItem", "JSON内の装置項目が無効です（token type: {0}{1}）。", "JSON 장치 항목이 잘못되었습니다(token type: {0}{1}).");
+            SetJaKo("JsonUnnamedSchema", "無名-{0}", "이름없음-{0}");
+            SetJaKo("JsonLinePosHint", "、行 {0}、位置 {1}", ", 줄 {0}, 위치 {1}");
+            SetJaKo("JsonUnknownReaderError", "不明なJSONリーダーエラー。", "알 수 없는 JSON 리더 오류.");
+            SetJaKo("JsonSyntaxErrorAtLinePos", "JSON構文エラー（行 {0}, 位置 {1}）:", "JSON 구문 오류(줄 {0}, 위치 {1}):");
+            SetJaKo("JsonNearContext", "  付近: ...{0}...", "  주변: ...{0}...");
+            SetJaKo("JsonContextHeader", "  コンテキスト:", "  문맥:");
+            SetJaKo("JsonCommonFixes", "一般的な修正:", "일반적인 수정:");
+            SetJaKo("JsonFixMissingComma", "  - 配列項目またはオブジェクト属性間のカンマ不足を確認してください", "  - 배열 항목/객체 속성 사이의 쉼표 누락 확인");
+            SetJaKo("JsonFixTrailingComma", "  - } または ] の前の余分なカンマを確認してください", "  - } 또는 ] 앞의 후행 쉼표 확인");
+            SetJaKo("JsonFixDoubleQuotes", "  - 文字列が標準のダブルクォート \" を使っているか確認してください", "  - 문자열이 표준 큰따옴표 \" 를 사용하는지 확인");
+            SetJaKo("JsonFixBalancedBrackets", "  - 括弧 {} と [] が対応しているか確認してください", "  - 괄호 {} 및 [] 의 균형 확인");
+            SetJaKo("JsonOriginalError", "元のエラー: {0}", "원본 오류: {0}");
+            SetJaKo("JsonUnknown", "不明", "알 수 없음");
+            SetJaKo("JsonNone", "(なし)", "(없음)");
+            SetJaKo("JsonPasteHint", "Excel/画像にJSON規則（上のボタンでコピー）を添えてAIに渡し、生成JSONをここへ貼り付けてください。", "Excel/이미지와 JSON 규격(위 버튼 복사)을 AI에 전달한 뒤 생성된 JSON을 여기에 붙여넣으세요.");
+            SetJaKo("CopyJsonSchema", "JSON規則をクリップボードへコピー", "JSON 규격을 클립보드에 복사");
+            SetJaKo("Copied", "コピーしました！", "복사됨!");
+            SetJaKo("CopyError", "エラーをコピー", "오류 복사");
+        }
+
+        private static void SetJaKo(string key, string ja, string ko)
+        {
+            if (!Strings.TryGetValue(key, out var langDict))
+            {
+                return;
+            }
+            langDict[Language.Japanese] = ja;
+            langDict[Language.Korean] = ko;
+        }
+
+        private static void SetJaKoFromEnglish(string key)
+        {
+            if (!Strings.TryGetValue(key, out var langDict))
+            {
+                return;
+            }
+
+            if (langDict.TryGetValue(Language.English, out string en))
+            {
+                langDict[Language.Japanese] = en;
+                langDict[Language.Korean] = en;
+            }
+        }
+
         public static Language CurrentLanguage
         {
             get { return _currentLanguage; }
@@ -1427,6 +2268,16 @@ namespace _4._18
         {
             if (index < 0 || index >= DeviceNames.Length)
                 return string.Empty;
+
+            if (_currentLanguage == Language.Japanese)
+            {
+                return DeviceNamesJapanese[index];
+            }
+
+            if (_currentLanguage == Language.Korean)
+            {
+                return DeviceNamesKorean[index];
+            }
 
             int langIndex;
             switch (_currentLanguage)

@@ -138,8 +138,8 @@
         {
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6EE9D57C2B7F4F9F85D97F95A870AAE6"
             {
-            "SourcePath" = "8:..\\4.18\\bin\\Debug\\4.18.pdb"
-            "TargetName" = "8:4.18.pdb"
+            "SourcePath" = "8:..\\4.18\\bin\\Debug\\WellheadDiagram.pdb"
+            "TargetName" = "8:WellheadDiagram.pdb"
             "Tag" = "8:"
             "Folder" = "8:_DB01E48F3CF94355AD1AC0A0DEC40F3D"
             "Condition" = "8:"
@@ -158,8 +158,8 @@
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8BCBECAEF6EC4E83AADE8194C5555606"
             {
-            "SourcePath" = "8:..\\4.18\\bin\\Debug\\4.18.exe.config"
-            "TargetName" = "8:4.18.exe.config"
+            "SourcePath" = "8:..\\4.18\\bin\\Debug\\WellheadDiagram.exe.config"
+            "TargetName" = "8:WellheadDiagram.exe.config"
             "Tag" = "8:"
             "Folder" = "8:_DB01E48F3CF94355AD1AC0A0DEC40F3D"
             "Condition" = "8:"
@@ -180,16 +180,16 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:4.18, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:WellheadDiagram, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_98C9EAC76E5645318513704DC7F73208"
                     {
-                    "Name" = "8:4.18.exe"
+                    "Name" = "8:WellheadDiagram.exe"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:..\\4.18\\bin\\Debug\\4.18.exe"
+            "SourcePath" = "8:..\\4.18\\bin\\Debug\\WellheadDiagram.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_DB01E48F3CF94355AD1AC0A0DEC40F3D"
@@ -209,8 +209,8 @@
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C7FF3579354E4E73807A0EF2A71BEE12"
             {
-            "SourcePath" = "8:..\\4.18\\bin\\Debug\\4.18.application"
-            "TargetName" = "8:4.18.application"
+            "SourcePath" = "8:..\\4.18\\bin\\Debug\\WellheadDiagram.application"
+            "TargetName" = "8:WellheadDiagram.application"
             "Tag" = "8:"
             "Folder" = "8:_DB01E48F3CF94355AD1AC0A0DEC40F3D"
             "Condition" = "8:"
@@ -229,8 +229,8 @@
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E3621EF940014007B26182B268EFE125"
             {
-            "SourcePath" = "8:..\\4.18\\bin\\Debug\\4.18.exe.manifest"
-            "TargetName" = "8:4.18.exe.manifest"
+            "SourcePath" = "8:..\\4.18\\bin\\Debug\\WellheadDiagram.exe.manifest"
+            "TargetName" = "8:WellheadDiagram.exe.manifest"
             "Tag" = "8:"
             "Folder" = "8:_DB01E48F3CF94355AD1AC0A0DEC40F3D"
             "Condition" = "8:"
@@ -884,7 +884,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_BE3430F801494A628313BBF591A39411"
             {
-            "SourcePath" = "8:..\\4.18\\obj\\Debug\\4.18.exe"
+            "SourcePath" = "8:..\\4.18\\obj\\Debug\\WellheadDiagram.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_DB01E48F3CF94355AD1AC0A0DEC40F3D"

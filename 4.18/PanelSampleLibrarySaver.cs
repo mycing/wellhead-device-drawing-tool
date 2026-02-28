@@ -12,6 +12,16 @@ namespace _4._18
         private readonly TreeView _treeView;
         private readonly Action _saveAction;
 
+        private static int ScaleByDpi(IWin32Window owner, int value)
+        {
+            const float baselineDpi = 216f; // 225% 作為視覺基準
+            if (owner is Control c && c.DeviceDpi > 0)
+            {
+                return (int)Math.Ceiling(value * c.DeviceDpi / baselineDpi);
+            }
+            return value;
+        }
+
         public PanelSampleLibrarySaver(
             PanelManager panelManager,
             List<TemplateTreeNodeData> templateLibraryData,
@@ -31,71 +41,88 @@ namespace _4._18
         {
             using (Form inputForm = new Form())
             {
-                inputForm.StartPosition = FormStartPosition.Manual;
-                inputForm.Location = new Point(500, 300);
-                inputForm.Width = 500;
-                inputForm.Height = 450;
+                // ── 先用 ScaleByDpi 算出所有尺寸，最後反推 ClientSize ──
+                int pad      = ScaleByDpi(owner, 14);
+                int gap      = ScaleByDpi(owner, 10);
+                int formW    = ScaleByDpi(owner, 560);
+                int fw       = formW - pad * 2;
+                // 10pt 字體在 baseline(216 DPI) = 30px，控件高度必須 > 30
+                int lblFolH  = ScaleByDpi(owner, 38); // 30px font + 8px padding
+                int treeH    = ScaleByDpi(owner, 280);
+                int lblNameW = ScaleByDpi(owner, 110);
+                int nameH    = ScaleByDpi(owner, 42); // TextBox 高由字體決定，此值用於定位
+                int btnH     = ScaleByDpi(owner, 46);
+                int btnW     = (fw - gap) / 2;
+
+                int treeTop  = pad + lblFolH + gap;
+                int nameTop  = treeTop + treeH + gap;
+                int btnTop   = nameTop + nameH + gap;
+                int formH    = btnTop + btnH + pad;   // 精確高度，不截斷
+
+                inputForm.StartPosition = FormStartPosition.CenterParent;
+                inputForm.AutoScaleMode = AutoScaleMode.None;
+                inputForm.ClientSize = new Size(formW, formH);
+                inputForm.FormBorderStyle = FormBorderStyle.FixedDialog;
+                inputForm.MaximizeBox = false;
+                inputForm.MinimizeBox = false;
                 inputForm.Text = LocalizationManager.GetString("SaveTemplateTitle");
 
                 // 標籤：選擇目標資料夾
                 Label labelFolder = new Label()
                 {
-                    Left = 10,
-                    Top = 10,
+                    Left = pad, Top = pad, Width = fw, Height = lblFolH,
                     Text = LocalizationManager.GetString("SelectTargetFolder"),
-                    Width = 460,
                     Font = new Font("Microsoft YaHei UI", 10F)
                 };
 
                 // TreeView 顯示現有的樹狀結構
                 TreeView folderTree = new TreeView()
                 {
-                    Left = 10,
-                    Top = 40,
-                    Width = 460,
-                    Height = 250,
-                    Font = new Font("Microsoft YaHei UI", 10F)
+                    Left = pad, Top = treeTop, Width = fw, Height = treeH,
+                    Font = new Font("Microsoft YaHei UI", 10F),
+                    ShowLines = true,
+                    ShowPlusMinus = true,
+                    ShowRootLines = true
                 };
 
                 // 載入完整樹節點（資料夾 + 模板）
                 LoadAllNodesToTreeView(folderTree, _templateLibraryData);
 
-                // 若主 TreeView 有選中節點，則在彈窗中自動選中對應節點
-                if (_treeView.SelectedNode != null)
+                // 預設不選中任何節點，讓用戶手動選擇
+                folderTree.SelectedNode = null;
+                // 防止 TreeView 獲得焦點時自動選中第一個節點
+                bool userHasSelected = false;
+                folderTree.BeforeSelect += (bs, be) =>
                 {
-                    TreeNode preselectNode = FindNodeByPath(folderTree.Nodes, _treeView.SelectedNode.FullPath, _treeView.PathSeparator);
-                    if (preselectNode != null)
+                    if (!userHasSelected && be.Action == TreeViewAction.Unknown)
                     {
-                        folderTree.SelectedNode = preselectNode;
-                        preselectNode.EnsureVisible();
+                        be.Cancel = true;
                     }
-                }
+                };
+                folderTree.NodeMouseClick += (mc, me) => { userHasSelected = true; };
+                folderTree.KeyDown += (kd, ke) => { userHasSelected = true; };
 
                 // 標籤：模板名稱
                 Label labelName = new Label()
                 {
-                    Left = 10,
-                    Top = 300,
+                    Left = pad, Top = nameTop,
+                    Width = lblNameW, Height = nameH,
                     Text = LocalizationManager.GetString("TemplateName"),
-                    Width = 80,
-                    Font = new Font("Microsoft YaHei UI", 10F)
+                    Font = new Font("Microsoft YaHei UI", 10F),
+                    TextAlign = System.Drawing.ContentAlignment.MiddleLeft
                 };
 
                 TextBox textBox = new TextBox()
                 {
-                    Left = 90,
-                    Top = 298,
-                    Width = 380,
+                    Left = pad + lblNameW + gap, Top = nameTop,
+                    Width = fw - lblNameW - gap, Height = nameH,
                     Font = new Font("Microsoft YaHei UI", 10F)
                 };
 
                 Button confirmation = new Button()
                 {
+                    Left = pad, Top = btnTop, Width = btnW, Height = btnH,
                     Text = LocalizationManager.GetString("Save"),
-                    Left = 10,
-                    Width = 225,
-                    Top = 340,
-                    Height = 40,
                     Font = new Font("Microsoft YaHei UI", 10F)
                 };
                 confirmation.Click += (s, ev) =>
@@ -112,23 +139,20 @@ namespace _4._18
 
                 Button cancelButton = new Button()
                 {
+                    Left = pad + btnW + gap, Top = btnTop, Width = btnW, Height = btnH,
                     Text = LocalizationManager.GetString("Cancel"),
-                    Left = 245,
-                    Width = 225,
-                    Top = 340,
-                    Height = 40,
                     Font = new Font("Microsoft YaHei UI", 10F)
                 };
                 cancelButton.Click += (s, ev) => { inputForm.DialogResult = DialogResult.Cancel; inputForm.Close(); };
 
                 inputForm.AcceptButton = confirmation;
                 inputForm.CancelButton = cancelButton;
-                inputForm.Controls.Add(labelFolder);
-                inputForm.Controls.Add(folderTree);
-                inputForm.Controls.Add(labelName);
-                inputForm.Controls.Add(textBox);
-                inputForm.Controls.Add(confirmation);
-                inputForm.Controls.Add(cancelButton);
+                inputForm.Controls.AddRange(new Control[]
+                {
+                    labelFolder, folderTree,
+                    labelName, textBox,
+                    confirmation, cancelButton
+                });
 
                 if (inputForm.ShowDialog(owner) == DialogResult.OK)
                 {
@@ -189,36 +213,47 @@ namespace _4._18
         {
             using (Form inputForm = new Form())
             {
-                inputForm.StartPosition = FormStartPosition.Manual;
-                inputForm.Location = new Point(500, 300);
-                inputForm.Width = 400;
-                inputForm.Height = 180;
+                // ── 先算所有尺寸，最後反推 ClientSize ──────────────
+                int p2    = ScaleByDpi(owner, 16);
+                int gap2  = ScaleByDpi(owner, 10);
+                int fw2   = ScaleByDpi(owner, 428); // 460 - 2*16
+                int lblW  = ScaleByDpi(owner, 110);
+                int nameH2 = ScaleByDpi(owner, 42); // 10pt font(30px) + 12px padding
+                int btnH2  = ScaleByDpi(owner, 46);
+                int btnW2  = (fw2 - gap2) / 2;
+
+                int nameTop2 = p2;
+                int btnTop2  = nameTop2 + nameH2 + gap2;
+                int formH2   = btnTop2 + btnH2 + p2;   // 精確高度
+
+                inputForm.StartPosition = FormStartPosition.CenterParent;
+                inputForm.AutoScaleMode = AutoScaleMode.None;
+                inputForm.ClientSize = new Size(ScaleByDpi(owner, 460), formH2);
+                inputForm.FormBorderStyle = FormBorderStyle.FixedDialog;
+                inputForm.MaximizeBox = false;
+                inputForm.MinimizeBox = false;
                 inputForm.Text = LocalizationManager.GetString("SaveToFolder", parentNode.Text);
 
                 Label label = new Label()
                 {
-                    Left = 10,
-                    Top = 20,
+                    Left = p2, Top = nameTop2,
+                    Width = lblW, Height = nameH2,
                     Text = LocalizationManager.GetString("TemplateName"),
-                    Width = 80,
-                    Font = new Font("Microsoft YaHei UI", 10F)
+                    Font = new Font("Microsoft YaHei UI", 10F),
+                    TextAlign = System.Drawing.ContentAlignment.MiddleLeft
                 };
 
                 TextBox textBox = new TextBox()
                 {
-                    Left = 90,
-                    Top = 18,
-                    Width = 280,
+                    Left = p2 + lblW + gap2, Top = nameTop2,
+                    Width = fw2 - lblW - gap2, Height = nameH2,
                     Font = new Font("Microsoft YaHei UI", 10F)
                 };
 
                 Button confirmation = new Button()
                 {
+                    Left = p2, Top = btnTop2, Width = btnW2, Height = btnH2,
                     Text = LocalizationManager.GetString("Save"),
-                    Left = 10,
-                    Width = 175,
-                    Top = 70,
-                    Height = 40,
                     Font = new Font("Microsoft YaHei UI", 10F)
                 };
                 confirmation.Click += (s, ev) =>
@@ -235,21 +270,15 @@ namespace _4._18
 
                 Button cancelButton = new Button()
                 {
+                    Left = p2 + btnW2 + gap2, Top = btnTop2, Width = btnW2, Height = btnH2,
                     Text = LocalizationManager.GetString("Cancel"),
-                    Left = 195,
-                    Width = 175,
-                    Top = 70,
-                    Height = 40,
                     Font = new Font("Microsoft YaHei UI", 10F)
                 };
                 cancelButton.Click += (s, ev) => { inputForm.DialogResult = DialogResult.Cancel; inputForm.Close(); };
 
                 inputForm.AcceptButton = confirmation;
                 inputForm.CancelButton = cancelButton;
-                inputForm.Controls.Add(label);
-                inputForm.Controls.Add(textBox);
-                inputForm.Controls.Add(confirmation);
-                inputForm.Controls.Add(cancelButton);
+                inputForm.Controls.AddRange(new Control[] { label, textBox, confirmation, cancelButton });
 
                 if (inputForm.ShowDialog(owner) == DialogResult.OK)
                 {

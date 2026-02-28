@@ -16,7 +16,6 @@ using System.Collections.Specialized;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Header;
 using System.Runtime.InteropServices;
 using System.Security.Policy;
-using System.Data.SQLite;
 using Newtonsoft.Json;
 using System.Security.Permissions;
 using System.Web;
@@ -109,6 +108,9 @@ namespace _4._18
         private ToolStripMenuItem menuItemDelete;
         private ToolStripMenuItem menuItemRename;
         private ToolStripMenuItem menuItemAddToLibrary;
+        private ToolStripMenuItem menuItemCopyTemplate;
+        private ToolStripMenuItem menuItemPasteTemplate;
+        private TreeNode _copiedTemplateNode;
 
         //listBox1 右鍵菜單
         private ContextMenuStrip contextMenuStripListBox1;
@@ -123,9 +125,12 @@ namespace _4._18
         private ToolStripMenuItem openSampleMenuItemPanel2;
         private ToolStripMenuItem autoAlignMenuItemPanel2;
         private ToolStripMenuItem saveSampleMenuItemPanel2;
+        private ToolStripMenuItem saveCurrentTemplateMenuItemPanel2;
         private ToolStripMenuItem deleteMenuItemPanel2;
         private ToolStripSeparator separatorPanel2;
+        private ToolStripMenuItem importJsonMenuItemPanel2;
         private Control clickedControlOnPanel2;
+        private CustomScrollBar hScrollBarPanel2;
 
         // 自動對齊管理器
         private AutoAlignManager autoAlignManager;
@@ -148,6 +153,11 @@ namespace _4._18
         //5.7 設置svg公共變量用於存儲與getimage相同的需要繪製的圖片
         public byte[] SvgData;
         private bool _useUncoloredDevices = true;
+        private Size _currentDrawBaseSize = Size.Empty;
+        private Point _lastPreviewLocation = new Point(int.MinValue, int.MinValue);
+        private int _lastHoverIndex = -1;
+        private TemplateTreeNodeData _currentEditingTemplate;
+        private static readonly HashSet<string> _svgParseLogged = new HashSet<string>();
 
         //創建panelmanager管理類
         private PanelManager _panelManager;
@@ -216,11 +226,17 @@ namespace _4._18
             contextMenuTemplates = new ContextMenuStrip();
             menuItemAddToLibrary = new ToolStripMenuItem(LocalizationManager.GetString("AddSampleToLibrary"));
             menuItemAddToLibrary.Click += MenuItemAddToLibrary_Click;
+            menuItemCopyTemplate = new ToolStripMenuItem(LocalizationManager.GetString("CopyNode"));
+            menuItemCopyTemplate.Click += (s, ev) => { _copiedTemplateNode = treeViewTemplates.SelectedNode; };
+            menuItemPasteTemplate = new ToolStripMenuItem(LocalizationManager.GetString("PasteAsChild"));
+            menuItemPasteTemplate.Click += MenuItemPasteTemplate_Click;
             menuItemRename = new ToolStripMenuItem(LocalizationManager.GetString("Rename"));
             menuItemRename.Click += MenuItemRename_Click;
             menuItemDelete = new ToolStripMenuItem(LocalizationManager.GetString("Delete"));
             menuItemDelete.Click += MenuItemDelete_Click;
             contextMenuTemplates.Items.Add(menuItemAddToLibrary);
+            contextMenuTemplates.Items.Add(menuItemCopyTemplate);
+            contextMenuTemplates.Items.Add(menuItemPasteTemplate);
             contextMenuTemplates.Items.Add(menuItemRename);
             contextMenuTemplates.Items.Add(menuItemDelete);
             MenuStyleHelper.Apply(contextMenuTemplates);
@@ -251,6 +267,8 @@ namespace _4._18
             openSampleMenuItemPanel2.Click += OpenSampleMenuItem_Click_Panel2;
             autoAlignMenuItemPanel2 = new ToolStripMenuItem(LocalizationManager.GetString("AutoAlign"));
             autoAlignMenuItemPanel2.Click += AutoAlignMenuItem_Click_Panel2;
+            saveCurrentTemplateMenuItemPanel2 = new ToolStripMenuItem(LocalizationManager.GetString("SaveCurrentTemplate"));
+            saveCurrentTemplateMenuItemPanel2.Click += SaveCurrentTemplateMenuItem_Click_Panel2;
             saveSampleMenuItemPanel2 = new ToolStripMenuItem(LocalizationManager.GetString("AddSampleToLibrary"));
             saveSampleMenuItemPanel2.Click += SaveSampleMenuItem_Click_Panel2;
             contextMenuStripPanel2.Items.Add(autoAlignMenuItemPanel2);
@@ -260,12 +278,47 @@ namespace _4._18
             contextMenuStripPanel2.Items.Add(captureMenuItemPanel2);
             contextMenuStripPanel2.Items.Add(clearCanvasMenuItemPanel2);
             contextMenuStripPanel2.Items.Add(openSampleMenuItemPanel2);
+            contextMenuStripPanel2.Items.Add(saveCurrentTemplateMenuItemPanel2);
             contextMenuStripPanel2.Items.Add(saveSampleMenuItemPanel2);
+            contextMenuStripPanel2.Items.Add(new ToolStripSeparator());
+            importJsonMenuItemPanel2 = new ToolStripMenuItem(LocalizationManager.GetString("ImportJson"));
+            importJsonMenuItemPanel2.Click += ImportJsonMenuItem_Click_Panel2;
+            contextMenuStripPanel2.Items.Add(importJsonMenuItemPanel2);
             MenuStyleHelper.Apply(contextMenuStripPanel2);
+            contextMenuStripPanel2.Opening += (s, ev) =>
+            {
+                autoAlignMenuItemPanel2.Text = GetAutoAlignMenuText();
+                UpdateSaveCurrentTemplateMenuState();
+            };
 
             //panel2鼠標滾動處理事件
             panel2.MouseWheel += new MouseEventHandler(Panel2_MouseWheel);
             capturelist = new List<Bitmap>();
+
+            // panel2 橫向滾動條（與縱向邏輯對齊）
+            hScrollBarPanel2 = new CustomScrollBar();
+            hScrollBarPanel2.Orientation = Orientation.Horizontal;
+            hScrollBarPanel2.Minimum = 0;
+            hScrollBarPanel2.SmallChange = 30;
+            hScrollBarPanel2.LargeChange = 200;
+            hScrollBarPanel2.TrackColor = vScrollBarPanel2.TrackColor;
+            hScrollBarPanel2.ThumbColor = vScrollBarPanel2.ThumbColor;
+            hScrollBarPanel2.BorderStyle = vScrollBarPanel2.BorderStyle;
+            hScrollBarPanel2.Value = 0;
+            hScrollBarPanel2.Scroll += hScrollBarPanel2_Scroll;
+            panel1.Controls.Add(hScrollBarPanel2);
+            hScrollBarPanel2.BringToFront();
+
+            // 非 listBox1 區域的點擊/滾動，統一關閉預覽並取消選定
+            textBoxTagSearch.MouseDown += NonListBoxArea_MouseDown;
+            textBoxTemplateSearch.MouseDown += NonListBoxArea_MouseDown;
+            listBox3Container.MouseDown += NonListBoxArea_MouseDown;
+            vScrollBarPanel2.MouseDown += NonListBoxArea_MouseDown;
+            hScrollBarPanel2.MouseDown += NonListBoxArea_MouseDown;
+            textBoxTagSearch.MouseWheel += NonListBoxArea_MouseWheel;
+            textBoxTemplateSearch.MouseWheel += NonListBoxArea_MouseWheel;
+            treeViewTemplates.MouseWheel += NonListBoxArea_MouseWheel;
+            panel1.MouseWheel += NonListBoxArea_MouseWheel;
 
             //初始化截圖管理類
             captureManager = new ScreenCaptureManager(panel2);
@@ -288,15 +341,11 @@ namespace _4._18
             // 補充 treeViewTemplates 的 MouseDown 事件訂閱
             treeViewTemplates.MouseDown += treeViewTemplates_MouseDown;
 
-            labelSettings.BringToFront();
-            int settingsButtonWidth = TextRenderer.MeasureText(labelSettings.Text, labelSettings.Font).Width + 12;
-            if (labelSettings.Width < settingsButtonWidth)
-            {
-                labelSettings.Width = settingsButtonWidth;
-            }
-
             // 應用本地化
             ApplyLocalization();
+
+            // 初始化工具欄按鈕
+            InitToolbar();
         }
 
         /// <summary>
@@ -311,20 +360,13 @@ namespace _4._18
             // 隱藏預覽圖片
             if (previewDevice != null)
             {
-                this.Controls.Remove(previewDevice);
-                previewDevice.Dispose();
-                previewDevice = null;
+                ClearPreviewDevice();
             }
         }
 
         private void textBoxTagSearch_TextChanged(object sender, EventArgs e)
         {
             tagTreeUserControl1.ApplyFilter(textBoxTagSearch.Text);
-        }
-
-        private void labelSettings_Click(object sender, EventArgs e)
-        {
-            ShowSettingsDialog();
         }
 
         /// <summary>
@@ -334,10 +376,45 @@ namespace _4._18
         {
             using (Form settingsForm = new Form())
             {
+                const float baselineDpi = 216f; // 225% 作為視覺基準
+                int dpi = this.DeviceDpi > 0 ? this.DeviceDpi : (int)baselineDpi;
+                Func<int, int> scale = v => (int)Math.Ceiling(v * dpi / baselineDpi);
+
+                // ── 先算所有尺寸，最後反推 ClientSize ──────────────
+                int spad  = scale(20);
+                int sgap  = scale(10);
+                int sfw   = scale(480);  // 控件區可用寬度
+                int sLblW = scale(180);  // 左列標籤寬
+                int sCmbW = sfw - sLblW - sgap;
+                int sRowH = scale(42);   // 10pt font(30px) + 12px padding，各 DPI 安全
+                int sBtnH = scale(46);
+                int sBtnW = (sfw - sgap) / 2;
+                int sLnkH = scale(30);
+
+                // 測量底部鏈接文本寬度，確保窗體夠寬
+                string repoDisplayText = "GitHub: https://github.com/mycing/wellhead-device-drawing-tool";
+                using (Font infoFont = new Font("Microsoft YaHei UI", 8.5F))
+                {
+                    int textW = System.Windows.Forms.TextRenderer.MeasureText(repoDisplayText, infoFont).Width + spad;
+                    if (textW > sfw)
+                        sfw = textW;
+                    // 重算依賴 sfw 的值
+                    sCmbW = sfw - sLblW - sgap;
+                    sBtnW = (sfw - sgap) / 2;
+                }
+
+                int row1Top  = spad;
+                int row2Top  = row1Top + sRowH + sgap;
+                int jsonBtnTop = row2Top + sRowH + scale(16);
+                int btnTop   = jsonBtnTop + sBtnH + sgap;
+                int lnkTop   = btnTop  + sBtnH + sgap;
+                int infoTop  = lnkTop  + sLnkH + scale(6);
+                int sformH   = infoTop + sLnkH * 2 + spad;   // 精確高度
+
                 settingsForm.Text = LocalizationManager.GetString("SettingsTitle");
                 settingsForm.StartPosition = FormStartPosition.CenterParent;
-                settingsForm.Width = 400;
-                settingsForm.Height = 250;
+                settingsForm.AutoScaleMode = AutoScaleMode.None;
+                settingsForm.ClientSize = new Size(sfw + spad * 2, sformH);
                 settingsForm.FormBorderStyle = FormBorderStyle.FixedDialog;
                 settingsForm.MaximizeBox = false;
                 settingsForm.MinimizeBox = false;
@@ -345,62 +422,33 @@ namespace _4._18
                 Label langLabel = new Label()
                 {
                     Text = LocalizationManager.GetString("LanguageLabel"),
-                    Left = 20,
-                    Top = 25,
-                    Width = 160,
+                    Left = spad, Top = row1Top, Width = sLblW, Height = sRowH,
                     Font = new Font("Microsoft YaHei UI", 10F),
                     TextAlign = System.Drawing.ContentAlignment.MiddleLeft
                 };
 
                 ComboBox langCombo = new ComboBox()
                 {
-                    Left = 180,
-                    Top = 23,
-                    Width = 180,
+                    Left = spad + sLblW + sgap, Top = row1Top + scale(2),
+                    Width = sCmbW, Height = sRowH,
                     Font = new Font("Microsoft YaHei UI", 10F),
                     DropDownStyle = ComboBoxStyle.DropDownList
                 };
-                langCombo.Items.Add("English");
-                langCombo.Items.Add("简体中文");
-                langCombo.Items.Add("繁體中文");
-                langCombo.Items.Add("Español");
-                langCombo.Items.Add("Français");
-                langCombo.Items.Add("Português");
-                langCombo.Items.Add("Русский");
-                langCombo.Items.Add("فارسی");
-                langCombo.Items.Add("Norsk");
-                langCombo.Items.Add("العربية");
-
-                // 設置當前選中項
-                switch (LocalizationManager.CurrentLanguage)
-                {
-                    case Language.English: langCombo.SelectedIndex = 0; break;
-                    case Language.SimplifiedChinese: langCombo.SelectedIndex = 1; break;
-                    case Language.TraditionalChinese: langCombo.SelectedIndex = 2; break;
-                    case Language.Spanish: langCombo.SelectedIndex = 3; break;
-                    case Language.French: langCombo.SelectedIndex = 4; break;
-                    case Language.Portuguese: langCombo.SelectedIndex = 5; break;
-                    case Language.Russian: langCombo.SelectedIndex = 6; break;
-                    case Language.Persian: langCombo.SelectedIndex = 7; break;
-                    case Language.Norwegian: langCombo.SelectedIndex = 8; break;
-                    case Language.Arabic: langCombo.SelectedIndex = 9; break;
-                }
+                langCombo.Items.AddRange(LanguageOptionMapper.GetDisplayNames().ToArray());
+                langCombo.SelectedIndex = LanguageOptionMapper.GetIndex(LocalizationManager.CurrentLanguage);
 
                 Label uncolorLabel = new Label()
                 {
                     Text = LocalizationManager.GetString("UseUncoloredDeviceLabel"),
-                    Left = 20,
-                    Top = 65,
-                    Width = 160,
+                    Left = spad, Top = row2Top, Width = sLblW, Height = sRowH,
                     Font = new Font("Microsoft YaHei UI", 10F),
                     TextAlign = System.Drawing.ContentAlignment.MiddleLeft
                 };
 
                 ComboBox uncolorCombo = new ComboBox()
                 {
-                    Left = 180,
-                    Top = 63,
-                    Width = 180,
+                    Left = spad + sLblW + sgap, Top = row2Top + scale(2),
+                    Width = sCmbW, Height = sRowH,
                     Font = new Font("Microsoft YaHei UI", 10F),
                     DropDownStyle = ComboBoxStyle.DropDownList
                 };
@@ -408,13 +456,27 @@ namespace _4._18
                 uncolorCombo.Items.Add(LocalizationManager.GetString("UseUncoloredDevice"));
                 uncolorCombo.SelectedIndex = _useUncoloredDevices ? 1 : 0;
 
+                Button importJsonBtn = new Button()
+                {
+                    Text = LocalizationManager.GetString("ImportJson"),
+                    Left = spad, Top = jsonBtnTop, Width = sfw, Height = sBtnH,
+                    Font = new Font("Microsoft YaHei UI", 10F),
+                    FlatStyle = FlatStyle.Flat,
+                    BackColor = Color.FromArgb(45, 120, 180),
+                    ForeColor = Color.White
+                };
+                importJsonBtn.FlatAppearance.BorderSize = 0;
+                importJsonBtn.Click += (s, ev) =>
+                {
+                    settingsForm.DialogResult = DialogResult.Cancel;
+                    settingsForm.Close();
+                    ImportJsonToCanvas();
+                };
+
                 Button okButton = new Button()
                 {
                     Text = LocalizationManager.GetString("OK"),
-                    Left = 20,
-                    Top = 110,
-                    Width = 167,
-                    Height = 38,
+                    Left = spad, Top = btnTop, Width = sBtnW, Height = sBtnH,
                     Font = new Font("Microsoft YaHei UI", 10F),
                     FlatStyle = FlatStyle.Flat,
                     BackColor = Color.FromArgb(60, 63, 70),
@@ -430,10 +492,7 @@ namespace _4._18
                 Button cancelButton = new Button()
                 {
                     Text = LocalizationManager.GetString("Cancel"),
-                    Left = 193,
-                    Top = 110,
-                    Width = 167,
-                    Height = 38,
+                    Left = spad + sBtnW + sgap, Top = btnTop, Width = sBtnW, Height = sBtnH,
                     Font = new Font("Microsoft YaHei UI", 10F),
                     FlatStyle = FlatStyle.Flat
                 };
@@ -448,12 +507,12 @@ namespace _4._18
                 {
                     Text = LocalizationManager.GetString("Help"),
                     Font = new Font("Microsoft YaHei UI", 9F),
-                    AutoSize = true,
-                    Top = 162,
+                    AutoSize = false,
+                    Left = spad, Top = lnkTop, Width = sfw, Height = sLnkH,
+                    TextAlign = System.Drawing.ContentAlignment.MiddleCenter,
                     LinkColor = Color.FromArgb(100, 100, 100),
                     ActiveLinkColor = Color.FromArgb(60, 63, 70)
                 };
-                helpLink.Left = (settingsForm.ClientSize.Width - helpLink.PreferredWidth) / 2;
                 helpLink.Click += (s, ev) =>
                 {
                     using (HelpDialog dialog = new HelpDialog())
@@ -463,33 +522,54 @@ namespace _4._18
                     }
                 };
 
+                string repoUrl = "https://github.com/mycing/wellhead-device-drawing-tool";
+                LinkLabel repoLink = new LinkLabel()
+                {
+                    Text = repoDisplayText,
+                    Font = new Font("Microsoft YaHei UI", 8.5F),
+                    AutoSize = false,
+                    Left = spad, Top = infoTop, Width = sfw, Height = sLnkH,
+                    TextAlign = System.Drawing.ContentAlignment.MiddleCenter,
+                    ForeColor = Color.FromArgb(80, 80, 80),
+                    LinkColor = Color.FromArgb(0, 102, 204),
+                    ActiveLinkColor = Color.FromArgb(0, 70, 160),
+                    VisitedLinkColor = Color.FromArgb(0, 102, 204)
+                };
+                repoLink.LinkArea = new LinkArea(8, repoUrl.Length);
+                repoLink.Click += (s, ev) =>
+                {
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = repoUrl,
+                        UseShellExecute = true
+                    });
+                };
+
+                Label emailLabel = new Label()
+                {
+                    Text = "Email: 472070418@qq.com",
+                    Font = new Font("Microsoft YaHei UI", 8.5F),
+                    AutoSize = false,
+                    Left = spad, Top = infoTop + sLnkH, Width = sfw, Height = sLnkH,
+                    TextAlign = System.Drawing.ContentAlignment.MiddleCenter,
+                    ForeColor = Color.FromArgb(80, 80, 80)
+                };
+
                 settingsForm.AcceptButton = okButton;
                 settingsForm.CancelButton = cancelButton;
-                settingsForm.Controls.Add(langLabel);
-                settingsForm.Controls.Add(langCombo);
-                settingsForm.Controls.Add(uncolorLabel);
-                settingsForm.Controls.Add(uncolorCombo);
-                settingsForm.Controls.Add(okButton);
-                settingsForm.Controls.Add(cancelButton);
-                settingsForm.Controls.Add(helpLink);
+                settingsForm.Controls.AddRange(new Control[]
+                {
+                    langLabel, langCombo,
+                    uncolorLabel, uncolorCombo,
+                    importJsonBtn,
+                    okButton, cancelButton,
+                    helpLink,
+                    repoLink, emailLabel
+                });
 
                 if (settingsForm.ShowDialog(this) == DialogResult.OK)
                 {
-                    Language selectedLang;
-                    switch (langCombo.SelectedIndex)
-                    {
-                        case 0: selectedLang = Language.English; break;
-                        case 1: selectedLang = Language.SimplifiedChinese; break;
-                        case 2: selectedLang = Language.TraditionalChinese; break;
-                        case 3: selectedLang = Language.Spanish; break;
-                        case 4: selectedLang = Language.French; break;
-                        case 5: selectedLang = Language.Portuguese; break;
-                        case 6: selectedLang = Language.Russian; break;
-                        case 7: selectedLang = Language.Persian; break;
-                        case 8: selectedLang = Language.Norwegian; break;
-                        case 9: selectedLang = Language.Arabic; break;
-                        default: selectedLang = Language.English; break;
-                    }
+                    Language selectedLang = LanguageOptionMapper.GetLanguageByIndex(langCombo.SelectedIndex);
 
                     if (selectedLang != LocalizationManager.CurrentLanguage)
                     {
@@ -516,7 +596,6 @@ namespace _4._18
             label3.Text = LocalizationManager.GetString("TagManagement");
             label4.Text = LocalizationManager.GetString("BOPConfig");
             label2.Text = LocalizationManager.GetString("SavedTemplates");
-            labelSettings.Text = LocalizationManager.GetString("Settings");
 
             // Panel2 右鍵菜單
             deleteMenuItemPanel2.Text = LocalizationManager.GetString("Delete");
@@ -524,8 +603,10 @@ namespace _4._18
             captureMenuItemPanel2.Text = LocalizationManager.GetString("Capture");
             clearCanvasMenuItemPanel2.Text = LocalizationManager.GetString("ClearCanvas");
             openSampleMenuItemPanel2.Text = LocalizationManager.GetString("OpenSample");
-            autoAlignMenuItemPanel2.Text = LocalizationManager.GetString("AutoAlign");
+            autoAlignMenuItemPanel2.Text = GetAutoAlignMenuText();
             saveSampleMenuItemPanel2.Text = LocalizationManager.GetString("AddSampleToLibrary");
+            saveCurrentTemplateMenuItemPanel2.Text = LocalizationManager.GetString("SaveCurrentTemplate");
+            importJsonMenuItemPanel2.Text = LocalizationManager.GetString("ImportJson");
 
             // ListBox1 右鍵菜單
             addDeviceMenuItemListBox1.Text = LocalizationManager.GetString("AddCustomDevice");
@@ -535,14 +616,20 @@ namespace _4._18
             menuItemDelete.Text = LocalizationManager.GetString("Delete");
             menuItemRename.Text = LocalizationManager.GetString("Rename");
             menuItemAddToLibrary.Text = LocalizationManager.GetString("AddSampleToLibrary");
+            menuItemCopyTemplate.Text = LocalizationManager.GetString("CopyNode");
+            menuItemPasteTemplate.Text = LocalizationManager.GetString("PasteAsChild");
 
             // 標籤樹右鍵菜單
             tagTreeUserControl1.ApplyLocalization();
 
             RefreshDeviceList();
 
+            // 更新工具欄按鈕文字
+            UpdateToolbarLocalization();
+
             // 重新調整按鈕佈局
             AdjustHelpButtonLayout();
+            AdjustTagSearchLayout();
         }
 
         private void RefreshDeviceList()
@@ -585,6 +672,9 @@ namespace _4._18
         }
         private void Panel2_MouseWheel(object sender, MouseEventArgs e)
         {
+            // 只要在其他區域發生滾動，立即關閉 listBox1 預覽並取消選定
+            DismissListBoxPreviewAndSelection();
+
             int moveStep = 50; // 每次滚动移动的像素数
 
             // 計算最大滾動值
@@ -615,6 +705,7 @@ namespace _4._18
         /// </summary>
         private void vScrollBarPanel2_Scroll(object sender, ScrollEventArgs e)
         {
+            DismissListBoxPreviewAndSelection();
             // 計算最大滾動值
             int maxScrollValue = Math.Max(0, panel2.Height - panel2Container.ClientSize.Height);
 
@@ -623,6 +714,14 @@ namespace _4._18
 
             // panel2 在容器内滚动，Top 为负值表示向上滚动
             panel2.Top = -scrollValue;
+        }
+
+        private void hScrollBarPanel2_Scroll(object sender, ScrollEventArgs e)
+        {
+            DismissListBoxPreviewAndSelection();
+            int maxScrollValue = Math.Max(0, panel2.Width - panel2Container.ClientSize.Width);
+            int scrollValue = Math.Max(0, Math.Min(maxScrollValue, e.NewValue));
+            panel2.Left = -scrollValue;
         }
         private void panel2_MouseDown(object sender, MouseEventArgs e)
         {
@@ -659,9 +758,7 @@ namespace _4._18
                     // 隱藏預覽圖片
                     if (previewDevice != null)
                     {
-                        this.Controls.Remove(previewDevice);
-                        previewDevice.Dispose();
-                        previewDevice = null;
+                        ClearPreviewDevice();
                     }
                     listBox1.ClearSelected();
                     fixedIndex = -1;
@@ -702,7 +799,7 @@ namespace _4._18
             {
                 if (previewDevice != null)
                 {
-                    previewDevice.Dispose();
+                    ClearPreviewDevice();
                 }
                 if (toolTip != null)
                 {
@@ -711,7 +808,7 @@ namespace _4._18
 
                 if (listBox1.SelectedIndex != -1 && !tagTreeUserControl1.HasSelection)
                 {
-                    if (listBox1.SelectedIndex <= 21)
+                    if (ShouldDrawSvgForCurrentSelection())
                     {
                         CreateSvgPanel(e.Location, SvgData);
                     }
@@ -733,33 +830,16 @@ namespace _4._18
                 {
                     selectionRectangle = new Rectangle(e.Location, new Size(0, 0));
                 }
+
+                // panel2 左鍵繪製後，立即關閉預覽並取消 listBox1 選定
+                DismissListBoxPreviewAndSelection();
             }
         }
         private void panel2_MouseMove(object sender, MouseEventArgs e)
         {
             if (isrightclick_while_cursor_leave_listbox1 == false && listBox1.SelectedIndex != -1)
             {
-                // 如果已经有一个 PictureBox，先移除并释放它
-                if (previewDevice != null)
-                {
-                    this.Controls.Remove(previewDevice);
-                    previewDevice.Dispose();
-                    previewDevice = null;
-                }
-                // 新建一个 PictureBox 用来存储预览的装置
-                previewDevice = new PictureBox
-                {
-                    SizeMode = PictureBoxSizeMode.AutoSize,
-                    Image = getImage,
-                    Visible = true
-                };
-                this.Controls.Add(previewDevice);
-
-                // 设置 PictureBox 的图像和位置
-
-                Point cursorPosition = this.PointToClient(Cursor.Position);
-                previewDevice.Location = new Point(cursorPosition.X + 5, cursorPosition.Y + 5); // 调整位置以避免覆盖鼠标指针
-                previewDevice.BringToFront();
+                ShowPreviewAtCursor(5, 5);
             }
 
             if (is_show_the_tootip == true)
@@ -827,63 +907,21 @@ namespace _4._18
                 int idx = listBox1.SelectedIndex;
                 if (idx < LocalizationManager.BuiltInDeviceCount)
                 {
-                    if (_useUncoloredDevices == false)
+                    getImage = BuiltInDeviceCatalog.GetPreviewImage(idx, _useUncoloredDevices);
+                    SvgData = _useUncoloredDevices ? BuiltInDeviceCatalog.GetSvgData(idx) : null;
+
+                    if (ShouldDrawSvgForCurrentSelection())
                     {
-                        switch (idx)
-                        {
-                            case 0:  getImage = Properties.Resource.转盘面; break;
-                            case 1:  getImage = Properties.Resource.喇叭口; break;
-                            case 2:  getImage = Properties.Resource.密封盘根升高短节; break;
-                            case 3:  getImage = Properties.Resource.旋转控制头; break;
-                            case 4:  getImage = Properties.Resource.临时井口头; break;
-                            case 5:  getImage = Properties.Resource.万能防喷器; break;
-                            case 6:  getImage = Properties.Resource.闸板防喷器; break;
-                            case 7:  getImage = Properties.Resource.双闸板防喷器; break;
-                            case 8:  getImage = Properties.Resource.钻井四通; break;
-                            case 9:  getImage = Properties.Resource.油管四通; break;
-                            case 10: getImage = Properties.Resource.油管四通; break;
-                            case 11: getImage = Properties.Resource.法兰; break;
-                            case 12: getImage = Properties.Resource.法兰; break;
-                            case 13: getImage = Properties.Resource.升高立管; break;
-                            case 14: getImage = Properties.Resource.套管头; break;
-                            case 15: getImage = Properties.Resource.井口平台; break;
-                            case 16: getImage = Properties.Resource.分流器; break;
-                            case 17: getImage = Properties.Resource.单层套管; break;
-                            case 18: getImage = Properties.Resource.双层套管; break;
-                            case 19: getImage = Properties.Resource.三层套管; break;
-                            case 20: getImage = Properties.Resource.單筒雙井; break;
-                            case 21: getImage = Properties.Resource.隔水導管; break;
-                            case 22: getImage = Properties.Resource.節流壓井管匯; break;
-                        }
+                        _currentDrawBaseSize = TryGetSvgSize(SvgData);
                     }
                     else
                     {
-                        switch (idx)
-                        {
-                            case 0:  getImage = Properties.Resource.轉盤面; SvgData = Properties.Resource.转盘面1; break;
-                            case 1:  getImage = Properties.Resource.喇叭口1; SvgData = Properties.Resource.喇叭口2; break;
-                            case 2:  getImage = Properties.Resource.密封盤根升高短節; SvgData = Properties.Resource.密封盘根升高短节1; break;
-                            case 3:  getImage = Properties.Resource.旋轉控制頭; SvgData = Properties.Resource.精细控压旋转控制头; break;
-                            case 4:  getImage = Properties.Resource.臨時京口頭; SvgData = Properties.Resource.临时井口头1; break;
-                            case 5:  getImage = Properties.Resource.萬能; SvgData = Properties.Resource.环形防喷器; break;
-                            case 6:  getImage = Properties.Resource.閘板防噴器; SvgData = Properties.Resource.闸板防喷器1; break;
-                            case 7:  getImage = Properties.Resource.雙閘版防噴器; SvgData = Properties.Resource.双闸板防喷器1; break;
-                            case 8:  getImage = Properties.Resource.鑽井四通; SvgData = Properties.Resource.钻井四通1; break;
-                            case 9:  getImage = Properties.Resource.鑽井四通; SvgData = Properties.Resource.钻井四通1; break;
-                            case 10: getImage = Properties.Resource.鑽井四通; SvgData = Properties.Resource.钻井四通1; break;
-                            case 11: getImage = Properties.Resource.法蘭; SvgData = Properties.Resource.变径法兰; break;
-                            case 12: getImage = Properties.Resource.法蘭; SvgData = Properties.Resource.变径法兰; break;
-                            case 13: getImage = Properties.Resource.升高1; SvgData = Properties.Resource.升高立管1; break;
-                            case 14: getImage = Properties.Resource.套管頭; SvgData = Properties.Resource.套管头1; break;
-                            case 15: getImage = Properties.Resource.井口平臺; SvgData = Properties.Resource.井口平台1; break;
-                            case 16: getImage = Properties.Resource.分流器11; SvgData = Properties.Resource.分流器2; break;
-                            case 17: getImage = Properties.Resource.單層套管; SvgData = Properties.Resource.单层套管1; break;
-                            case 18: getImage = Properties.Resource.雙層套管; SvgData = Properties.Resource.双层套管1; break;
-                            case 19: getImage = Properties.Resource.三層套管; SvgData = Properties.Resource.三层套管1; break;
-                            case 20: getImage = Properties.Resource.單筒雙井; SvgData = Properties.Resource.單筒雙井1; break;
-                            case 21: getImage = Properties.Resource.隔水導管; SvgData = Properties.Resource.隔水導管1; break;
-                            case 22: getImage = Properties.Resource.節流壓井管匯; SvgData = Properties.Resource.变径法兰; break;
-                        }
+                        _currentDrawBaseSize = getImage != null ? getImage.Size : Size.Empty;
+                    }
+
+                    if ((_currentDrawBaseSize.Width <= 0 || _currentDrawBaseSize.Height <= 0) && getImage != null)
+                    {
+                        _currentDrawBaseSize = getImage.Size;
                     }
                 }
                 else
@@ -894,6 +932,7 @@ namespace _4._18
                         using (Bitmap bitmap = new Bitmap(Path.Combine(storePictureaddress, listBox1.SelectedItem.ToString())))
                         {
                             getImage = new Bitmap(bitmap);
+                            _currentDrawBaseSize = getImage.Size;
                         }
                     }
                     else
@@ -919,6 +958,7 @@ namespace _4._18
             // 動態調整 panel2Container 和滾動條的位置和大小
             AdjustPanel2Layout();
             AdjustHelpButtonLayout();
+            AdjustTagSearchLayout();
         }
 
         /// <summary>
@@ -930,25 +970,117 @@ namespace _4._18
             int topY = listBox1Container.Top;
             int bottomY = listBox3Container.Bottom;
             int visibleHeight = bottomY - topY;
+            int hScrollHeight = 26;
 
             // 設置滾動條位置和大小
             vScrollBarPanel2.Top = topY;
-            vScrollBarPanel2.Height = visibleHeight;
+            vScrollBarPanel2.Height = visibleHeight - hScrollHeight;
             vScrollBarPanel2.Width = 48; // 明確設置寬度
 
             // 設置 panel2Container 位置和大小
             panel2Container.Top = topY;
-            panel2Container.Height = visibleHeight;
+            panel2Container.Height = visibleHeight - hScrollHeight;
 
             // panel2Container 右邊緊貼滾動條左邊
             panel2Container.Width = vScrollBarPanel2.Left - panel2Container.Left;
 
-            // panel2 寬度填滿容器（考慮邊框）
-            panel2.Width = panel2Container.ClientSize.Width;
+            // 橫向滾動條緊貼 panel2Container 底部
+            if (hScrollBarPanel2 != null)
+            {
+                hScrollBarPanel2.Left = panel2Container.Left;
+                hScrollBarPanel2.Top = panel2Container.Bottom;
+                hScrollBarPanel2.Width = panel2Container.Width;
+                hScrollBarPanel2.Height = hScrollHeight;
+            }
 
-            // 設置滾動條的最大值：panel2高度 - 可視區域高度（考慮邊框）
+            // 先按可視區域重置基準，最終尺寸由 EnsurePanel2ContentVisible 根據內容精確計算
+            panel2.Width = panel2Container.ClientSize.Width;
+            panel2.Height = panel2Container.ClientSize.Height;
+
+            EnsurePanel2ContentVisible();
+        }
+
+        /// <summary>
+        /// 保證 panel2 內現有內容可見：高度不夠則增高，左右超出則整體平移回可視區域
+        /// </summary>
+        private void EnsurePanel2ContentVisible()
+        {
+            if (panel2 == null || panel2Container == null) return;
+
+            int minX = int.MaxValue;
+            int minY = int.MaxValue;
+            int maxRight = 0;
+            int maxBottom = 0;
+            bool hasContent = false;
+
+            foreach (Control c in panel2.Controls)
+            {
+                if (c == null || !c.Visible) continue;
+                if (c is VScrollBar) continue;
+                hasContent = true;
+                minX = Math.Min(minX, c.Left);
+                minY = Math.Min(minY, c.Top);
+                maxRight = Math.Max(maxRight, c.Right);
+                maxBottom = Math.Max(maxBottom, c.Bottom);
+            }
+
+            if (!hasContent)
+            {
+                panel2.Width = panel2Container.ClientSize.Width;
+                panel2.Height = panel2Container.ClientSize.Height;
+                vScrollBarPanel2.Value = 0;
+                vScrollBarPanel2.Maximum = vScrollBarPanel2.LargeChange;
+                panel2.Top = 0;
+                if (hScrollBarPanel2 != null)
+                {
+                    hScrollBarPanel2.Value = 0;
+                    hScrollBarPanel2.Maximum = hScrollBarPanel2.LargeChange;
+                    panel2.Left = 0;
+                }
+                return;
+            }
+
+            const int padding = 12;
+            // 內容超出左/上邊界時，整體回推到 padding 區域
+            if (minX < padding)
+            {
+                int shift = padding - minX;
+                foreach (Control c in panel2.Controls)
+                {
+                    if (c == null || !c.Visible) continue;
+                    if (c is VScrollBar) continue;
+                    c.Left += shift;
+                }
+                maxRight += shift;
+            }
+            if (minY < padding)
+            {
+                int shift = padding - minY;
+                foreach (Control c in panel2.Controls)
+                {
+                    if (c == null || !c.Visible) continue;
+                    if (c is VScrollBar) continue;
+                    c.Top += shift;
+                }
+                maxBottom += shift;
+            }
+
+            // 每次按“當前內容”重算畫布尺寸（可放大也可縮小）
+            panel2.Width = Math.Max(panel2Container.ClientSize.Width, maxRight + padding);
+            panel2.Height = Math.Max(panel2Container.ClientSize.Height, maxBottom + padding);
+
             int maxScroll = Math.Max(0, panel2.Height - panel2Container.ClientSize.Height);
             vScrollBarPanel2.Maximum = maxScroll + vScrollBarPanel2.LargeChange;
+            vScrollBarPanel2.Value = Math.Min(vScrollBarPanel2.Value, maxScroll);
+            panel2.Top = -vScrollBarPanel2.Value;
+
+            if (hScrollBarPanel2 != null)
+            {
+                int maxHScroll = Math.Max(0, panel2.Width - panel2Container.ClientSize.Width);
+                hScrollBarPanel2.Maximum = maxHScroll + hScrollBarPanel2.LargeChange;
+                hScrollBarPanel2.Value = Math.Min(hScrollBarPanel2.Value, maxHScroll);
+                panel2.Left = -hScrollBarPanel2.Value;
+            }
         }
 
         protected override void OnResize(EventArgs e)
@@ -956,29 +1088,116 @@ namespace _4._18
             base.OnResize(e);
             AdjustPanel2Layout();
             AdjustHelpButtonLayout();
+            AdjustTagSearchLayout();
         }
 
         private void AdjustHelpButtonLayout()
         {
-            if (labelSettings == null || label4 == null)
+            // labelSettings 已合併到工具欄，此方法保留為空以避免修改調用點
+        }
+
+        /// <summary>
+        /// 動態調整兩個搜索框的位置（跟隨 Form 的 AutoScale 基準）
+        /// </summary>
+        private void AdjustTagSearchLayout()
+        {
+            float designDpi = this.AutoScaleDimensions.Width > 0 ? this.AutoScaleDimensions.Width : 240f;
+            float runtimeDpi = this.DeviceDpi > 0 ? this.DeviceDpi : designDpi;
+            int gap = Math.Max(4, (int)Math.Round(8f * runtimeDpi / designDpi));
+
+            // ── tagTreeUserControl1 上方的搜索框（label3 右側）──
+            if (textBoxTagSearch != null && label3 != null && tagTreeUserControl1 != null)
             {
-                return;
+                int searchLeft = label3.Right + gap;
+                int searchRight = tagTreeUserControl1.Right;
+                textBoxTagSearch.Top = label3.Top;
+                textBoxTagSearch.Left = searchLeft;
+                textBoxTagSearch.Width = Math.Max(60, searchRight - searchLeft);
+                textBoxTagSearch.Height = label3.Height;
+                textBoxTagSearch.BringToFront();
             }
 
-            labelSettings.Font = label4.Font;
-            labelSettings.Height = label4.Height;
-            labelSettings.Top = label4.Top;
-            labelSettings.BackColor = label4.BackColor;
-            labelSettings.ForeColor = label4.ForeColor;
-            labelSettings.TextAlign = label4.TextAlign;
+            // ── listBox3Container 上方的搜索框（label2 右側）──
+            if (textBoxTemplateSearch != null && label2 != null && listBox3Container != null)
+            {
+                int searchLeft2 = label2.Right + gap;
+                int searchRight2 = listBox3Container.Right;
+                textBoxTemplateSearch.Top = label2.Top;
+                textBoxTemplateSearch.Left = searchLeft2;
+                textBoxTemplateSearch.Width = Math.Max(60, searchRight2 - searchLeft2);
+                textBoxTemplateSearch.Height = label2.Height;
+                textBoxTemplateSearch.BringToFront();
+            }
+        }
 
-            int settingsTextWidth = TextRenderer.MeasureText(labelSettings.Text, labelSettings.Font, new Size(int.MaxValue, labelSettings.Height), TextFormatFlags.SingleLine).Width;
-            int settingsTargetWidth = settingsTextWidth + 32;
-            labelSettings.Width = Math.Max(60, settingsTargetWidth);
-            labelSettings.Left = (panel2Container != null)
-                ? panel2Container.Right - labelSettings.Width
-                : label4.Right + 4;
-            labelSettings.BringToFront();
+        /// <summary>
+        /// 初始化工具欄按鈕
+        /// </summary>
+        private void InitToolbar()
+        {
+            flowLayoutToolbar.Controls.Clear();
+
+            // 動態適配：讓工具欄高度跟隨 label1 的實際高度（已經過 DPI 縮放）
+            int targetHeight = label1.Height + 4; // 上下各留 2px
+            panelToolbar.Height = targetHeight;
+
+            // 按鈕定義：(Unicode符號, 本地化鍵, 點擊事件)
+            var buttons = new (string symbol, string locKey, EventHandler handler)[]
+            {
+                ("\u2795", "ImportJson",          (s, e) => ImportJsonToCanvas()),
+                ("\u2702", "ClearCanvas",         (s, e) => ClearCanvasMenuItem_Click_Panel2(s, e)),
+                ("\u25A4", "AutoAlign",           (s, e) => AutoAlignMenuItem_Click_Panel2(s, e)),
+                ("\u25A3", "Capture",             (s, e) => CaptureMenuItem_Click_Panel2(s, e)),
+                ("\u27F3", "AutoCapture",         (s, e) => AutoCaptureMenuItem_Click_Panel2(s, e)),
+                ("\u25C7", "AddSampleToLibrary",  (s, e) => SaveSampleMenuItem_Click_Panel2(s, e)),
+                ("\u25B7", "OpenSample",          (s, e) => OpenSampleMenuItem_Click_Panel2(s, e)),
+                ("\u2699", "Settings",            (s, e) => ShowSettingsDialog()),
+                ("\u2753", "Help",                (s, e) => { using (var d = new HelpDialog()) { d.StartPosition = FormStartPosition.CenterParent; d.ShowDialog(this); } }),
+            };
+
+            foreach (var (symbol, locKey, handler) in buttons)
+            {
+                flowLayoutToolbar.Controls.Add(CreateToolbarButton(symbol, locKey, handler));
+            }
+        }
+
+        /// <summary>
+        /// 創建工具欄按鈕
+        /// </summary>
+        private Button CreateToolbarButton(string symbol, string locKey, EventHandler onClick)
+        {
+            var btn = new Button();
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.BorderSize = 0;
+            btn.FlatAppearance.MouseOverBackColor = Color.FromArgb(210, 212, 215);
+            btn.FlatAppearance.MouseDownBackColor = Color.FromArgb(190, 192, 195);
+            btn.BackColor = Color.Transparent;
+            // 使用與 label1 相同的字體大小，確保 DPI 下按鈕文字清晰可讀
+            btn.Font = label1.Font;
+            btn.AutoSize = true;
+            btn.Height = label1.Height;
+            btn.Margin = new Padding(2, 0, 2, 0);
+            btn.Padding = new Padding(6, 0, 6, 0);
+            btn.Cursor = Cursors.Hand;
+            btn.Text = symbol + " " + LocalizationManager.GetString(locKey);
+            btn.Click += onClick;
+            btn.Tag = new string[] { symbol, locKey };
+            return btn;
+        }
+
+        /// <summary>
+        /// 更新工具欄按鈕的本地化文字
+        /// </summary>
+        private void UpdateToolbarLocalization()
+        {
+            if (flowLayoutToolbar == null) return;
+            foreach (Control c in flowLayoutToolbar.Controls)
+            {
+                if (c is Button btn && btn.Tag is string[] parts && parts.Length == 2)
+                {
+                    btn.Text = parts[0] + " " + LocalizationManager.GetString(parts[1]);
+                }
+            }
         }
 
         /// <summary>
@@ -1000,7 +1219,7 @@ namespace _4._18
             if (previewDevice != null)
             {
                 getImage = null;
-                previewDevice.Dispose();
+                ClearPreviewDevice();
             }
             tagTreeUserControl1.ClearSelection();
             if (toolTip != null)
@@ -1016,7 +1235,9 @@ namespace _4._18
         private void ClearCanvasMenuItem_Click_Panel2(object sender, EventArgs e)
         {
             panel2.Controls.Clear();
+            dynamicPanels.Clear();
             panel2.Refresh();
+            EnsurePanel2ContentVisible();
         }
 
         /// <summary>
@@ -1095,6 +1316,21 @@ namespace _4._18
         }
 
         /// <summary>
+        /// panel2 右鍵菜單 - 保存到當前編輯模板
+        /// </summary>
+        private void SaveCurrentTemplateMenuItem_Click_Panel2(object sender, EventArgs e)
+        {
+            TemplateTreeNodeData target = ResolveCurrentEditingTemplate();
+            if (target == null || !target.IsTemplate)
+            {
+                return;
+            }
+
+            target.TemplateData = _panelManager.SaveAllPanels();
+            SaveTemplateLibrary();
+        }
+
+        /// <summary>
         /// 公開方法 - 自動對齊（供自定義控件調用）
         /// 使用 AutoAlignManager 管理器執行自動對齊
         /// </summary>
@@ -1104,11 +1340,301 @@ namespace _4._18
         }
 
         /// <summary>
+        /// 根據當前對齊模式返回對應的菜單文字
+        /// </summary>
+        public string GetAutoAlignMenuText()
+        {
+            if (autoAlignManager == null) return LocalizationManager.GetString("AutoAlign");
+            return autoAlignManager.CurrentMode == 0
+                ? LocalizationManager.GetString("AutoAlignCenter")
+                : LocalizationManager.GetString("AutoAlignRight");
+        }
+
+        /// <summary>
         /// 公開方法 - 添加樣例到庫（供自定義控件調用）
         /// </summary>
         public void SaveSampleToLibrary()
         {
             _panelSampleLibrarySaver?.PromptAndSave(this);
+        }
+
+        /// <summary>
+        /// 公開方法 - 匯入 JSON 到畫布（供自定義控件調用）
+        /// </summary>
+        public void ImportJsonToCanvas()
+        {
+            _currentEditingTemplate = null;
+            var importer = new WellheadJsonImporter(panel2, dynamicPanels, tagLabelFont,
+                Custom_device, storePictureaddress);
+            var dialog = new JsonImportDialog(importer, Custom_device);
+            if (dialog.ShowDialog(this) && importer.LastImportedSchemas != null && importer.LastImportedSchemas.Count > 0)
+            {
+                int batchIndex = 1;
+                foreach (var schema in importer.LastImportedSchemas)
+                {
+                    if (schema == null || schema.Devices == null)
+                    {
+                        continue;
+                    }
+
+                    string rerenderError;
+                    if (!importer.Import(JsonConvert.SerializeObject(schema), out rerenderError))
+                    {
+                        continue;
+                    }
+
+                    string groupName = !string.IsNullOrWhiteSpace(schema.Name)
+                        ? schema.Name
+                        : DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+                    if (importer.LastImportedSchemas.Count > 1)
+                    {
+                        groupName += $" #{batchIndex}";
+                    }
+                    batchIndex++;
+
+                    var childTags = new List<string>();
+                    foreach (var device in schema.Devices)
+                    {
+                        string tag = "";
+                        if (!string.IsNullOrWhiteSpace(device.Label))
+                            tag = device.Label.Replace("\n", " ");
+                        if (!string.IsNullOrWhiteSpace(device.Flange))
+                        {
+                            if (tag.Length > 0) tag += " | ";
+                            tag += device.Flange.Replace("\n", " ");
+                        }
+                        if (!string.IsNullOrWhiteSpace(tag))
+                            childTags.Add(tag);
+                    }
+
+                    tagTreeUserControl1.AddTagGroup(groupName, childTags);
+
+                    // 同時保存到模板庫（listBox3 / treeViewTemplates）
+                    List<PanelInfo> panelInfos = _panelManager.SaveAllPanels();
+                    TemplateTreeNodeData newTemplate = new TemplateTreeNodeData(groupName, panelInfos);
+                    templateLibraryData.Add(newTemplate);
+                    TreeNode newNode = new TreeNode(groupName);
+                    newNode.Tag = newTemplate;
+                    treeViewTemplates.Nodes.Add(newNode);
+                }
+                SaveTemplateLibrary();
+                AdjustPanel2Layout();
+            }
+            UpdateSaveCurrentTemplateMenuState();
+        }
+
+        private void ImportJsonMenuItem_Click_Panel2(object sender, EventArgs e)
+        {
+            ImportJsonToCanvas();
+        }
+
+        private void ClearPreviewDevice()
+        {
+            if (previewDevice == null)
+            {
+                return;
+            }
+
+            this.Controls.Remove(previewDevice);
+            previewDevice.Dispose();
+            previewDevice = null;
+            _lastPreviewLocation = new Point(int.MinValue, int.MinValue);
+        }
+
+        private void DismissListBoxPreviewAndSelection()
+        {
+            isrightclick_while_cursor_leave_listbox1 = true;
+            if (previewDevice != null)
+            {
+                ClearPreviewDevice();
+            }
+            listBox1.ClearSelected();
+            fixedIndex = -1;
+        }
+
+        private void NonListBoxArea_MouseDown(object sender, MouseEventArgs e)
+        {
+            DismissListBoxPreviewAndSelection();
+        }
+
+        private void NonListBoxArea_MouseWheel(object sender, MouseEventArgs e)
+        {
+            DismissListBoxPreviewAndSelection();
+        }
+
+        private Size GetPreviewTargetSize(Image sourceImage)
+        {
+            if (sourceImage == null || sourceImage.Width <= 0 || sourceImage.Height <= 0)
+            {
+                return Size.Empty;
+            }
+
+            int idx = listBox1.SelectedIndex;
+            bool isCustomDevice = idx >= LocalizationManager.BuiltInDeviceCount;
+
+            // 用戶自定義裝置（索引 22 之後）固定使用原始圖片尺寸，和落圖完全一致
+            Size targetSize = isCustomDevice ? sourceImage.Size : _currentDrawBaseSize;
+            if (targetSize.Width <= 0 || targetSize.Height <= 0)
+            {
+                targetSize = sourceImage.Size;
+            }
+            if (targetSize.Width <= 0 || targetSize.Height <= 0)
+            {
+                return Size.Empty;
+            }
+
+            return targetSize;
+        }
+
+        private PictureBox CreateScaledPreviewPictureBox(Image sourceImage)
+        {
+            Size targetSize = GetPreviewTargetSize(sourceImage);
+            if (targetSize.IsEmpty)
+            {
+                return null;
+            }
+
+            return new PictureBox
+            {
+                SizeMode = PictureBoxSizeMode.Zoom,
+                Size = targetSize,
+                Image = sourceImage,
+                Visible = true
+            };
+        }
+
+        private bool ShouldDrawSvgForCurrentSelection()
+        {
+            int idx = listBox1.SelectedIndex;
+            return idx >= 0
+                   && idx < LocalizationManager.BuiltInDeviceCount
+                   && _useUncoloredDevices
+                   && SvgData != null
+                   && SvgData.Length > 0;
+        }
+
+        private Size TryGetSvgSize(byte[] svgData)
+        {
+            if (svgData == null || svgData.Length == 0)
+            {
+                LogSvgParseIssue("TryGetSvgSize: empty svgData");
+                return Size.Empty;
+            }
+
+            try
+            {
+                using (var stream = new MemoryStream(svgData))
+                {
+                    var doc = SvgDocument.Open<SvgDocument>(stream);
+                    if (doc != null)
+                    {
+                        int width = (int)Math.Round((float)doc.Width);
+                        int height = (int)Math.Round((float)doc.Height);
+
+                        // 某些 SVG 文档 Width/Height 会返回极小值，回退到 ViewBox。
+                        if (width <= 2 || height <= 2)
+                        {
+                            try
+                            {
+                                if (doc.ViewBox.Width > 2 && doc.ViewBox.Height > 2)
+                                {
+                                    width = (int)Math.Round(doc.ViewBox.Width);
+                                    height = (int)Math.Round(doc.ViewBox.Height);
+                                }
+                            }
+                            catch
+                            {
+                                // Ignore and continue fallback below.
+                            }
+                        }
+
+                        if (width > 0 && height > 0)
+                        {
+                            return new Size(width, height);
+                        }
+
+                        LogSvgParseIssue($"TryGetSvgSize: invalid size width={width}, height={height}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // SVG 無法解析時，回退到圖片尺寸
+                LogSvgParseIssue("TryGetSvgSize exception: " + ex.Message);
+            }
+
+            return Size.Empty;
+        }
+
+        private void LogSvgParseIssue(string message)
+        {
+            try
+            {
+                string key = message ?? string.Empty;
+                lock (_svgParseLogged)
+                {
+                    if (_svgParseLogged.Contains(key))
+                    {
+                        return;
+                    }
+                    _svgParseLogged.Add(key);
+                }
+
+                string logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "svg_parse.log");
+                File.AppendAllText(logPath,
+                    $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {message}{Environment.NewLine}");
+            }
+            catch
+            {
+                // Never break UI flow because of diagnostics.
+            }
+        }
+
+        private void ShowPreviewAtCursor(int offsetX, int offsetY)
+        {
+            Size targetSize = GetPreviewTargetSize(getImage);
+            if (targetSize.IsEmpty || getImage == null)
+            {
+                ClearPreviewDevice();
+                return;
+            }
+
+            if (previewDevice == null)
+            {
+                previewDevice = CreateScaledPreviewPictureBox(getImage);
+                if (previewDevice == null)
+                {
+                    return;
+                }
+                this.Controls.Add(previewDevice);
+            }
+            else
+            {
+                if (!this.Controls.Contains(previewDevice))
+                {
+                    this.Controls.Add(previewDevice);
+                }
+                if (!ReferenceEquals(previewDevice.Image, getImage))
+                {
+                    previewDevice.Image = getImage;
+                }
+                if (previewDevice.Size != targetSize)
+                {
+                    previewDevice.Size = targetSize;
+                }
+                previewDevice.Visible = true;
+            }
+
+            Point cursorPosition = this.PointToClient(Cursor.Position);
+            Point newLocation = new Point(cursorPosition.X + offsetX, cursorPosition.Y + offsetY);
+            if (_lastPreviewLocation.X == int.MinValue ||
+                Math.Abs(newLocation.X - _lastPreviewLocation.X) >= 2 ||
+                Math.Abs(newLocation.Y - _lastPreviewLocation.Y) >= 2)
+            {
+                previewDevice.Location = newLocation;
+                _lastPreviewLocation = newLocation;
+            }
+            previewDevice.BringToFront();
         }
 
 
@@ -1130,58 +1656,20 @@ namespace _4._18
                 // 获取鼠标当前位置对应的 ListBox 项的索引
                 int index = listBox1.IndexFromPoint(e.Location);
 
-                // 如果索引有效且不同于当前选中的索引
-                if (index != ListBox.NoMatches && index != listBox1.SelectedIndex)
+                // 只在 hover 的項目真正改變時才更新選中狀態（避免鼠標抖動導致閃爍）
+                if (index != ListBox.NoMatches && index != _lastHoverIndex)
                 {
-                    // 设置当前选中的项
-                    listBox1.SelectedIndex = index;
+                    _lastHoverIndex = index;
+                    if (index != listBox1.SelectedIndex)
+                    {
+                        listBox1.SelectedIndex = index;
+                    }
                 }
-                // 如果已经有一个 PictureBox，先移除并释放它
-                if (previewDevice != null)
-                {
-                    this.Controls.Remove(previewDevice);
-                    previewDevice.Dispose();
-                    previewDevice = null;
-                }
-
-                // 新建一个 PictureBox 用来存储预览的装置
-                previewDevice = new PictureBox
-                {
-                    SizeMode = PictureBoxSizeMode.AutoSize,
-                    Image = getImage,
-                    Visible = true
-                };
-                this.Controls.Add(previewDevice);
-
-                // 设置 PictureBox 的图像和位置
-
-                Point cursorPosition = this.PointToClient(Cursor.Position);
-                previewDevice.Location = new Point(cursorPosition.X, cursorPosition.Y); // 调整位置以避免覆盖鼠标指针
-                previewDevice.BringToFront();
+                ShowPreviewAtCursor(0, 0);
             }
             else
             {
-                // 如果已经有一个 PictureBox，先移除并释放它
-                if (previewDevice != null)
-                {
-                    this.Controls.Remove(previewDevice);
-                    previewDevice.Dispose();
-                    previewDevice = null;
-                }
-                // 新建一个 PictureBox 用来存储预览的装置
-                previewDevice = new PictureBox
-                {
-                    SizeMode = PictureBoxSizeMode.AutoSize,
-                    Image = getImage,
-                    Visible = true
-                };
-                this.Controls.Add(previewDevice);
-
-                // 设置 PictureBox 的图像和位置
-
-                Point cursorPosition = this.PointToClient(Cursor.Position);
-                previewDevice.Location = new Point(cursorPosition.X + 5, cursorPosition.Y + 5); // 调整位置以避免覆盖鼠标指针
-                previewDevice.BringToFront();
+                ShowPreviewAtCursor(5, 5);
             }
 
 
@@ -1196,9 +1684,10 @@ namespace _4._18
         private void listBox1_MouseLeave(object sender, EventArgs e)
         {
             isCursorleavelistbox1 = true;
+            _lastHoverIndex = -1;
             if (fixedIndex == -1 && previewDevice != null)
             {
-                previewDevice.Dispose();
+                ClearPreviewDevice();
             }
         }
 
@@ -1231,9 +1720,7 @@ namespace _4._18
                 if (previewDevice != null)
                 {
                     previewDevice.Visible = false;
-                    this.Controls.Remove(previewDevice);
-                    previewDevice.Dispose();
-                    previewDevice = null;
+                    ClearPreviewDevice();
                 }
                 listBox1.ClearSelected();
                 fixedIndex = -1;
@@ -1344,27 +1831,7 @@ namespace _4._18
         {
             if (listBox1.SelectedIndex != -1)
             {
-                // 如果已经有一个 PictureBox，先移除并释放它
-                if (previewDevice != null)
-                {
-                    this.Controls.Remove(previewDevice);
-                    previewDevice.Dispose();
-                    previewDevice = null;
-                }
-                // 新建一个 PictureBox 用来存储预览的装置
-                previewDevice = new PictureBox
-                {
-                    SizeMode = PictureBoxSizeMode.AutoSize,
-                    Image = getImage,
-                    Visible = true
-                };
-                this.Controls.Add(previewDevice);
-
-                // 设置 PictureBox 的图像和位置
-
-                Point cursorPosition = this.PointToClient(Cursor.Position);
-                previewDevice.Location = new Point(cursorPosition.X + 5, cursorPosition.Y + 5); // 调整位置以避免覆盖鼠标指针
-                previewDevice.BringToFront();
+                ShowPreviewAtCursor(5, 5);
             }
             // 顯示 tagTreeUserControl1 選中節點的提示
             else if (tagTreeUserControl1.HasSelection)
@@ -1393,27 +1860,7 @@ namespace _4._18
         {
             if (isrightclick_while_cursor_leave_listbox1 == false && listBox1.SelectedIndex != -1)
             {
-                // 如果已经有一个 PictureBox，先移除并释放它
-                if (previewDevice != null)
-                {
-                    this.Controls.Remove(previewDevice);
-                    previewDevice.Dispose();
-                    previewDevice = null;
-                }
-                // 新建一个 PictureBox 用来存储预览的装置
-                previewDevice = new PictureBox
-                {
-                    SizeMode = PictureBoxSizeMode.AutoSize,
-                    Image = getImage,
-                    Visible = true
-                };
-                this.Controls.Add(previewDevice);
-
-                // 设置 PictureBox 的图像和位置
-
-                Point cursorPosition = this.PointToClient(Cursor.Position);
-                previewDevice.Location = new Point(cursorPosition.X + 5, cursorPosition.Y + 5); // 调整位置以避免覆盖鼠标指针
-                previewDevice.BringToFront();
+                ShowPreviewAtCursor(5, 5);
             }
             // 顯示 tagTreeUserControl1 選中節點的提示
             else if (listBox1.SelectedIndex == -1 && tagTreeUserControl1.HasSelection)
@@ -1426,36 +1873,18 @@ namespace _4._18
         {
             if (isrightclick_while_cursor_leave_listbox1 == false && listBox1.SelectedIndex != -1)
             {
-                // 如果已经有一个 PictureBox，先移除并释放它
-                if (previewDevice != null)
-                {
-                    this.Controls.Remove(previewDevice);
-                    previewDevice.Dispose();
-                    previewDevice = null;
-                }
-                // 新建一个 PictureBox 用来存储预览的装置
-                previewDevice = new PictureBox
-                {
-                    SizeMode = PictureBoxSizeMode.AutoSize,
-                    Image = getImage,
-                    Visible = true
-                };
-                this.Controls.Add(previewDevice);
-
-                Point cursorPosition = this.PointToClient(Cursor.Position);
-                previewDevice.Location = new Point(cursorPosition.X + 5, cursorPosition.Y + 5);
-                previewDevice.BringToFront();
+                ShowPreviewAtCursor(5, 5);
             }
         }
 
         private void TagTreeUserControl1_MouseDown(object sender, MouseEventArgs e)
         {
-            isrightclick_while_cursor_leave_listbox1 = true;
-            if (e.Button == MouseButtons.Right && previewDevice != null)
+            bool hadPreview = previewDevice != null;
+            DismissListBoxPreviewAndSelection();
+            if (e.Button == MouseButtons.Right && hadPreview)
             {
-                this.Controls.Remove(previewDevice);
-                previewDevice.Dispose();
-                previewDevice = null;
+                tagTreeUserControl1.SuppressNextContextMenu = true;
+                return;
             }
             listBox1.ClearSelected();
             fixedIndex = -1;
@@ -1463,13 +1892,12 @@ namespace _4._18
 
         private void panel1_MouseDown(object sender, MouseEventArgs e)
         {
-            isrightclick_while_cursor_leave_listbox1 = true;
+            bool hadPreview = previewDevice != null;
+            DismissListBoxPreviewAndSelection();
 
-            if (e.Button == MouseButtons.Right && previewDevice != null)
+            if (e.Button == MouseButtons.Right && hadPreview)
             {
-                this.Controls.Remove(previewDevice);
-                previewDevice.Dispose();
-                previewDevice = null;
+                return;
             }
             if (e.Button == MouseButtons.Right)
             {
@@ -1480,14 +1908,16 @@ namespace _4._18
             fixedIndex = -1;
         }
 
+        private bool _suppressTemplatesContextMenu;
+
         private void treeViewTemplates_MouseDown(object sender, MouseEventArgs e)
         {
-            isrightclick_while_cursor_leave_listbox1 = true;
-            if (e.Button == MouseButtons.Right && previewDevice != null)
+            bool hadPreview = previewDevice != null;
+            DismissListBoxPreviewAndSelection();
+            if (e.Button == MouseButtons.Right && hadPreview)
             {
-                this.Controls.Remove(previewDevice);
-                previewDevice.Dispose();
-                previewDevice = null;
+                _suppressTemplatesContextMenu = true;
+                return;
             }
             if (e.Button == MouseButtons.Right)
             {
@@ -1878,6 +2308,14 @@ namespace _4._18
             TemplateTreeNodeData nodeData = e.Node.Tag as TemplateTreeNodeData;
             if (nodeData != null && nodeData.IsTemplate)
             {
+                vScrollBarPanel2.Value = 0;
+                panel2.Top = 0;
+                if (hScrollBarPanel2 != null)
+                {
+                    hScrollBarPanel2.Value = 0;
+                    panel2.Left = 0;
+                }
+
                 // 使用逆向循环遍历控件集合，以便在移除控件时不会影响循环
                 for (int i = panel2.Controls.Count - 1; i >= 0; i--)
                 {
@@ -1888,6 +2326,9 @@ namespace _4._18
                     }
                 }
                 _panelManager.RestorePanels(nodeData.TemplateData);
+                EnsurePanel2ContentVisible();
+                _currentEditingTemplate = ResolveTemplateNodeData(nodeData);
+                UpdateSaveCurrentTemplateMenuState();
             }
         }
 
@@ -1904,6 +2345,14 @@ namespace _4._18
             TemplateTreeNodeData nodeData = e.Node.Tag as TemplateTreeNodeData;
             if (nodeData != null && nodeData.IsTemplate)
             {
+                vScrollBarPanel2.Value = 0;
+                panel2.Top = 0;
+                if (hScrollBarPanel2 != null)
+                {
+                    hScrollBarPanel2.Value = 0;
+                    panel2.Left = 0;
+                }
+
                 // 使用逆向循环遍历控件集合，以便在移除控件时不会影响循环
                 for (int i = panel2.Controls.Count - 1; i >= 0; i--)
                 {
@@ -1914,6 +2363,9 @@ namespace _4._18
                     }
                 }
                 _panelManager.RestorePanels(nodeData.TemplateData);
+                EnsurePanel2ContentVisible();
+                _currentEditingTemplate = ResolveTemplateNodeData(nodeData);
+                UpdateSaveCurrentTemplateMenuState();
             }
         }
 
@@ -1928,23 +2380,34 @@ namespace _4._18
         /// </summary>
         private void treeViewTemplates_MouseUp(object sender, MouseEventArgs e)
         {
+            if (e.Button == MouseButtons.Right && _suppressTemplatesContextMenu)
+            {
+                _suppressTemplatesContextMenu = false;
+                return;
+            }
             if (e.Button == MouseButtons.Right)
             {
                 TreeNode node = treeViewTemplates.GetNodeAt(e.Location);
 
                 if (node == null)
                 {
-                    // 右鍵點擊空白區域：添加樣例到庫
+                    // 右鍵點擊空白區域：添加樣例到庫、粘貼為根節點
                     treeViewTemplates.SelectedNode = null;
                     menuItemAddToLibrary.Visible = true;
+                    menuItemCopyTemplate.Visible = false;
+                    menuItemPasteTemplate.Visible = true;
+                    menuItemPasteTemplate.Enabled = _copiedTemplateNode != null;
                     menuItemRename.Visible = false;
                     menuItemDelete.Visible = false;
                 }
                 else
                 {
-                    // 右鍵點擊節點：重命名、刪除
+                    // 右鍵點擊節點：複製、粘貼為子節點、重命名、刪除
                     treeViewTemplates.SelectedNode = node;
                     menuItemAddToLibrary.Visible = false;
+                    menuItemCopyTemplate.Visible = true;
+                    menuItemPasteTemplate.Visible = true;
+                    menuItemPasteTemplate.Enabled = _copiedTemplateNode != null;
                     menuItemRename.Visible = true;
                     menuItemDelete.Visible = true;
                 }
@@ -2027,11 +2490,126 @@ namespace _4._18
                     // 從 TreeView 中移除
                     selectedNode.Remove();
                     SaveTemplateLibrary();
+                    if (!IsTemplateNodeInLibrary(_currentEditingTemplate))
+                    {
+                        _currentEditingTemplate = null;
+                    }
+                    UpdateSaveCurrentTemplateMenuState();
                 }
             }
         }
 
+        /// <summary>
+        /// 粘貼節點（作為選中節點的子節點，或作為根節點）
+        /// </summary>
+        private void MenuItemPasteTemplate_Click(object sender, EventArgs e)
+        {
+            if (_copiedTemplateNode == null)
+                return;
 
+            TemplateTreeNodeData sourceData = _copiedTemplateNode.Tag as TemplateTreeNodeData;
+            if (sourceData == null)
+                return;
+
+            TemplateTreeNodeData clonedData = CloneTemplateData(sourceData);
+            TreeNode clonedNode = ConvertDataToTreeNode(clonedData);
+
+            TreeNode targetNode = treeViewTemplates.SelectedNode;
+            if (targetNode != null)
+            {
+                // 粘貼為子節點
+                TemplateTreeNodeData targetData = targetNode.Tag as TemplateTreeNodeData;
+                if (targetData != null)
+                    targetData.Children.Add(clonedData);
+                targetNode.Nodes.Add(clonedNode);
+                targetNode.Expand();
+            }
+            else
+            {
+                // 粘貼為根節點
+                templateLibraryData.Add(clonedData);
+                treeViewTemplates.Nodes.Add(clonedNode);
+            }
+
+            SaveTemplateLibrary();
+        }
+
+        /// <summary>
+        /// 深拷貝 TemplateTreeNodeData（包含子節點和模板數據）
+        /// </summary>
+        private static TemplateTreeNodeData CloneTemplateData(TemplateTreeNodeData source)
+        {
+            TemplateTreeNodeData clone = new TemplateTreeNodeData();
+            clone.Text = source.Text;
+            clone.TemplateData = source.TemplateData != null
+                ? new List<PanelInfo>(source.TemplateData)
+                : null;
+            clone.Children = new List<TemplateTreeNodeData>();
+            foreach (TemplateTreeNodeData child in source.Children)
+            {
+                clone.Children.Add(CloneTemplateData(child));
+            }
+            return clone;
+        }
+
+        private TemplateTreeNodeData ResolveTemplateNodeData(TemplateTreeNodeData nodeData)
+        {
+            if (nodeData == null) return null;
+            return nodeData.OriginalData ?? nodeData;
+        }
+
+        private TemplateTreeNodeData ResolveCurrentEditingTemplate()
+        {
+            TemplateTreeNodeData current = ResolveTemplateNodeData(_currentEditingTemplate);
+            if (!IsTemplateNodeInLibrary(current))
+            {
+                _currentEditingTemplate = null;
+                return null;
+            }
+            _currentEditingTemplate = current;
+            return current;
+        }
+
+        private void UpdateSaveCurrentTemplateMenuState()
+        {
+            if (saveCurrentTemplateMenuItemPanel2 == null)
+            {
+                return;
+            }
+            saveCurrentTemplateMenuItemPanel2.Enabled = ResolveCurrentEditingTemplate() != null;
+        }
+
+        private bool IsTemplateNodeInLibrary(TemplateTreeNodeData node)
+        {
+            if (node == null || templateLibraryData == null)
+            {
+                return false;
+            }
+
+            return ContainsTemplateNodeRecursive(templateLibraryData, node);
+        }
+
+        private static bool ContainsTemplateNodeRecursive(List<TemplateTreeNodeData> nodes, TemplateTreeNodeData target)
+        {
+            if (nodes == null || target == null)
+            {
+                return false;
+            }
+
+            foreach (TemplateTreeNodeData node in nodes)
+            {
+                if (ReferenceEquals(node, target))
+                {
+                    return true;
+                }
+                if (ContainsTemplateNodeRecursive(node.Children, target))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
 
         private void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
         {
